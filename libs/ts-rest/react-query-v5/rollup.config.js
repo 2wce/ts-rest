@@ -31,7 +31,7 @@ logger.info = new Proxy(logger.info, {
         },
       });
 
-      fs.rmdirSync(v5BuildDir, { recursive: true });
+      fs.rmSync(v5BuildDir, { recursive: true });
 
       logger.info(
         '\nMerged `@ts-rest/react-query-v5` into `@ts-rest/react-query` and deleted build output of react-query-v5',

@@ -4,9 +4,14 @@ Thanks for wanting to contribute to the project! Below is some guidance for help
 
 ## Development workflow
 
+Use Node.js 26.12.0 (pinned in `.nvmrc`) and pnpm 9.4.0 for development.
+If you use nvm, install and select the pinned runtime before installing dependencies:
+
 ```bash
 git clone git@github.com:ts-rest/ts-rest.git
 cd ts-rest
+nvm install
+nvm use
 pnpm install
 ```
 
