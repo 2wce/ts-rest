@@ -8,8 +8,14 @@
     "dev": "vp dev"
   },
   "devDependencies": {
+    "vite-plugin-solid": "catalog:",
+    "vite-plus": "catalog:"
+  },
+  "dependencies": {
+    "@tanstack/solid-query": "catalog:",
     "@ts-rest/core": "workspace:*",
     "@ts-rest/example-microservice-util-posts-api": "workspace:*",
-    "@ts-rest/solid-query": "workspace:*"
+    "@ts-rest/solid-query": "workspace:*",
+    "solid-js": "catalog:"
   }
 }

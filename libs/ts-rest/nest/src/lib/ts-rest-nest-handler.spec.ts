@@ -761,7 +761,7 @@ describe('ts-rest-nest-handler', () => {
         .send()
         .expect(302)
         .expect((res) => {
-          expect(res.header.location).toBe('/redirected');
+          expect(res.header['location']).toBe('/redirected');
         });
     });
 
@@ -1738,7 +1738,7 @@ describe('ts-rest-nest-handler', () => {
         .send()
         .expect(302)
         .expect((res) => {
-          expect(res.header.location).toBe('/redirected');
+          expect(res.header['location']).toBe('/redirected');
         });
     });
 
@@ -2435,7 +2435,7 @@ describe('ts-rest-nest-handler', () => {
           const res = ctx.getResponse<Response>();
 
           if (exception instanceof TsRestRequestValidationError) {
-            return res.status(400).send({
+            res.status(400).send({
               custom: 'error filter caught it',
               bodyErrors: exception.body?.issues?.length || 0,
               headerErrors: exception.headers?.issues?.length || 0,

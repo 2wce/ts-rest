@@ -7,7 +7,14 @@
     "dev": "wrangler dev src/index.ts"
   },
   "devDependencies": {
-    "@ts-rest/serverless": "workspace:*",
-    "@ts-rest/example-contracts": "workspace:*"
+    "vitest": "catalog:",
+    "wait-on": "catalog:",
+    "@types/wait-on": "catalog:",
+    "wrangler": "catalog:",
+    "@cloudflare/workers-types": "catalog:"
+  },
+  "dependencies": {
+    "@ts-rest/example-contracts": "workspace:*",
+    "@ts-rest/serverless": "workspace:*"
   }
 }

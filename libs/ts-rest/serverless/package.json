@@ -32,6 +32,13 @@
   "devDependencies": {
     "@ts-rest/core": "workspace:*"
   },
-  "main": "../../../dist/libs/ts-rest/serverless/index.cjs.js",
-  "types": "./src/index.ts"
+  "types": "./src/index.ts",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": "./src/index.ts",
+    "./fetch": "./src/fetch.ts",
+    "./aws": "./src/aws.ts",
+    "./next": "./src/next.ts",
+    "./azure": "./src/azure.ts"
+  }
 }

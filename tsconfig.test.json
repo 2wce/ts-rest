@@ -1,0 +1,13 @@
+{
+  "extends": "./tsconfig.library.json",
+  "compilerOptions": {
+    "types": ["vitest/globals", "node"]
+  },
+  "include": [
+    "${configDir}/src/**/*.test.ts",
+    "${configDir}/src/**/*.test.tsx",
+    "${configDir}/src/**/*.spec.ts",
+    "${configDir}/src/**/*.spec.tsx",
+    "${configDir}/src/**/*.d.ts"
+  ]
+}

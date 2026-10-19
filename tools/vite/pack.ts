@@ -1,20 +1,22 @@
 import { readFile, writeFile, copyFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import swc from 'unplugin-swc';
+import type { PackUserConfig } from 'vite-plus/pack';
+import { decoratorOptions } from './swc';
 
 // Keep release metadata generation in a supported build hook, rather than
 // intercepting logs from the build tool. Changesets still versions source manifests.
-export function libraryPack(name: string, entry: Record<string, string>) {
+export function libraryPack(
+  name: string,
+  entry: Record<string, string>,
+): PackUserConfig {
   const outDir = resolve('../../../dist/libs/ts-rest', name);
   return {
     entry,
     outDir,
     format: ['esm', 'cjs'] as Array<'esm' | 'cjs'>,
     target: 'es2019',
-    dts: {
-      generator: 'tsc' as const,
-      compilerOptions: { rootDir: '../../..' },
-    },
+    dts: true,
     tsconfig: 'tsconfig.lib.json',
     sourcemap: true,
     unbundle: name === 'react-query',
@@ -25,19 +27,7 @@ export function libraryPack(name: string, entry: Record<string, string>) {
     }),
     plugins:
       name === 'nest'
-        ? [
-            swc.rollup({
-              tsconfigFile: 'tsconfig.lib.json',
-              swcrc: false,
-              jsc: {
-                parser: { syntax: 'typescript', decorators: true },
-                transform: { legacyDecorator: true, decoratorMetadata: true },
-                target: 'es2019',
-                keepClassNames: true,
-              },
-              module: { type: 'es6' },
-            }),
-          ]
+        ? [swc.rollup(decoratorOptions('tsconfig.lib.json'))]
         : [],
     hooks: {
       'build:done': async () => {
@@ -78,5 +68,21 @@ export function libraryPack(name: string, entry: Record<string, string>) {
         await copyFile('CHANGELOG.md', resolve(outDir, 'CHANGELOG.md'));
       },
     },
+  };
+}
+
+// Node examples share their runtime/packing policy and state local entry/output.
+export function nodePack(
+  outDir: string,
+  entry = 'src/main.ts',
+): PackUserConfig {
+  return {
+    entry: { main: entry },
+    outDir,
+    format: 'cjs',
+    target: 'node26',
+    dts: false,
+    tsconfig: 'tsconfig.json',
+    deps: { neverBundle: true, alwaysBundle: [/^@ts-rest\//] },
   };
 }

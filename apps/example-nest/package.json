@@ -9,7 +9,24 @@
   },
   "devDependencies": {
     "@ts-rest/core": "workspace:*",
+    "@nestjs/testing": "catalog:",
+    "@types/cors": "catalog:",
+    "supertest": "catalog:",
+    "@types/supertest": "catalog:",
+    "unplugin-swc": "catalog:",
+    "vite-plus": "catalog:",
+    "vitest": "catalog:"
+  },
+  "dependencies": {
+    "@nestjs/common": "catalog:",
+    "@nestjs/core": "catalog:",
+    "@nestjs/swagger": "catalog:",
+    "@prisma/client": "catalog:",
     "@ts-rest/example-contracts": "workspace:*",
-    "@ts-rest/nest": "workspace:*"
+    "@ts-rest/nest": "workspace:*",
+    "@ts-rest/open-api": "workspace:*",
+    "cors": "catalog:",
+    "zod": "catalog:",
+    "@nestjs/platform-express": "catalog:"
   }
 }

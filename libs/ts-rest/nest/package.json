@@ -31,8 +31,12 @@
     "rxjs": "^7.1.0"
   },
   "scripts": {
-    "build": "vp pack"
+    "build": "vp pack",
+    "typecheck": "tsc --noEmit -p tsconfig.assertions.json"
   },
-  "main": "../../../dist/libs/ts-rest/nest/index.cjs.js",
-  "types": "./src/index.ts"
+  "types": "./src/index.ts",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": "./src/index.ts"
+  }
 }

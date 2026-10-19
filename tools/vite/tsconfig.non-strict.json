@@ -1,12 +1,10 @@
 {
-  "extends": "../../tsconfig.base.json",
+  "extends": "./tsconfig.assertions.json",
   "compilerOptions": {
     "strict": false,
     "strictNullChecks": false,
-    "types": ["vitest/globals", "node"],
-    "noEmit": true,
     "paths": {
-      "@ts-rest/core": ["dist/libs/ts-rest/core/index.cjs.d.ts"]
+      "@ts-rest/core": ["../../dist/libs/ts-rest/core/index.cjs.d.ts"]
     }
   },
   "include": ["../../libs/non-strict-mode-test/src/**/*.spec.ts"]

@@ -119,18 +119,27 @@ const invalid: ClientInferResponseBody<typeof contract.get, 200> = { value: 1 };
 void [initQueryClient, initTsrReactQuery, createFetchHandler, value, invalid];
 `,
   );
-  for (const mode of ['node', 'nodenext']) {
+  for (const [compiler, mode] of [
+    ['typescript-legacy', 'node'],
+    ['typescript-legacy', 'nodenext'],
+    ['typescript', 'bundler'],
+    ['typescript', 'nodenext'],
+  ]) {
     execFileSync(
       process.execPath,
       [
-        resolve(root, 'node_modules/typescript/bin/tsc'),
+        resolve(root, 'node_modules', compiler, 'bin/tsc'),
         '--noEmit',
         '--strict',
         '--skipLibCheck',
         '--target',
         'es2019',
         '--module',
-        mode === 'node' ? 'commonjs' : 'nodenext',
+        mode === 'node'
+          ? 'commonjs'
+          : mode === 'bundler'
+            ? 'esnext'
+            : 'nodenext',
         '--moduleResolution',
         mode,
         join(consumer, 'consumer.ts'),

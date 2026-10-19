@@ -10,6 +10,13 @@
   },
   "devDependencies": {
     "@ts-rest/core": "workspace:*",
+    "vite-plus": "catalog:",
+    "vitest": "catalog:",
+    "wait-on": "catalog:",
+    "@types/wait-on": "catalog:"
+  },
+  "dependencies": {
+    "@azure/functions": "catalog:",
     "@ts-rest/example-contracts": "workspace:*",
     "@ts-rest/serverless": "workspace:*"
   }

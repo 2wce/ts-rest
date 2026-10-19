@@ -9,7 +9,11 @@
   },
   "devDependencies": {
     "@ts-rest/core": "workspace:*",
+    "vite-plus": "catalog:"
+  },
+  "dependencies": {
     "@ts-rest/example-contracts": "workspace:*",
-    "@ts-rest/fastify": "workspace:*"
+    "@ts-rest/fastify": "workspace:*",
+    "fastify": "catalog:"
   }
 }

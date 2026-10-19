@@ -1,5 +1,13 @@
 {
   "name": "@ts-rest/non-strict-mode-test",
   "version": "0.0.1",
-  "type": "commonjs"
+  "type": "commonjs",
+  "devDependencies": {
+    "@ts-rest/core": "workspace:*",
+    "zod": "catalog:"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit -p ../../tools/vite/tsconfig.non-strict.json"
+  },
+  "private": true
 }

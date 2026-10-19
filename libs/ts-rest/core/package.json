@@ -27,8 +27,12 @@
     }
   },
   "scripts": {
-    "build": "vp pack"
+    "build": "vp pack",
+    "typecheck": "tsc --noEmit -p ../../../tools/vite/tsconfig.assertions.json"
   },
-  "main": "../../../dist/libs/ts-rest/core/index.cjs.js",
-  "types": "./src/index.ts"
+  "types": "./src/index.ts",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": "./src/index.ts"
+  }
 }

@@ -10,6 +10,14 @@
   "devDependencies": {
     "@ts-rest/core": "workspace:*",
     "@ts-rest/example-microservice-util-posts-api": "workspace:*",
-    "@ts-rest/vue-query": "workspace:*"
+    "@vitejs/plugin-vue": "catalog:",
+    "vite-plus": "catalog:",
+    "typescript": "5.2.2"
+  },
+  "dependencies": {
+    "@tanstack/vue-query": "catalog:",
+    "@ts-rest/example-contracts": "workspace:*",
+    "@ts-rest/vue-query": "workspace:*",
+    "vue": "catalog:"
   }
 }

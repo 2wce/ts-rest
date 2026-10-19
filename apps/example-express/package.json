@@ -8,8 +8,30 @@
     "start": "node ../../dist/apps/example-express/main.cjs"
   },
   "devDependencies": {
+    "@types/body-parser": "catalog:",
+    "@types/cors": "catalog:",
+    "@types/express": "catalog:",
+    "@types/jsonwebtoken": "catalog:",
+    "@types/lodash": "catalog:",
+    "@types/passport": "catalog:",
+    "@types/passport-jwt": "catalog:",
+    "supertest": "catalog:",
+    "@types/supertest": "catalog:",
+    "@types/swagger-ui-express": "catalog:",
+    "vite-plus": "catalog:"
+  },
+  "dependencies": {
     "@ts-rest/core": "workspace:*",
     "@ts-rest/example-contracts": "workspace:*",
-    "@ts-rest/express": "workspace:*"
+    "@ts-rest/express": "workspace:*",
+    "@ts-rest/open-api": "workspace:*",
+    "body-parser": "catalog:",
+    "cors": "catalog:",
+    "express": "catalog:",
+    "jsonwebtoken": "catalog:",
+    "lodash": "catalog:",
+    "passport": "catalog:",
+    "passport-jwt": "catalog:",
+    "swagger-ui-express": "catalog:"
   }
 }

@@ -1,16 +1,6 @@
 {
-  "extends": "./tsconfig.json",
+  "extends": "../../../tsconfig.test.json",
   "compilerOptions": {
-    "outDir": "../../../dist/out-tsc",
-    "module": "esnext",
-    "types": ["vitest/globals", "node"],
-    "skipLibCheck": true
-  },
-  "include": [
-    "**/*.test.ts",
-    "**/*.test.tsx",
-    "**/*.spec.ts",
-    "**/*.spec.tsx",
-    "**/*.d.ts"
-  ]
+    "types": ["vitest/globals", "node", "@testing-library/jest-dom/vitest"]
+  }
 }

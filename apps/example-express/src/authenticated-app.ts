@@ -152,10 +152,10 @@ createExpressEndpoints(apiBlog, completedRouter, app, {
     (req, res, next) => {
       const routeMetadata = req.tsRestRoute.metadata;
 
-      if (routeMetadata.resource) {
+      if ('resource' in routeMetadata && 'identifierPath' in routeMetadata) {
         const resourceId = _.get(req, routeMetadata.identifierPath);
         const resource = mockOwnedResource(routeMetadata.resource, {
-          id: resourceId,
+          id: typeof resourceId === 'string' ? resourceId : undefined,
         });
 
         if (resource.ownerId !== req.user?.id) {

@@ -1,25 +1,11 @@
 import { defineConfig } from 'vite-plus';
+import { nodePack } from '../../../tools/vite/pack';
 import swc from 'unplugin-swc';
+import { decoratorOptions } from '../../../tools/vite/swc';
+
 export default defineConfig({
   pack: {
-    entry: { main: 'src/main.ts' },
-    outDir: '../../../dist/apps/example-microservice/users-service',
-    format: 'cjs',
-    target: 'node26',
-    dts: false,
-    tsconfig: 'tsconfig.app.json',
-    deps: { neverBundle: true, alwaysBundle: [/^@ts-rest\//] },
-    plugins: [
-      swc.rollup({
-        tsconfigFile: 'tsconfig.app.json',
-        swcrc: false,
-        jsc: {
-          parser: { syntax: 'typescript', decorators: true },
-          transform: { legacyDecorator: true, decoratorMetadata: true },
-          target: 'es2019',
-        },
-        module: { type: 'es6' },
-      }),
-    ],
+    ...nodePack('../../../dist/apps/example-microservice/users-service'),
+    plugins: [swc.rollup(decoratorOptions('tsconfig.json'))],
   },
 });

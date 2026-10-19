@@ -8,7 +8,25 @@
     "react": "^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "catalog:",
+    "@testing-library/react": "catalog:",
+    "@types/react": "catalog:",
+    "react-error-boundary": "catalog:",
+    "vitest": "catalog:",
+    "zod": "catalog:"
+  },
+  "dependencies": {
+    "@tanstack/query-core": "catalog:",
+    "@tanstack/react-query": "catalog:",
     "@ts-rest/core": "workspace:*",
-    "@tanstack/react-query": "5.51.11"
+    "react": "catalog:"
+  },
+  "exports": {
+    "./package.json": "./package.json",
+    ".": "./src/v5.ts"
+  },
+  "types": "./src/v5.ts",
+  "scripts": {
+    "typecheck": "tsc --noEmit -p tsconfig.assertions.json"
   }
 }

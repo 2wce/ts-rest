@@ -29,6 +29,9 @@
   "devDependencies": {
     "@ts-rest/core": "workspace:*"
   },
-  "main": "../../../dist/libs/ts-rest/solid-query/index.cjs.js",
-  "types": "./src/index.ts"
+  "types": "./src/index.ts",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": "./src/index.ts"
+  }
 }

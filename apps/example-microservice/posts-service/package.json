@@ -8,10 +8,22 @@
     "start": "node ../../../dist/apps/example-microservice/posts-service/main.cjs"
   },
   "devDependencies": {
-    "@ts-rest/core": "workspace:*",
     "@ts-rest/example-contracts": "workspace:*",
-    "@ts-rest/express": "workspace:*",
+    "@types/cors": "catalog:",
+    "@types/express": "catalog:",
+    "@types/multer": "catalog:",
+    "@types/swagger-ui-express": "catalog:",
+    "vite-plus": "catalog:"
+  },
+  "dependencies": {
+    "@ts-rest/core": "workspace:*",
     "@ts-rest/example-microservice-util-posts-api": "workspace:*",
-    "@ts-rest/example-microservice-util-users-api": "workspace:*"
+    "@ts-rest/example-microservice-util-users-api": "workspace:*",
+    "@ts-rest/express": "workspace:*",
+    "@ts-rest/open-api": "workspace:*",
+    "cors": "catalog:",
+    "express": "catalog:",
+    "multer": "catalog:",
+    "swagger-ui-express": "catalog:"
   }
 }

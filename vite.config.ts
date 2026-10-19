@@ -1,16 +1,7 @@
 import { defineConfig } from 'vite-plus';
 import swc from 'unplugin-swc';
-import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-
-const paths = JSON.parse(readFileSync('tsconfig.base.json', 'utf8'))
-  .compilerOptions.paths;
-const alias = Object.entries(paths)
-  .sort(([a], [b]) => b.length - a.length)
-  .map(([find, files]) => ({
-    find,
-    replacement: resolve((files as string[])[0]),
-  }));
+import { decoratorOptions } from './tools/vite/swc';
 
 const projects = [
   'core',
@@ -25,43 +16,37 @@ const projects = [
   'solid-query',
   'vue-query',
 ].map((name) => ({
-  resolve: { alias },
+  extends: true,
   plugins:
     name === 'nest'
       ? [
-          swc.vite({
-            tsconfigFile: resolve('libs/ts-rest/nest/tsconfig.lib.json'),
-            swcrc: false,
-            jsc: {
-              parser: { syntax: 'typescript', decorators: true },
-              transform: { legacyDecorator: true, decoratorMetadata: true },
-              target: 'es2019',
-              keepClassNames: true,
-            },
-            module: { type: 'es6' },
-          }),
+          swc.vite(
+            decoratorOptions(resolve('libs/ts-rest/nest/tsconfig.lib.json')),
+          ),
         ]
       : [],
   test: {
     name,
     root: resolve('libs/ts-rest', name),
-    globals: true,
     environment: ['react-query', 'react-query-v5', 'vue-query'].includes(name)
       ? 'jsdom'
-      : 'node',
-    include: ['src/**/*.{spec,test}.{ts,tsx}'],
+      : undefined,
     setupFiles: [resolve('tools/vite/test-setup.ts')],
-    testTimeout: name === 'fastify' ? 30000 : 10000,
-    snapshotFormat: { escapeString: true, printBasicPrototype: true },
+    testTimeout: name === 'fastify' ? 30000 : undefined,
   },
 }));
 
 export default defineConfig({
   test: {
+    globals: true,
+    environment: 'node',
+    include: ['src/**/*.{spec,test}.{ts,tsx}'],
+    testTimeout: 10000,
+    snapshotFormat: { escapeString: true, printBasicPrototype: true },
     projects: [
       ...projects,
       {
-        resolve: { alias },
+        extends: false,
         test: {
           name: 'non-strict-mode',
           globals: true,
@@ -71,21 +56,9 @@ export default defineConfig({
         },
       },
       {
-        resolve: { alias },
+        extends: false,
         plugins: [
-          swc.vite({
-            tsconfigFile: resolve('tsconfig.base.json'),
-            swcrc: false,
-            jsc: {
-              parser: { syntax: 'typescript', decorators: true },
-              transform: {
-                legacyDecorator: true,
-                decoratorMetadata: true,
-                react: { runtime: 'automatic' },
-              },
-            },
-            module: { type: 'es6' },
-          }),
+          swc.vite(decoratorOptions(resolve('tsconfig.base.json'), true)),
         ],
         test: {
           name: 'examples',
@@ -124,15 +97,31 @@ export default defineConfig({
     ],
   },
   lint: {
+    options: { typeAware: true, typeCheck: true },
     plugins: ['typescript', 'react', 'import'],
     categories: { correctness: 'error' },
     overrides: [
       {
+        files: ['libs/non-strict-mode-test/**'],
+        rules: { 'typescript/no-useless-default-assignment': 'off' },
+      },
+      {
         files: ['**/*.spec.ts', '**/*.spec.tsx'],
-        rules: { 'no-unused-expressions': 'off' },
+        rules: {
+          'no-unused-expressions': 'off',
+          'typescript/unbound-method': 'off',
+        },
       },
     ],
     rules: {
+      // Roll out newly enabled type-aware rules as warnings for existing code.
+      'typescript/await-thenable': 'warn',
+      'typescript/no-base-to-string': 'warn',
+      'typescript/restrict-template-expressions': 'warn',
+      'typescript/unbound-method': 'warn',
+      'typescript/no-floating-promises': 'warn',
+      'typescript/no-redundant-type-constituents': 'warn',
+      'typescript/no-useless-default-assignment': 'warn',
       'typescript/no-explicit-any': 'warn',
       'typescript/no-unused-vars': 'warn',
       'react/rules-of-hooks': 'error',
@@ -154,6 +143,7 @@ export default defineConfig({
     ignorePatterns: [
       '.nx/**',
       'apps/docs/**',
+      'test-projects/**',
       '**/node_modules/**',
       '**/dist/**',
       '**/coverage/**',

@@ -1,12 +1,6 @@
 import { defineConfig } from 'vite-plus';
+import { nodePack } from '../../../tools/vite/pack';
+
 export default defineConfig({
-  pack: {
-    entry: { main: 'src/main.ts' },
-    outDir: '../../../dist/apps/example-microservice/posts-service',
-    format: 'cjs',
-    target: 'node26',
-    dts: false,
-    tsconfig: 'tsconfig.app.json',
-    deps: { neverBundle: true, alwaysBundle: [/^@ts-rest\//] },
-  },
+  pack: nodePack('../../../dist/apps/example-microservice/posts-service'),
 });

@@ -1,11 +1,7 @@
 {
-  "extends": "../../../tsconfig.base.json",
+  "extends": "../../../tsconfig.web.json",
   "compilerOptions": {
-    "outDir": "../../../dist/apps/example-microservice/web-app",
-    "types": ["node", "vitest"],
-    "allowSyntheticDefaultImports": true,
     "jsx": "react",
-    "declaration": false
-  },
-  "include": ["**/*.ts", "**/*.tsx"]
+    "types": ["vite/client", "vitest/globals", "node"]
+  }
 }

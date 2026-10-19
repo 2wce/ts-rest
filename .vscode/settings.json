@@ -8,6 +8,5 @@
     "TRPC",
     "ts-rest"
   ],
-  "typescript.tsdk": "node_modules/typescript/lib",
   "editor.defaultFormatter": "oxc.oxc-vscode"
 }

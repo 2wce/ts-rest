@@ -9,7 +9,17 @@
   },
   "devDependencies": {
     "@ts-rest/core": "workspace:*",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "vite-plus": "catalog:",
+    "vitest": "catalog:"
+  },
+  "dependencies": {
+    "@tanstack/react-query": "catalog:",
+    "@tanstack/react-query-devtools": "catalog:",
     "@ts-rest/example-microservice-util-posts-api": "workspace:*",
-    "@ts-rest/react-query": "workspace:*"
+    "@ts-rest/react-query": "workspace:*",
+    "react": "catalog:",
+    "react-dom": "catalog:"
   }
 }
