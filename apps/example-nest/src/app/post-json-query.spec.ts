@@ -2,7 +2,7 @@ import { vi } from 'vitest';
 import { PostService } from './post.service';
 import { Test } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
-import { Post } from '@prisma/client';
+import { Post } from '@ts-rest/example-database';
 import request from 'supertest';
 import { PostJsonQueryController } from './post-json-query.controller';
 

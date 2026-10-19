@@ -5,7 +5,7 @@ import { decoratorOptions } from '../../../tools/vite/swc';
 
 export default defineConfig({
   pack: {
-    ...nodePack('../../../dist/apps/example-microservice/users-service'),
+    ...nodePack(),
     plugins: [swc.rollup(decoratorOptions('tsconfig.json'))],
   },
 });

@@ -3,9 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "build": "vp pack",
-    "dev": "vp pack --watch --on-success \"node ../../dist/apps/example-nest/main.cjs\"",
-    "start": "node ../../dist/apps/example-nest/main.cjs"
+    "start": "node dist/main.cjs"
   },
   "devDependencies": {
     "@ts-rest/core": "workspace:*",
@@ -21,8 +19,8 @@
     "@nestjs/common": "catalog:",
     "@nestjs/core": "catalog:",
     "@nestjs/swagger": "catalog:",
-    "@prisma/client": "catalog:",
     "@ts-rest/example-contracts": "workspace:*",
+    "@ts-rest/example-database": "workspace:*",
     "@ts-rest/nest": "workspace:*",
     "@ts-rest/open-api": "workspace:*",
     "cors": "catalog:",

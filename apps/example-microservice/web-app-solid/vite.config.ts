@@ -5,6 +5,5 @@ export default defineConfig({
   server: { port: 5005 },
   build: {
     target: 'es2019',
-    outDir: '../../../dist/apps/example-microservice/web-app-solid',
   },
 });

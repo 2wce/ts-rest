@@ -2,8 +2,5 @@ import { defineConfig } from 'vite-plus';
 import { nodePack } from '../../tools/vite/pack';
 
 export default defineConfig({
-  pack: nodePack(
-    '../../dist/apps/example-azure-function',
-    'src/functions/index.ts',
-  ),
+  pack: nodePack('src/functions/index.ts'),
 });

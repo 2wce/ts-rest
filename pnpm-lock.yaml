@@ -478,9 +478,6 @@ importers:
       '@openapi-contrib/json-schema-to-openapi-schema':
         specifier: 'catalog:'
         version: 4.0.0
-      '@prisma/client':
-        specifier: 'catalog:'
-        version: 6.3.1(prisma@6.3.1(typescript@7.0.2))(typescript@7.0.2)
       '@swc/core':
         specifier: 'catalog:'
         version: 1.16.18(@swc/helpers@0.5.3)
@@ -568,9 +565,6 @@ importers:
       parse-multipart-data:
         specifier: 'catalog:'
         version: 1.5.0
-      prisma:
-        specifier: 'catalog:'
-        version: 6.3.1(typescript@7.0.2)
       qs:
         specifier: 'catalog:'
         version: 6.16.1
@@ -979,12 +973,12 @@ importers:
       '@nestjs/swagger':
         specifier: 'catalog:'
         version: 7.1.4(@nestjs/common@10.3.10(reflect-metadata@0.1.14)(rxjs@7.8.2))(@nestjs/core@10.3.10)(reflect-metadata@0.1.14)
-      '@prisma/client':
-        specifier: 'catalog:'
-        version: 6.3.1(prisma@6.3.1(typescript@7.0.2))(typescript@7.0.2)
       '@ts-rest/example-contracts':
         specifier: workspace:*
         version: link:../../libs/example-contracts
+      '@ts-rest/example-database':
+        specifier: workspace:*
+        version: link:../../libs/example-database
       '@ts-rest/nest':
         specifier: workspace:*
         version: link:../../libs/ts-rest/nest
@@ -1025,9 +1019,6 @@ importers:
 
   apps/example-next:
     dependencies:
-      '@prisma/client':
-        specifier: 'catalog:'
-        version: 6.3.1(prisma@6.3.1(typescript@5.2.2))(typescript@5.2.2)
       '@tanstack/query-core':
         specifier: 'catalog:'
         version: 5.51.9
@@ -1043,6 +1034,9 @@ importers:
       '@ts-rest/example-contracts':
         specifier: workspace:*
         version: link:../../libs/example-contracts
+      '@ts-rest/example-database':
+        specifier: workspace:*
+        version: link:../../libs/example-database
       '@ts-rest/next':
         specifier: workspace:*
         version: link:../../libs/ts-rest/next
@@ -1104,6 +1098,9 @@ importers:
       typescript:
         specifier: 5.2.2
         version: 5.2.2
+      vite-plus:
+        specifier: 'catalog:'
+        version: 1.3.0(@types/node@26.6.5)(@vitest/ui@5.0.5)(esbuild@0.17.19)(jsdom@22.1.0(supports-color@7.2.0))(typescript@5.2.2)
       vitest:
         specifier: 5.0.5
         version: 5.0.5(@types/node@26.6.5)(@vitest/browser-preview@5.0.5)(@vitest/ui@5.0.5)(@voidzero-dev/vite-plus-core@1.3.0(@types/node@26.6.5)(esbuild@0.17.19)(typescript@5.2.2))(jsdom@22.1.0(supports-color@7.2.0))
@@ -1116,6 +1113,19 @@ importers:
       zod:
         specifier: 'catalog:'
         version: 3.22.3
+
+  libs/example-database:
+    dependencies:
+      '@prisma/client':
+        specifier: 'catalog:'
+        version: 6.3.1(prisma@6.3.1(typescript@7.0.2))(typescript@7.0.2)
+    devDependencies:
+      prisma:
+        specifier: 'catalog:'
+        version: 6.3.1(typescript@7.0.2)
+      vite-plus:
+        specifier: 'catalog:'
+        version: 1.3.0(@types/node@26.6.5)(@vitest/ui@5.0.5)(esbuild@0.17.19)(jsdom@22.1.0(supports-color@7.2.0))(typescript@7.0.2)
 
   libs/example-microservice/util-posts-api:
     dependencies:
@@ -7034,11 +7044,6 @@ snapshots:
 
   '@polka/url@1.0.0-next.29': {}
 
-  '@prisma/client@6.3.1(prisma@6.3.1(typescript@5.2.2))(typescript@5.2.2)':
-    optionalDependencies:
-      prisma: 6.3.1(typescript@5.2.2)
-      typescript: 5.2.2
-
   '@prisma/client@6.3.1(prisma@6.3.1(typescript@7.0.2))(typescript@7.0.2)':
     optionalDependencies:
       prisma: 6.3.1(typescript@7.0.2)
@@ -9799,14 +9804,6 @@ snapshots:
       react-is: 17.0.2
 
   printable-characters@1.0.42: {}
-
-  prisma@6.3.1(typescript@5.2.2):
-    dependencies:
-      '@prisma/engines': 6.3.1
-    optionalDependencies:
-      fsevents: 2.3.3
-      typescript: 5.2.2
-    optional: true
 
   prisma@6.3.1(typescript@7.0.2):
     dependencies:

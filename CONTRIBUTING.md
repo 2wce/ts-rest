@@ -17,7 +17,9 @@ Use Node 26.12.0 (see `.nvmrc`) and pnpm 12.14.0. Run `nvm use` and
   warnings; compiler errors fail the command.
 - `pnpm format` / `pnpm format:check`: Oxfmt.
 - `pnpm build:examples`: build framework examples with native commands.
-- `pnpm --filter example-nest dev`: build, run and restart the Nest example.
+- `pnpm nest`: generate the example database client, build, run and restart Nest.
+- `pnpm exec vp run example-next#dev`: generate the client and start Next.
+- `pnpm exec vp run example-nest#build` / `example-next#build`: build one database example.
 - `pnpm example-microservice:serve`: run microservice development tasks.
 - `make e2e`: isolated Nest, Express and validator compatibility fixtures.
 
@@ -61,8 +63,7 @@ Declare example dependencies in the package that uses them. Runtime imports go
 in `dependencies`, tooling/tests/types in `devDependencies`, and local packages
 use `workspace:*`. Use `catalog:` for versions shared through
 `pnpm-workspace.yaml`. Published library dependencies and peer ranges keep their
-consumer-facing version specs. Shared test tooling and Prisma generation stay
-at the root.
+consumer-facing version specs. Shared test tooling stays at the root.
 
 The workspace compiler is TypeScript 7.0.2, with Node types 26.6.5. The
 `typescript-legacy` alias pins 5.2.2 solely to check published declarations with
@@ -85,6 +86,36 @@ suppression.
 TypeScript 7 uses its native language server. The old VS Code `typescript.tsdk`
 setting has been removed because this package no longer contains the classic
 JavaScript editor SDK.
+
+## Example database
+
+`libs/example-database` owns the shared PostgreSQL schema, Prisma CLI and client
+for Nest and Next. Those applications depend on `@ts-rest/example-database`;
+published ts-rest libraries do not. Workspace installation does not generate a
+Prisma client. `pnpm examples:generate` generates it explicitly. Vite+ task
+dependencies also generate it before Nest/Next build and development tasks and
+before the full `pnpm test`, `pnpm lint` and `pnpm check` workflows. Generated
+client files and engines stay inside the private package and are ignored by Git,
+lint and formatting.
+
+`pnpm build` and `pnpm exec vp test run --project core` do not run generation.
+To install only core and its dependencies, use
+`pnpm --filter @ts-rest/core... install --frozen-lockfile` in a fresh checkout.
+The [database README](libs/example-database/README.md) describes PostgreSQL setup.
+
+## Example build outputs
+
+All example build outputs stay in their application directory. Vite and Vite+
+packing use their built-in `dist` default; Wrangler's dry-run build writes to
+local `dist`, and Next keeps its local `.next` output. Node example start/watch
+commands and Azure's function entry point resolve those local files. This lets
+Node resolve dependencies from the owning application's `node_modules`.
+
+Workspace discovery excludes `dist`, `.next` and generated-client directories,
+so artifact manifests never become additional workspace packages.
+
+Published libraries still build into `dist/libs/ts-rest`, the release staging
+layout used by Changesets and standalone compatibility fixtures.
 
 ## Host integration examples
 

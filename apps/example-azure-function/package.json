@@ -1,7 +1,7 @@
 {
   "name": "example-azure-function",
   "version": "0.0.0",
-  "main": "../../dist/apps/example-azure-function/*.cjs",
+  "main": "dist/*.cjs",
   "private": true,
   "scripts": {
     "build": "vp pack",

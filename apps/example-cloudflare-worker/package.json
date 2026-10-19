@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "scripts": {
-    "build": "wrangler deploy --dry-run --outdir ../../dist/apps/example-cloudflare-worker",
+    "build": "wrangler deploy --dry-run --outdir dist",
     "dev": "wrangler dev src/index.ts"
   },
   "devDependencies": {

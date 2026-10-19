@@ -77,3 +77,10 @@ Native inference tasks run with vp run --no-cache. The negative cache probe
 showed a cached success after adding a failing assertion; direct compilation
 detected it. Disabling caching for these fast checks avoids a maintained input
 glob list and ensures the current assertion files are compiled each time.
+
+## Example database follow-up
+
+The user approved moving shared Prisma generation out of the root on 2026-10-19.
+The example-only package and task prerequisites described in
+`../plans/2026-10-19-example-database.md` supersede the earlier root Prisma
+placement. Root installation no longer generates the example client.

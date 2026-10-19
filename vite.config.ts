@@ -79,7 +79,31 @@ export default defineConfig({
       },
     ],
   },
-  run: { cache: { scripts: true } },
+  run: {
+    cache: { scripts: true },
+    tasks: {
+      'unit-tests': {
+        command: 'vp test run',
+        dependsOn: ['@ts-rest/example-database#generate'],
+        cache: false,
+      },
+      'watch-tests': {
+        command: 'vp test',
+        dependsOn: ['@ts-rest/example-database#generate'],
+        cache: false,
+      },
+      'lint-workspace': {
+        command: 'vp lint',
+        dependsOn: ['@ts-rest/example-database#generate'],
+        cache: false,
+      },
+      'check-workspace': {
+        command: ['vp check', 'vp test run', 'pnpm typecheck'],
+        dependsOn: ['@ts-rest/example-database#generate'],
+        cache: false,
+      },
+    },
+  },
   fmt: {
     singleQuote: true,
     printWidth: 80,
@@ -87,6 +111,7 @@ export default defineConfig({
     ignorePatterns: [
       '.nx/**',
       'apps/docs/**',
+      'libs/example-database/generated/**',
       '**/node_modules/**',
       '**/dist/**',
       '**/coverage/**',
@@ -143,6 +168,7 @@ export default defineConfig({
     ignorePatterns: [
       '.nx/**',
       'apps/docs/**',
+      'libs/example-database/generated/**',
       'test-projects/**',
       '**/node_modules/**',
       '**/dist/**',

@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "build": "vp pack",
-    "dev": "vp pack --watch --on-success \"node ../../../dist/apps/example-microservice/users-service/main.cjs\"",
-    "start": "node ../../../dist/apps/example-microservice/users-service/main.cjs"
+    "dev": "vp pack --watch --on-success \"node dist/main.cjs\"",
+    "start": "node dist/main.cjs"
   },
   "devDependencies": {
     "@ts-rest/core": "workspace:*",

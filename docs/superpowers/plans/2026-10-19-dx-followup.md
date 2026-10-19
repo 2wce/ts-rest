@@ -92,3 +92,10 @@ transitively in framework dependencies; all direct Babel configuration is gone.
 ## Final delivery verification
 
 The user authorized a draft PR to `2wce/ts-rest` and committing all changes on 2026-10-19. Fresh delivery checks passed: frozen pnpm install, `pnpm build-test-all`, fourteen host integration tests and all nine `make e2e` fixture projects. The pipeline includes 565 unit tests, seven native inference projects, ten library builds, eleven example tasks and ten packages/sixteen ESM/CommonJS entry points. The lint checker reports zero errors and 388 warnings. Task scratch files are removed after delivery; permanent configs, contributor documentation, specs and plans are retained.
+
+## Example database follow-up
+
+The user approved moving shared Prisma generation out of the root on 2026-10-19.
+The example-only package and task prerequisites described in
+`../plans/2026-10-19-example-database.md` supersede the earlier root Prisma
+placement. Root installation no longer generates the example client.

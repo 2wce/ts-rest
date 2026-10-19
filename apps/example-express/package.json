@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "build": "vp pack",
-    "dev": "vp pack --watch --on-success \"node ../../dist/apps/example-express/main.cjs\"",
-    "start": "node ../../dist/apps/example-express/main.cjs"
+    "dev": "vp pack --watch --on-success \"node dist/main.cjs\"",
+    "start": "node dist/main.cjs"
   },
   "devDependencies": {
     "@types/body-parser": "catalog:",

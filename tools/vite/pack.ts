@@ -71,14 +71,10 @@ export function libraryPack(
   };
 }
 
-// Node examples share their runtime/packing policy and state local entry/output.
-export function nodePack(
-  outDir: string,
-  entry = 'src/main.ts',
-): PackUserConfig {
+// Node examples share runtime/packing policy and use the package-local dist default.
+export function nodePack(entry = 'src/main.ts'): PackUserConfig {
   return {
     entry: { main: entry },
-    outDir,
     format: 'cjs',
     target: 'node26',
     dts: false,
