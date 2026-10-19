@@ -1,4 +1,5 @@
-import '@testing-library/jest-dom';
+import { vi } from 'vitest';
+import '@testing-library/jest-dom/vitest';
 import {
   QueryClient,
   QueryClientProvider,
@@ -152,7 +153,7 @@ const contract = c.router({
   },
 });
 
-const api = jest.fn();
+const api = vi.fn();
 
 let queryClient = new QueryClient();
 
@@ -519,7 +520,9 @@ describe('react-query', () => {
       },
     );
 
-    await waitForElementToBeRemoved(await screen.findByText('loading'));
+    await waitFor(() =>
+      expect(screen.queryByText('loading')).not.toBeInTheDocument(),
+    );
 
     expect(result.current.data).toStrictEqual(SUCCESS_RESPONSE);
     expect(result.current.contractEndpoint).toEqual(contract.health);
@@ -677,6 +680,7 @@ describe('react-query', () => {
               id: '1',
             },
             extraHeaders: {
+              // @ts-expect-error exercise removal of an undefined header at runtime
               'content-type': undefined,
             },
           },
@@ -1156,7 +1160,9 @@ describe('react-query', () => {
       },
     );
 
-    await waitForElementToBeRemoved(await screen.findByText('loading'));
+    await waitFor(() =>
+      expect(screen.queryByText('loading')).not.toBeInTheDocument(),
+    );
 
     expect(api).toHaveBeenCalledWith({
       method: 'GET',
@@ -1419,7 +1425,7 @@ describe('react-query', () => {
       },
     );
 
-    expect(result.current).resolves.toStrictEqual(ERROR_RESPONSE);
+    await expect(result.current).resolves.toStrictEqual(ERROR_RESPONSE);
 
     expect(api).toHaveBeenCalledWith({
       method: 'GET',

@@ -19,7 +19,10 @@ import {
 import type { Request } from 'express';
 import type { FastifyRequest } from 'fastify';
 import { TsRestAppRouteMetadataKey } from './constants';
-import { evaluateTsRestOptions, MaybeTsRestOptions } from './ts-rest-options';
+import {
+  evaluateTsRestOptions,
+  type MaybeTsRestOptions,
+} from './ts-rest-options';
 import { TS_REST_MODULE_OPTIONS_TOKEN } from './ts-rest.module';
 
 export type TsRestRequestShape<TRoute extends AppRoute> = ServerInferRequest<

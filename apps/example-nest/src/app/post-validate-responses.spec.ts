@@ -1,8 +1,9 @@
+import { vi } from 'vitest';
 import { PostService } from './post.service';
 import { Test } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import { Post } from '@prisma/client';
-import * as request from 'supertest';
+import request from 'supertest';
 import { PostValidateResponsesController } from './post-validate-responses.controller';
 
 describe('PostValidateResponsesController', () => {
@@ -16,8 +17,8 @@ describe('PostValidateResponsesController', () => {
         {
           provide: PostService,
           useValue: {
-            getPosts: jest.fn(),
-            createPost: jest.fn(),
+            getPosts: vi.fn(),
+            createPost: vi.fn(),
           },
         },
       ],
@@ -31,7 +32,7 @@ describe('PostValidateResponsesController', () => {
 
   describe('GET /posts', () => {
     it('should succeed validation, cleanup extra fields and add default fields', async () => {
-      jest.spyOn(postService, 'getPosts').mockImplementation(async () => ({
+      vi.spyOn(postService, 'getPosts').mockImplementation(async () => ({
         posts: [
           {
             id: '1',
@@ -71,7 +72,7 @@ describe('PostValidateResponsesController', () => {
     });
 
     it('should fail with missing fields', async () => {
-      jest.spyOn(postService, 'getPosts').mockImplementation(async () => ({
+      vi.spyOn(postService, 'getPosts').mockImplementation(async () => ({
         posts: [{} as Post],
         totalPosts: 1,
       }));

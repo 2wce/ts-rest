@@ -11,10 +11,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "incremental": true,
-    "types": [
-      "jest",
-      "node"
-    ],
+    "types": ["vitest/globals", "node"],
     "strictNullChecks": true,
     "plugins": [
       {
@@ -29,10 +26,8 @@
     "**/*.jsx",
     "next-env.d.ts",
     "../../tmp/apps/example-next/.next/types/**/*.ts",
-    "../../dist/apps/example-next/.next/types/**/*.ts"
+    "../../dist/apps/example-next/.next/types/**/*.ts",
+    ".next/types/**/*.ts"
   ],
-  "exclude": [
-    "node_modules",
-    "jest.config.ts"
-  ]
+  "exclude": ["node_modules"]
 }

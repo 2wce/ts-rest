@@ -41,11 +41,8 @@ type ExtractExtraParametersFromClientArgs<
 /**
  * Extract the path params from the path in the contract
  */
-type PathParamsFromUrl<T extends AppRoute> = ParamsFromUrl<
-  T['path']
-> extends infer U
-  ? U
-  : never;
+type PathParamsFromUrl<T extends AppRoute> =
+  ParamsFromUrl<T['path']> extends infer U ? U : never;
 
 /**
  * Merge `PathParamsFromUrl<T>` with pathParams schema if it exists
@@ -108,15 +105,15 @@ type AppRouteResponses<
     > extends true
       ? never
       : Exclude<TStatus, keyof T['responses']> extends never
-      ? never
-      : {
-          status: Exclude<TStatus, keyof T['responses']>;
-          body: unknown;
-        } & (TClientOrServer extends 'client'
-          ? {
-              headers: Headers;
-            }
-          : {}));
+        ? never
+        : {
+            status: Exclude<TStatus, keyof T['responses']>;
+            body: unknown;
+          } & (TClientOrServer extends 'client'
+            ? {
+                headers: Headers;
+              }
+            : {}));
 
 export type ServerInferResponses<
   T extends AppRoute | AppRouter,
@@ -125,14 +122,14 @@ export type ServerInferResponses<
 > = T extends AppRoute
   ? Prettify<AppRouteResponses<T, TStatus, 'server', TStrictStatusCodes>>
   : T extends AppRouter
-  ? {
-      [TKey in keyof T]: ServerInferResponses<
-        T[TKey],
-        TStatus,
-        TStrictStatusCodes
-      >;
-    }
-  : never;
+    ? {
+        [TKey in keyof T]: ServerInferResponses<
+          T[TKey],
+          TStatus,
+          TStrictStatusCodes
+        >;
+      }
+    : never;
 
 export type ClientInferResponses<
   T extends AppRoute | AppRouter,
@@ -141,14 +138,14 @@ export type ClientInferResponses<
 > = T extends AppRoute
   ? Prettify<AppRouteResponses<T, TStatus, 'client', TStrictStatusCodes>>
   : T extends AppRouter
-  ? {
-      [TKey in keyof T]: ClientInferResponses<
-        T[TKey],
-        TStatus,
-        TStrictStatusCodes
-      >;
-    }
-  : never;
+    ? {
+        [TKey in keyof T]: ClientInferResponses<
+          T[TKey],
+          TStatus,
+          TStrictStatusCodes
+        >;
+      }
+    : never;
 
 export type ServerInferResponseBody<
   T extends AppRoute,
@@ -197,8 +194,8 @@ export type ServerInferRequest<
       >
     >
   : T extends AppRouter
-  ? { [TKey in keyof T]: ServerInferRequest<T[TKey], TServerHeaders> }
-  : never;
+    ? { [TKey in keyof T]: ServerInferRequest<T[TKey], TServerHeaders> }
+    : never;
 
 type ClientInferRequestBase<
   T extends AppRoute,
@@ -228,10 +225,10 @@ type ClientInferRequestBase<
         ? T['body'] extends null
           ? never
           : T['contentType'] extends 'multipart/form-data'
-          ? FormData | SchemaInputOrType<T['body']>
-          : T['contentType'] extends 'application/x-www-form-urlencoded'
-          ? string | SchemaInputOrType<T['body']>
-          : SchemaInputOrType<T['body']>
+            ? FormData | SchemaInputOrType<T['body']>
+            : T['contentType'] extends 'application/x-www-form-urlencoded'
+              ? string | SchemaInputOrType<T['body']>
+              : SchemaInputOrType<T['body']>
         : never;
       query: 'query' extends keyof T
         ? T['query'] extends null
@@ -273,8 +270,8 @@ export type ClientInferRequest<
 > = T extends AppRoute
   ? ClientInferRequestBase<T, TClientArgs>
   : T extends AppRouter
-  ? { [TKey in keyof T]: ClientInferRequest<T[TKey]> }
-  : never;
+    ? { [TKey in keyof T]: ClientInferRequest<T[TKey]> }
+    : never;
 
 export type PartialClientInferRequest<
   TRoute extends AppRoute,

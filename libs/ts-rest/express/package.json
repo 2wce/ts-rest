@@ -9,5 +9,13 @@
   "license": "MIT",
   "peerDependencies": {
     "express": "^4.0.0 || ^5.0.0"
-  }
+  },
+  "scripts": {
+    "build": "vp pack"
+  },
+  "devDependencies": {
+    "@ts-rest/core": "workspace:*"
+  },
+  "main": "../../../dist/libs/ts-rest/express/index.cjs.js",
+  "types": "./src/index.ts"
 }

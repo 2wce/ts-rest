@@ -1,5 +1,5 @@
 import { initClient } from '@ts-rest/core';
-import { User, usersApi } from '@ts-rest/example-microservice/util-users-api';
+import { User, usersApi } from '@ts-rest/example-microservice-util-users-api';
 
 const usersClient = initClient(usersApi, {
   baseHeaders: {},

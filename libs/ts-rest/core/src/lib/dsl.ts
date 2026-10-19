@@ -123,8 +123,8 @@ type RecursivelyProcessAppRouter<
   [K in keyof T]: T[K] extends AppRoute
     ? ValidatedHeaders<T[K], TOptions>
     : T[K] extends AppRouter
-    ? RecursivelyProcessAppRouter<T[K], TOptions>
-    : T[K];
+      ? RecursivelyProcessAppRouter<T[K], TOptions>
+      : T[K];
 };
 
 type RecursivelyApplyOptions<
@@ -134,8 +134,8 @@ type RecursivelyApplyOptions<
   [TRouterKey in keyof TRouter]: TRouter[TRouterKey] extends AppRoute
     ? Prettify<ApplyOptions<TRouter[TRouterKey], TOptions>>
     : TRouter[TRouterKey] extends AppRouter
-    ? RecursivelyApplyOptions<TRouter[TRouterKey], TOptions>
-    : TRouter[TRouterKey];
+      ? RecursivelyApplyOptions<TRouter[TRouterKey], TOptions>
+      : TRouter[TRouterKey];
 };
 
 /**
@@ -152,18 +152,18 @@ export type MergeHeadersWithLegacySupport<
 > = [A, B] extends [undefined, undefined]
   ? unknown
   : A extends undefined
-  ? B
-  : B extends undefined
-  ? A
-  : A extends ContractAnyTypeLegacy
-  ? B extends ContractAnyTypeLegacy
-    ? MergeHeadersLegacy<A, B>
-    : unknown
-  : A extends Record<string, ContractAnyType>
-  ? B extends Record<string, ContractAnyType>
-    ? MergeObjectBasedHeaders<A, B>
-    : unknown
-  : unknown;
+    ? B
+    : B extends undefined
+      ? A
+      : A extends ContractAnyTypeLegacy
+        ? B extends ContractAnyTypeLegacy
+          ? MergeHeadersLegacy<A, B>
+          : unknown
+        : A extends Record<string, ContractAnyType>
+          ? B extends Record<string, ContractAnyType>
+            ? MergeObjectBasedHeaders<A, B>
+            : unknown
+          : unknown;
 
 /**
  * pre standard schema we used to have headers typed as a zod object, now we type them as Record<string, ContractAnyType>
@@ -178,20 +178,20 @@ type MergeHeadersLegacy<A, B> = A extends z.AnyZodObject
         B['_def']['catchall']
       >
     : unknown extends B
-    ? A
-    : MixedZodError<A, B>
+      ? A
+      : MixedZodError<A, B>
   : unknown extends A
-  ? B
-  : B extends z.AnyZodObject
-  ? MixedZodError<A, B>
-  : unknown extends B
-  ? A
-  : Prettify<
-      Merge<
-        A extends ContractPlainType<infer APlain> ? APlain : A,
-        B extends ContractPlainType<infer BPlain> ? BPlain : B
-      >
-    >;
+    ? B
+    : B extends z.AnyZodObject
+      ? MixedZodError<A, B>
+      : unknown extends B
+        ? A
+        : Prettify<
+            Merge<
+              A extends ContractPlainType<infer APlain> ? APlain : A,
+              B extends ContractPlainType<infer BPlain> ? BPlain : B
+            >
+          >;
 
 type MixedZodError<A, B> = Opaque<{ a: A; b: B }, 'MixedZodError'>;
 
@@ -207,8 +207,8 @@ type MergeObjectBasedHeaders<
   [K in keyof T | keyof U]: K extends keyof U
     ? U[K]
     : K extends keyof T
-    ? T[K]
-    : never;
+      ? T[K]
+      : never;
 } extends infer M
   ? {
       [K in keyof M as M[K] extends null ? never : K]: M[K];
@@ -230,22 +230,22 @@ export type InferHeadersInput<
 > = unknown extends THeaders
   ? undefined
   : // if empty object
-  IsEmptyObject<THeaders> extends true
-  ? {}
-  : // if Zod
-  THeaders extends z.AnyZodObject
-  ? LowercaseKeys<z.input<THeaders>>
-  : // if modern object-based headers
-  THeaders extends Record<string, ContractAnyType>
-  ? LowercaseKeys<
-      UnknownOrUndefinedObjectValuesToOptionalKeys<{
-        [K in keyof THeaders]: THeaders[K] extends ContractAnyType
-          ? SchemaInputOrType<THeaders[K]>
-          : never;
-      }>
-    >
-  : // else
-    undefined;
+    IsEmptyObject<THeaders> extends true
+    ? {}
+    : // if Zod
+      THeaders extends z.AnyZodObject
+      ? LowercaseKeys<z.input<THeaders>>
+      : // if modern object-based headers
+        THeaders extends Record<string, ContractAnyType>
+        ? LowercaseKeys<
+            UnknownOrUndefinedObjectValuesToOptionalKeys<{
+              [K in keyof THeaders]: THeaders[K] extends ContractAnyType
+                ? SchemaInputOrType<THeaders[K]>
+                : never;
+            }>
+          >
+        : // else
+          undefined;
 
 /**
  * { foo: string | undefined } => { foo?: string | undefined }
@@ -254,17 +254,21 @@ export type InferHeadersInput<
  * @internal
  */
 export type UnknownOrUndefinedObjectValuesToOptionalKeys<T> = {
-  [K in keyof T as undefined extends T[K]
-    ? K
-    : unknown extends T[K]
-    ? K
-    : never]?: T[K];
+  [
+    K in keyof T as undefined extends T[K]
+      ? K
+      : unknown extends T[K]
+        ? K
+        : never
+  ]?: T[K];
 } & {
-  [K in keyof T as undefined extends T[K]
-    ? never
-    : unknown extends T[K]
-    ? never
-    : K]: T[K];
+  [
+    K in keyof T as undefined extends T[K]
+      ? never
+      : unknown extends T[K]
+        ? never
+        : K
+  ]: T[K];
 };
 
 /**
@@ -276,19 +280,19 @@ export type InferHeadersOutput<
 > = unknown extends THeaders
   ? '1'
   : // if empty object
-  IsEmptyObject<THeaders> extends true
-  ? {}
-  : // if Zod
-  THeaders extends z.AnyZodObject
-  ? LowercaseKeys<z.output<THeaders>>
-  : // if modern object-based headers
-  THeaders extends Record<string, ContractAnyType>
-  ? {
-      [K in keyof THeaders]: THeaders[K] extends ContractAnyType
-        ? LowercaseKeys<SchemaOutputOrType<THeaders[K]>>
-        : never;
-    }
-  : '3';
+    IsEmptyObject<THeaders> extends true
+    ? {}
+    : // if Zod
+      THeaders extends z.AnyZodObject
+      ? LowercaseKeys<z.output<THeaders>>
+      : // if modern object-based headers
+        THeaders extends Record<string, ContractAnyType>
+        ? {
+            [K in keyof THeaders]: THeaders[K] extends ContractAnyType
+              ? LowercaseKeys<SchemaOutputOrType<THeaders[K]>>
+              : never;
+          }
+        : '3';
 
 type ApplyOptions<
   TRoute extends AppRoute,
@@ -305,8 +309,8 @@ type ApplyOptions<
     strictStatusCodes: TRoute['strictStatusCodes'] extends boolean
       ? TRoute['strictStatusCodes']
       : TOptions['strictStatusCodes'] extends boolean
-      ? TOptions['strictStatusCodes']
-      : unknown;
+        ? TOptions['strictStatusCodes']
+        : unknown;
     responses: 'commonResponses' extends keyof TOptions
       ? Prettify<Merge<TOptions['commonResponses'], TRoute['responses']>>
       : TRoute['responses'];
@@ -350,8 +354,8 @@ export type FlattenAppRouter<T extends AppRouter | AppRoute> =
         [TKey in keyof T]: T[TKey] extends AppRoute
           ? T[TKey]
           : T[TKey] extends AppRouter
-          ? FlattenAppRouter<T[TKey]>
-          : never;
+            ? FlattenAppRouter<T[TKey]>
+            : never;
       }[keyof T];
 
 export type RouterOptions<TPrefix extends string = string> = {

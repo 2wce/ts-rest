@@ -1,4 +1,16 @@
 {
   "name": "example-next",
-  "version": "0.0.0"
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "build": "next build",
+    "dev": "next dev",
+    "start": "next start"
+  },
+  "devDependencies": {
+    "@ts-rest/core": "workspace:*",
+    "@ts-rest/next": "workspace:*",
+    "@ts-rest/react-query": "workspace:*",
+    "@ts-rest/example-contracts": "workspace:*"
+  }
 }

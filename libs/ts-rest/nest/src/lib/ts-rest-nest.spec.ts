@@ -14,7 +14,7 @@ import {
   Type,
 } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
-import * as supertest from 'supertest';
+import supertest from 'supertest';
 import { z } from 'zod';
 import { TsRestModule } from './ts-rest.module';
 import {
@@ -471,9 +471,9 @@ describe('ts-rest-nest', () => {
 
     @TsRest({ validateResponses: true })
     @Controller()
-    class NonJsonController
-      implements NestControllerInterface<typeof nonJsonContract>
-    {
+    class NonJsonController implements NestControllerInterface<
+      typeof nonJsonContract
+    > {
       @TsRest(nonJsonContract.postIndex)
       async postIndex(
         @TsRestRequest()

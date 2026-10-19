@@ -1,7 +1,8 @@
-import * as waitOn from 'wait-on';
+import { vi } from 'vitest';
+import waitOn from 'wait-on';
 import { spawn } from 'child_process';
 
-jest.setTimeout(60000);
+vi.setConfig({ testTimeout: 60000, hookTimeout: 60000 });
 
 describe('example-cloudflare-worker', () => {
   let serverProcess: any;

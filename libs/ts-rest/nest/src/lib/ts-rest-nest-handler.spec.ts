@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import {
   ContractAnyType,
   initContract,
@@ -32,7 +33,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
-import * as supertest from 'supertest';
+import supertest from 'supertest';
 import { TsRest } from './ts-rest.decorator';
 import { FileInterceptor } from '@nestjs/platform-express';
 import {
@@ -42,19 +43,18 @@ import {
 import { Response } from 'express';
 import { map, Observable } from 'rxjs';
 import { TsRestModule } from './ts-rest.module';
-import path = require('path');
+import * as path from 'node:path';
 import * as v from 'valibot';
 import { APP_FILTER } from '@nestjs/core';
 
-export type Equal<a, b> = (<T>() => T extends a ? 1 : 2) extends <
-  T,
->() => T extends b ? 1 : 2
-  ? true
-  : false;
+export type Equal<a, b> =
+  (<T>() => T extends a ? 1 : 2) extends <T>() => T extends b ? 1 : 2
+    ? true
+    : false;
 
 export type Expect<a extends true> = a;
 
-jest.setTimeout(10000);
+vi.setConfig({ testTimeout: 10000 });
 
 describe('ts-rest-nest-handler', () => {
   describe('multi-handler api', () => {
@@ -1526,7 +1526,7 @@ describe('ts-rest-nest-handler', () => {
         },
       });
 
-      const httpExceptionObserver = jest.fn();
+      const httpExceptionObserver = vi.fn();
 
       @Catch()
       class HttpExceptionFilter implements ExceptionFilter {

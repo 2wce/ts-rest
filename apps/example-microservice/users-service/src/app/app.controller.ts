@@ -1,5 +1,5 @@
 import { Controller, UploadedFile, UseInterceptors } from '@nestjs/common';
-import { usersApi } from '@ts-rest/example-microservice/util-users-api';
+import { usersApi } from '@ts-rest/example-microservice-util-users-api';
 import {
   TsRestRequest,
   nestControllerContract,

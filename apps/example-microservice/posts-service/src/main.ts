@@ -3,11 +3,11 @@
  * This is only a minimal backend to get started.
  */
 
-import * as express from 'express';
-import * as cors from 'cors';
-import * as multer from 'multer';
+import express from 'express';
+import cors from 'cors';
+import multer from 'multer';
 import * as swaggerUi from 'swagger-ui-express';
-import { postsApi } from '@ts-rest/example-microservice/util-posts-api';
+import { postsApi } from '@ts-rest/example-microservice-util-posts-api';
 import { createExpressEndpoints, initServer } from '@ts-rest/express';
 import { userAdapter } from './app/userAdapter';
 import { generateOpenApi } from '@ts-rest/open-api';

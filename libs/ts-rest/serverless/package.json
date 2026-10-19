@@ -25,5 +25,13 @@
     "next": {
       "optional": true
     }
-  }
+  },
+  "scripts": {
+    "build": "vp pack"
+  },
+  "devDependencies": {
+    "@ts-rest/core": "workspace:*"
+  },
+  "main": "../../../dist/libs/ts-rest/serverless/index.cjs.js",
+  "types": "./src/index.ts"
 }

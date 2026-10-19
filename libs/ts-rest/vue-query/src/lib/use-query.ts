@@ -20,25 +20,26 @@ export type DataReturnQuery<
   TAppRoute extends AppRoute,
   TClientArgs extends ClientArgs,
   TArgs = PartialClientInferRequest<TAppRoute, TClientArgs>,
-> = AreAllPropertiesOptional<TArgs> extends true
-  ? <TData = DataResponse<TAppRoute>>(
-      queryKey: QueryKey,
-      args?: (context: QueryFunctionContext<QueryKey>) => TArgs,
-      options?: UseQueryOptions<
-        DataResponse<TAppRoute>,
-        ErrorResponse<TAppRoute>,
-        TData
-      >,
-    ) => UseQueryReturnType<TData, ErrorResponse<TAppRoute>>
-  : <TData = DataResponse<TAppRoute>>(
-      queryKey: QueryKey,
-      args: (context: QueryFunctionContext<QueryKey>) => TArgs,
-      options?: UseQueryOptions<
-        DataResponse<TAppRoute>,
-        ErrorResponse<TAppRoute>,
-        TData
-      >,
-    ) => UseQueryReturnType<TData, ErrorResponse<TAppRoute>>;
+> =
+  AreAllPropertiesOptional<TArgs> extends true
+    ? <TData = DataResponse<TAppRoute>>(
+        queryKey: QueryKey,
+        args?: (context: QueryFunctionContext<QueryKey>) => TArgs,
+        options?: UseQueryOptions<
+          DataResponse<TAppRoute>,
+          ErrorResponse<TAppRoute>,
+          TData
+        >,
+      ) => UseQueryReturnType<TData, ErrorResponse<TAppRoute>>
+    : <TData = DataResponse<TAppRoute>>(
+        queryKey: QueryKey,
+        args: (context: QueryFunctionContext<QueryKey>) => TArgs,
+        options?: UseQueryOptions<
+          DataResponse<TAppRoute>,
+          ErrorResponse<TAppRoute>,
+          TData
+        >,
+      ) => UseQueryReturnType<TData, ErrorResponse<TAppRoute>>;
 
 export const getRouteUseQuery = <
   TAppRoute extends AppRoute,

@@ -1,49 +1,40 @@
 # Contributing
 
-Thanks for wanting to contribute to the project! Below is some guidance for helping you get started.
+Use Node 26.12.0 (see `.nvmrc`) and pnpm 12.14.0. Run `nvm use` and
+`pnpm install --frozen-lockfile`. Vite+ is pinned locally; no global CLI is needed.
 
-## Development workflow
+## Commands
 
-Use Node.js 26.12.0 (pinned in `.nvmrc`) and pnpm 9.4.0 for development.
-If you use nvm, install and select the pinned runtime before installing dependencies:
+- `pnpm build`: build published libraries with Vite+.
+- `pnpm test` / `pnpm test:watch`: library and example unit tests.
+- `pnpm typecheck`: compile strict and non-strict inference assertions.
+- `pnpm test:packages`: verify built ESM/CommonJS exports, declarations,
+  Nest injection metadata and React client boundaries. Run `pnpm build` first.
+- `pnpm lint`: Oxlint. Existing `any`/unused-variable checks remain warnings.
+- `pnpm format` / `pnpm format:check`: Oxfmt.
+- `pnpm build:examples`: build framework examples with native commands.
+- `pnpm --filter example-nest dev`: build, run and restart the Nest example.
+- `pnpm example-microservice:serve`: run microservice development tasks.
+- `make e2e`: isolated Nest, Express and validator compatibility fixtures.
 
-```bash
-git clone git@github.com:ts-rest/ts-rest.git
-cd ts-rest
-nvm install
-nvm use
-pnpm install
-```
+Vite+ caches package scripts through `vp run`. Workspace dependencies determine
+ordering. Build artifacts stay in `dist/libs/ts-rest` for Changesets releases.
 
-### Get it running
+## Host integration examples
 
-```bash
-# in project root directory
-pnpm nx run-many --target=serve --all --parallel=10
-```
-
-This will start all of the example apps and the documentation in one single place, helping you get started! Feel free to run a reduced subset of the apps if you want to.
-
-### Testing
-
-```bash
-pnpm nx affected:test
-```
-
-NX will run all of the tests for the affected apps, helping you save some time
-
-### Linting
-
-```bash
-pnpm nx affected:lint
-```
+Azure and Cloudflare host smoke tests are explicit: `pnpm test:hosts`.
+Azure Functions Core Tools remains installed by the root workspace as before.
+Build the Azure example before its host test. Serverless adapter unit tests run
+directly against the SDK request and context objects.
 
 ## Documentation
 
-The documentation is built using [Docusaurus](https://docusaurus.io/). You can find the source code in the `docs` directory.
+The current documentation is the Next.js project in `apps/docs`. Install its own
+pinned dependencies with `bun install` from `apps/docs`, then run `pnpm docs:start` or `pnpm docs:build`.
 
-```
-pnpm nx run docs:serve
-```
+## Releases
 
-Note, when you run this command the TypeDocs (in the `docs/api` directory) will be generated automatically!
+Changesets versions source manifests. The library build generates release
+manifests with existing public peer ranges and conditional exports. Release CI
+publishes the packages under `dist/libs/ts-rest`. Do not publish from a source
+package directory.

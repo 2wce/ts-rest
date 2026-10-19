@@ -43,8 +43,8 @@ import { TsRestRequestShape } from './ts-rest-request.decorator';
 import { TS_REST_MODULE_OPTIONS_TOKEN } from './ts-rest.module';
 import {
   evaluateTsRestOptions,
-  MaybeTsRestOptions,
-  TsRestOptions,
+  type MaybeTsRestOptions,
+  type TsRestOptions,
 } from './ts-rest-options';
 import { type ZodError } from 'zod';
 

@@ -1,5 +1,15 @@
 {
   "name": "web-app-solid",
   "version": "0.0.0",
-  "description": ""
+  "description": "",
+  "private": true,
+  "scripts": {
+    "build": "vp build",
+    "dev": "vp dev"
+  },
+  "devDependencies": {
+    "@ts-rest/core": "workspace:*",
+    "@ts-rest/example-microservice-util-posts-api": "workspace:*",
+    "@ts-rest/solid-query": "workspace:*"
+  }
 }

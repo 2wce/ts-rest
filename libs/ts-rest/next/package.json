@@ -9,5 +9,13 @@
   "license": "MIT",
   "peerDependencies": {
     "next": "^12.0.0 || ^13.0.0 || ^14.0.0"
-  }
+  },
+  "scripts": {
+    "build": "vp pack"
+  },
+  "devDependencies": {
+    "@ts-rest/core": "workspace:*"
+  },
+  "main": "../../../dist/libs/ts-rest/next/index.cjs.js",
+  "types": "./src/index.ts"
 }

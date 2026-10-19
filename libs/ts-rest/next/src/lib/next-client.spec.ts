@@ -1,3 +1,4 @@
+import { vi, type Mock } from 'vitest';
 import {
   FetchOptions,
   initContract,
@@ -50,7 +51,7 @@ describe('next-client', () => {
       baseHeaders: {},
       baseUrl: 'http://localhost:5002',
     });
-    global.fetch = jest.fn(() =>
+    global.fetch = vi.fn(() =>
       Promise.resolve({
         json: () =>
           Promise.resolve({
@@ -84,6 +85,6 @@ describe('next-client', () => {
         tags: ['user1'],
       },
     });
-    (global.fetch as jest.Mock).mockClear();
+    (global.fetch as Mock).mockClear();
   });
 });

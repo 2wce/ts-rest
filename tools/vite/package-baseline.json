@@ -1,0 +1,202 @@
+{
+  "next": {
+    "name": "@ts-rest/next",
+    "exports": {
+      "./package.json": "./package.json",
+      ".": {
+        "import": "./index.esm.mjs",
+        "require": "./index.cjs.js",
+        "types": "./index.cjs.d.ts"
+      }
+    },
+    "peerDependencies": {
+      "@ts-rest/core": "~3.52.0",
+      "next": "^12.0.0 || ^13.0.0 || ^14.0.0"
+    }
+  },
+  "vue-query": {
+    "name": "@ts-rest/vue-query",
+    "exports": {
+      "./package.json": "./package.json",
+      ".": {
+        "import": "./index.esm.mjs",
+        "require": "./index.cjs.js",
+        "types": "./index.cjs.d.ts"
+      }
+    },
+    "peerDependencies": {
+      "@tanstack/vue-query": "^4.0.0",
+      "@ts-rest/core": "~3.52.0"
+    }
+  },
+  "react-query": {
+    "name": "@ts-rest/react-query",
+    "exports": {
+      "./package.json": "./package.json",
+      ".": {
+        "import": "./index.esm.mjs",
+        "require": "./index.cjs.js",
+        "types": "./index.cjs.d.ts"
+      },
+      "./tanstack": {
+        "import": "./tanstack.esm.mjs",
+        "require": "./tanstack.cjs.js",
+        "types": "./tanstack.cjs.d.ts"
+      },
+      "./v5": {
+        "import": "./v5.esm.mjs",
+        "require": "./v5.cjs.js",
+        "types": "./v5.cjs.d.ts"
+      }
+    },
+    "peerDependencies": {
+      "@tanstack/react-query": "^4.0.0 || ^5.0.0",
+      "@ts-rest/core": "~3.52.0",
+      "react": "^16.8.0 || ^17.0.0 || ^18.0.0"
+    }
+  },
+  "core": {
+    "name": "@ts-rest/core",
+    "exports": {
+      "./package.json": "./package.json",
+      ".": {
+        "import": "./index.esm.mjs",
+        "require": "./index.cjs.js",
+        "types": "./index.cjs.d.ts"
+      }
+    },
+    "peerDependencies": {
+      "@types/node": "^18.18.7 || >=20.8.4"
+    },
+    "peerDependenciesMeta": {
+      "@types/node": {
+        "optional": true
+      }
+    }
+  },
+  "express": {
+    "name": "@ts-rest/express",
+    "exports": {
+      "./package.json": "./package.json",
+      ".": {
+        "import": "./index.esm.mjs",
+        "require": "./index.cjs.js",
+        "types": "./index.cjs.d.ts"
+      }
+    },
+    "peerDependencies": {
+      "@ts-rest/core": "~3.52.0",
+      "express": "^4.0.0 || ^5.0.0"
+    }
+  },
+  "serverless": {
+    "name": "@ts-rest/serverless",
+    "exports": {
+      "./package.json": "./package.json",
+      ".": {
+        "import": "./index.esm.mjs",
+        "require": "./index.cjs.js",
+        "types": "./index.cjs.d.ts"
+      },
+      "./fetch": {
+        "import": "./fetch.esm.mjs",
+        "require": "./fetch.cjs.js",
+        "types": "./fetch.cjs.d.ts"
+      },
+      "./aws": {
+        "import": "./aws.esm.mjs",
+        "require": "./aws.cjs.js",
+        "types": "./aws.cjs.d.ts"
+      },
+      "./next": {
+        "import": "./next.esm.mjs",
+        "require": "./next.cjs.js",
+        "types": "./next.cjs.d.ts"
+      },
+      "./azure": {
+        "import": "./azure.esm.mjs",
+        "require": "./azure.cjs.js",
+        "types": "./azure.cjs.d.ts"
+      }
+    },
+    "peerDependencies": {
+      "@azure/functions": "^4.0.0",
+      "@ts-rest/core": "~3.52.0",
+      "@types/aws-lambda": "^8.10.115",
+      "next": "^12.0.0 || ^13.0.0 || ^14.0.0"
+    },
+    "peerDependenciesMeta": {
+      "@azure/functions": {
+        "optional": true
+      },
+      "@types/aws-lambda": {
+        "optional": true
+      },
+      "next": {
+        "optional": true
+      }
+    }
+  },
+  "solid-query": {
+    "name": "@ts-rest/solid-query",
+    "exports": {
+      "./package.json": "./package.json",
+      ".": {
+        "import": "./index.esm.mjs",
+        "require": "./index.cjs.js",
+        "types": "./index.cjs.d.ts"
+      }
+    },
+    "peerDependencies": {
+      "@tanstack/solid-query": "^4.0.0",
+      "@ts-rest/core": "~3.52.0"
+    }
+  },
+  "open-api": {
+    "name": "@ts-rest/open-api",
+    "exports": {
+      "./package.json": "./package.json",
+      ".": {
+        "import": "./index.esm.mjs",
+        "require": "./index.cjs.js",
+        "types": "./index.cjs.d.ts"
+      }
+    },
+    "peerDependencies": {
+      "@ts-rest/core": "~3.52.0",
+      "zod": "^3.22.3"
+    }
+  },
+  "nest": {
+    "name": "@ts-rest/nest",
+    "exports": {
+      "./package.json": "./package.json",
+      ".": {
+        "import": "./index.esm.mjs",
+        "require": "./index.cjs.js",
+        "types": "./index.cjs.d.ts"
+      }
+    },
+    "peerDependencies": {
+      "@nestjs/common": "^9.0.0 || ^10.0.0 || ^11.0.0",
+      "@nestjs/core": "^9.0.0 || ^10.0.0 || ^11.0.0",
+      "@ts-rest/core": "~3.52.0",
+      "rxjs": "^7.1.0"
+    }
+  },
+  "fastify": {
+    "name": "@ts-rest/fastify",
+    "exports": {
+      "./package.json": "./package.json",
+      ".": {
+        "import": "./index.esm.mjs",
+        "require": "./index.cjs.js",
+        "types": "./index.cjs.d.ts"
+      }
+    },
+    "peerDependencies": {
+      "@ts-rest/core": "~3.52.0",
+      "fastify": "^4.0.0"
+    }
+  }
+}

@@ -13,5 +13,13 @@
   },
   "peerDependencies": {
     "zod": "^3.22.3"
-  }
+  },
+  "scripts": {
+    "build": "vp pack"
+  },
+  "devDependencies": {
+    "@ts-rest/core": "workspace:*"
+  },
+  "main": "../../../dist/libs/ts-rest/open-api/index.cjs.js",
+  "types": "./src/index.ts"
 }

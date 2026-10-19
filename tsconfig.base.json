@@ -20,10 +20,10 @@
       "@ts-rest/core": ["libs/ts-rest/core/src/index.ts"],
       "@ts-rest/example-contracts": ["libs/example-contracts/src/index.ts"],
       "@ts-rest/example-express": ["apps/example-express/src/index.ts"],
-      "@ts-rest/example-microservice/util-posts-api": [
+      "@ts-rest/example-microservice-util-posts-api": [
         "libs/example-microservice/util-posts-api/src/index.ts"
       ],
-      "@ts-rest/example-microservice/util-users-api": [
+      "@ts-rest/example-microservice-util-users-api": [
         "libs/example-microservice/util-users-api/src/index.ts"
       ],
       "@ts-rest/example-nest": ["libs/example-nest/src/index.ts"],
@@ -45,7 +45,9 @@
       "@ts-rest/solid-query": ["libs/ts-rest/solid-query/src/index.ts"],
       "@ts-rest/ts-rest/utils": ["libs/ts-rest/utils/src/index.ts"],
       "@ts-rest/vue-query": ["libs/ts-rest/vue-query/src/index.ts"]
-    }
+    },
+    "esModuleInterop": true,
+    "jsx": "react-jsx"
   },
   "exclude": ["node_modules", "tmp"]
 }

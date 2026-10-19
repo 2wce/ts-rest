@@ -22,5 +22,13 @@
   "license": "MIT",
   "peerDependencies": {
     "@tanstack/vue-query": "^4.0.0"
-  }
+  },
+  "scripts": {
+    "build": "vp pack"
+  },
+  "devDependencies": {
+    "@ts-rest/core": "workspace:*"
+  },
+  "main": "../../../dist/libs/ts-rest/vue-query/index.cjs.js",
+  "types": "./src/index.ts"
 }

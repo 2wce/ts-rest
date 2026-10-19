@@ -38,11 +38,11 @@ export type TsRestReactQueryHooksContainer<
     ? T[TKey] extends AppRouteQuery
       ? QueryHooks<T[TKey], TClientArgs>
       : T[TKey] extends AppRouteMutation | AppRouteDeleteNoBody
-      ? MutationHooks<T[TKey], TClientArgs>
-      : never
+        ? MutationHooks<T[TKey], TClientArgs>
+        : never
     : T[TKey] extends AppRouter
-    ? TsRestReactQueryHooksContainer<T[TKey], TClientArgs>
-    : never;
+      ? TsRestReactQueryHooksContainer<T[TKey], TClientArgs>
+      : never;
 };
 
 export type TsRestReactQueryClientFunctionsContainer<
@@ -54,8 +54,8 @@ export type TsRestReactQueryClientFunctionsContainer<
       ? TsRestQueryClientFunctions<T[TKey], TClientArgs>
       : never
     : T[TKey] extends AppRouter
-    ? TsRestReactQueryClientFunctionsContainer<T[TKey], TClientArgs>
-    : never;
+      ? TsRestReactQueryClientFunctionsContainer<T[TKey], TClientArgs>
+      : never;
 };
 
 export type TsRestReactQueryClient<
@@ -67,6 +67,7 @@ export type ClientOptions = ClientArgs;
 
 export type InferClientArgs<
   TClient extends TsRestReactQueryHooksContainer<any, any>,
-> = TClient extends TsRestReactQueryHooksContainer<any, infer TClientArgs>
-  ? TClientArgs
-  : never;
+> =
+  TClient extends TsRestReactQueryHooksContainer<any, infer TClientArgs>
+    ? TClientArgs
+    : never;

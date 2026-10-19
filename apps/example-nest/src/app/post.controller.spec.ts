@@ -1,7 +1,8 @@
+import { vi } from 'vitest';
 import { PostService } from './post.service';
 import { Test } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
-import * as request from 'supertest';
+import request from 'supertest';
 import { PostController } from './post.controller';
 
 describe('PostController', () => {
@@ -15,8 +16,8 @@ describe('PostController', () => {
         {
           provide: PostService,
           useValue: {
-            getPosts: jest.fn(),
-            createPost: jest.fn(),
+            getPosts: vi.fn(),
+            createPost: vi.fn(),
           },
         },
       ],
@@ -30,7 +31,7 @@ describe('PostController', () => {
 
   describe('GET /posts', () => {
     it('should transform skip and take into numbers', async () => {
-      jest.spyOn(postService, 'getPosts').mockResolvedValue({
+      vi.spyOn(postService, 'getPosts').mockResolvedValue({
         posts: [],
         totalPosts: 0,
       });
@@ -49,7 +50,7 @@ describe('PostController', () => {
     });
 
     it('should fetch pagination header', async () => {
-      jest.spyOn(postService, 'getPosts').mockResolvedValue({
+      vi.spyOn(postService, 'getPosts').mockResolvedValue({
         posts: [],
         totalPosts: 0,
       });
@@ -115,9 +116,9 @@ describe('PostController', () => {
     });
 
     it('should transform body correctly', async () => {
-      jest
-        .spyOn(postService, 'createPost')
-        .mockImplementationOnce(async (post) => post as any);
+      vi.spyOn(postService, 'createPost').mockImplementationOnce(
+        async (post) => post as any,
+      );
 
       return request(app.getHttpServer())
         .post('/posts')

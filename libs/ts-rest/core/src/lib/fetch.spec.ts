@@ -1,13 +1,14 @@
+import { vi } from 'vitest';
 import * as clientModule from './client';
 import { initContract } from './dsl';
 const c = initContract();
 describe('fetchApi', () => {
   afterEach(() => {
-    jest.restoreAllMocks();
+    vi.restoreAllMocks();
   });
   it('should not include content-type application/json if body is undefined', async () => {
-    const tsRestApiStub = jest
-      .spyOn(clientModule, 'tsRestFetchApi')
+    const tsRestApiStub = vi
+      .fn<typeof clientModule.tsRestFetchApi>()
       .mockResolvedValue({
         status: 200,
         body: { message: 'never gonna give you up, never gonna let you down' },
@@ -19,6 +20,7 @@ describe('fetchApi', () => {
       path: '/rick-astley',
       clientArgs: {
         baseUrl: 'https://api.com',
+        api: tsRestApiStub,
         baseHeaders: {},
       },
       route: {
@@ -53,8 +55,8 @@ describe('fetchApi', () => {
   });
 
   it('should include content-type application/json if body is defined', async () => {
-    const tsRestApiStub = jest
-      .spyOn(clientModule, 'tsRestFetchApi')
+    const tsRestApiStub = vi
+      .fn<typeof clientModule.tsRestFetchApi>()
       .mockResolvedValue({
         status: 200,
         body: { message: 'never gonna give you up, never gonna let you down' },
@@ -68,6 +70,7 @@ describe('fetchApi', () => {
       path: '/rick-astley',
       clientArgs: {
         baseUrl: 'https://api.com',
+        api: tsRestApiStub,
         baseHeaders: {},
       },
       route: {

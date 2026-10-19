@@ -1,0 +1,17 @@
+{
+  "name": "example-microservice-posts-service",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "build": "vp pack",
+    "dev": "vp pack --watch --on-success \"node ../../../dist/apps/example-microservice/posts-service/main.cjs\"",
+    "start": "node ../../../dist/apps/example-microservice/posts-service/main.cjs"
+  },
+  "devDependencies": {
+    "@ts-rest/core": "workspace:*",
+    "@ts-rest/example-contracts": "workspace:*",
+    "@ts-rest/express": "workspace:*",
+    "@ts-rest/example-microservice-util-posts-api": "workspace:*",
+    "@ts-rest/example-microservice-util-users-api": "workspace:*"
+  }
+}

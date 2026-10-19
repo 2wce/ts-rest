@@ -9,5 +9,13 @@
   "license": "MIT",
   "peerDependencies": {
     "fastify": "^4.0.0"
-  }
+  },
+  "scripts": {
+    "build": "vp pack"
+  },
+  "devDependencies": {
+    "@ts-rest/core": "workspace:*"
+  },
+  "main": "../../../dist/libs/ts-rest/fastify/index.cjs.js",
+  "types": "./src/index.ts"
 }

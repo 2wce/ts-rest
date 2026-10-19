@@ -125,14 +125,14 @@ const wrapHooks = <
     | typeof tanstackQueryHooks.query
     | typeof tanstackQueryHooks.queries
     | typeof tanstackQueryHooks.prefetch,
-  H extends T extends
+  H extends (T extends
     | typeof tanstackQueryHooks.query
     | typeof tanstackQueryHooks.prefetch
     ? (options: QueryOptions<any, any>, queryClient?: QueryClient) => any
     : (
         options: { queries: QueryOptions<any, any>[] },
         queryClient?: QueryClient,
-      ) => any,
+      ) => any),
 >(
   hooks: T,
   getWrapper: (hook: H) => H,

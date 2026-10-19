@@ -61,8 +61,8 @@ export type RouterImplementation<T extends AppRouter> = {
   [TKey in keyof T]: T[TKey] extends AppRouter
     ? RouterImplementation<T[TKey]>
     : T[TKey] extends AppRoute
-    ? AppRouteImplementation<T[TKey]>
-    : never;
+      ? AppRouteImplementation<T[TKey]>
+      : never;
 };
 
 type AppRouteWithImplementation<T extends AppRouteQuery> = T &
@@ -197,8 +197,8 @@ export const createNextRoute = <T extends AppRouter | AppRoute>(
   implementation: T extends AppRouter
     ? RouterImplementation<T>
     : T extends AppRoute
-    ? AppRouteImplementation<T>
-    : never,
+      ? AppRouteImplementation<T>
+      : never,
 ) => implementation;
 
 /**

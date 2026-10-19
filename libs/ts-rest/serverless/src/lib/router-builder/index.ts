@@ -20,8 +20,8 @@ export class RouterBuilder<
   TContract extends AppRouter,
   TPlatformContext,
   TRequestExtensionCumulative,
-  TRemainingRoutes extends
-    ContractEndpointPaths<TContract> = ContractEndpointPaths<TContract>,
+  TRemainingRoutes extends ContractEndpointPaths<TContract> =
+    ContractEndpointPaths<TContract>,
 > {
   protected _requestMiddleware: Array<
     RequestHandler<
@@ -344,11 +344,10 @@ export class RouterBuilder<
           TRequestExtensionCumulative
         >
       | CompleteRouter<TSubContract, TPlatformContext, any>,
-    TSubRouterPaths = `${TSubRouterPath}.${ContractEndpointPaths<TSubContract>}`,
-    TNewRemainingRoutes extends Exclude<
-      TRemainingRoutes,
-      TSubRouterPaths
-    > = Exclude<TRemainingRoutes, TSubRouterPaths>,
+    TSubRouterPaths =
+      `${TSubRouterPath}.${ContractEndpointPaths<TSubContract>}`,
+    TNewRemainingRoutes extends Exclude<TRemainingRoutes, TSubRouterPaths> =
+      Exclude<TRemainingRoutes, TSubRouterPaths>,
   >(
     subRouterPath: TSubRouterPath,
     subRouter: TSubRouterImplementation,

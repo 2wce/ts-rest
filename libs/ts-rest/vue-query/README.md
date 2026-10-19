@@ -8,4 +8,4 @@ Run `nx build ts-rest-vue-query` to build the library.
 
 ## Running unit tests
 
-Run `nx test ts-rest-vue-query` to execute the unit tests via [Jest](https://jestjs.io).
+Run `pnpm test` from the workspace root to execute the unit tests with Vite+.

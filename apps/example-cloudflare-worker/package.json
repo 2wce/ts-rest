@@ -1,0 +1,13 @@
+{
+  "name": "example-cloudflare-worker",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "build": "wrangler deploy --dry-run --outdir ../../dist/apps/example-cloudflare-worker",
+    "dev": "wrangler dev src/index.ts"
+  },
+  "devDependencies": {
+    "@ts-rest/serverless": "workspace:*",
+    "@ts-rest/example-contracts": "workspace:*"
+  }
+}

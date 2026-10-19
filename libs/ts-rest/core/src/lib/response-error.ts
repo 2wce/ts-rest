@@ -40,8 +40,8 @@ type FlattenAppRouter<T extends AppRouter | AppRoute> = T extends AppRoute
       [TKey in keyof T]: T[TKey] extends AppRoute
         ? T[TKey]
         : T[TKey] extends AppRouter
-        ? FlattenAppRouter<T[TKey]>
-        : never;
+          ? FlattenAppRouter<T[TKey]>
+          : never;
     }[keyof T];
 
 type AppRouterCommonResponses<T extends AppRouter> = CommonAndEqual<

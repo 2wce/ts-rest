@@ -166,8 +166,8 @@ export type TsRestReactQueryClient<
   [TKey in keyof T]: T[TKey] extends AppRoute
     ? Without<AppRouteFunctions<T[TKey], TClientArgs>, never>
     : T[TKey] extends AppRouter
-    ? TsRestReactQueryClient<T[TKey], TClientArgs>
-    : never;
+      ? TsRestReactQueryClient<T[TKey], TClientArgs>
+      : never;
 };
 
 const ClientParameters = Symbol('ClientParameters');
@@ -337,8 +337,8 @@ export type UseTsRestQueryClient<
   [TKey in keyof T]: T[TKey] extends AppRoute
     ? Without<AppRouteFunctionsWithQueryClient<T[TKey], TClientArgs>, never>
     : T[TKey] extends AppRouter
-    ? UseTsRestQueryClient<T[TKey], TClientArgs>
-    : never;
+      ? UseTsRestQueryClient<T[TKey], TClientArgs>
+      : never;
 };
 
 export const useTsRestQueryClient = <

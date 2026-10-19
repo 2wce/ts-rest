@@ -1,11 +1,12 @@
+import { vi, type Mock } from 'vitest';
 import { createMocks } from 'node-mocks-http';
 
 import tsRestEndpoint from '../pages/api/[...ts-rest]';
 import { postsService } from '../server/posts';
 
-jest.mock('../server/posts');
+vi.mock('../server/posts');
 
-const getPosts = postsService.getPosts as jest.Mock;
+const getPosts = postsService.getPosts as Mock;
 
 describe('/posts', () => {
   beforeEach(() => {

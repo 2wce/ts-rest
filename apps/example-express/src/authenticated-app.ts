@@ -1,16 +1,16 @@
-import * as express from 'express';
+import express from 'express';
 import { apiBlog } from '@ts-rest/example-contracts';
 import {
   createExpressEndpoints,
   initServer,
   TsRestRequest,
 } from '@ts-rest/express';
-import * as bodyParser from 'body-parser';
+import bodyParser from 'body-parser';
 import { mockOwnedResource, mockPostFixtureFactory } from './fixtures';
 import { Strategy, ExtractJwt, VerifiedCallback } from 'passport-jwt';
 import * as passport from 'passport';
 import * as _ from 'lodash';
-import * as jwt from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 import { NextFunction, Request, Response } from 'express';
 
 declare global {

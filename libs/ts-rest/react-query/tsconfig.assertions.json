@@ -1,0 +1,7 @@
+{
+  "extends": "../../../tools/vite/tsconfig.assertions.json",
+  "compilerOptions": {
+    "types": ["vitest/globals", "node", "@testing-library/jest-dom/vitest"]
+  },
+  "include": ["src/**/*.spec.ts", "src/**/*.spec.tsx"]
+}

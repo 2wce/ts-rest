@@ -2,9 +2,10 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "../../../dist/out-tsc",
-    "module": "commonjs",
-    "types": ["jest", "node"],
-    "resolveJsonModule": true
+    "module": "esnext",
+    "types": ["vitest/globals", "node"],
+    "resolveJsonModule": true,
+    "skipLibCheck": true
   },
   "include": ["vite.config.ts", "**/*.test.ts", "**/*.spec.ts", "**/*.d.ts"]
 }

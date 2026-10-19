@@ -1,8 +1,9 @@
+import { vi } from 'vitest';
 import { spawn } from 'child_process';
-import * as waitOn from 'wait-on';
+import waitOn from 'wait-on';
 import * as path from 'path';
 
-jest.setTimeout(30000);
+vi.setConfig({ testTimeout: 30000 });
 
 describe('example-azure-function', () => {
   let serverProcess: any;

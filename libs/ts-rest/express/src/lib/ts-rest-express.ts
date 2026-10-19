@@ -41,8 +41,8 @@ export const initServer = () => {
     ) => router,
     route: <
       T extends AppRoute,
-      TRoute extends
-        AppRouteImplementationOrOptions<T> = AppRouteImplementationOrOptions<T>,
+      TRoute extends AppRouteImplementationOrOptions<T> =
+        AppRouteImplementationOrOptions<T>,
     >(
       contract: T,
       route: TRoute,

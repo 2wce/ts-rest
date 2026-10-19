@@ -1,5 +1,16 @@
 {
   "name": "example-azure-function",
   "version": "0.0.0",
-  "main": "../../dist/apps/example-azure-function/*.js"
+  "main": "../../dist/apps/example-azure-function/*.cjs",
+  "private": true,
+  "scripts": {
+    "build": "vp pack",
+    "dev": "vp pack --watch --on-success \"func start --javascript\"",
+    "start": "func start --javascript"
+  },
+  "devDependencies": {
+    "@ts-rest/core": "workspace:*",
+    "@ts-rest/example-contracts": "workspace:*",
+    "@ts-rest/serverless": "workspace:*"
+  }
 }

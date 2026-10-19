@@ -1,3 +1,26 @@
 packages:
   - 'apps/**/*'
   - 'libs/**/*'
+  - '!apps/docs'
+
+overrides:
+  vite: npm:@voidzero-dev/vite-plus-core@1.3.0
+  vitest: 5.0.5
+  itty-router: 5.0.18
+  # yauzl 2 exits during ZIP extraction on Node 26; 3 preserves the async reads.
+  'extract-zip>yauzl': 3.4.0
+  '@anatine/zod-openapi@^1.12.0': 1.12.0
+
+allowBuilds:
+  '@prisma/client': true
+  '@prisma/engines': true
+  prisma: true
+  azure-functions-core-tools: true
+  esbuild: true
+  '@nestjs/core': true
+  '@swc/core': true
+  sharp: true
+  vue-demi: true
+  workerd: true
+  '@scarf/scarf': false
+  core-js: false

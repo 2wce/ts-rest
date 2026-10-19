@@ -2,5 +2,14 @@
   "name": "example-microservice-web-app",
   "version": "0.0.1",
   "main": "./dist/index.js",
-  "private": true
+  "private": true,
+  "scripts": {
+    "build": "vp build",
+    "dev": "vp dev"
+  },
+  "devDependencies": {
+    "@ts-rest/core": "workspace:*",
+    "@ts-rest/example-microservice-util-posts-api": "workspace:*",
+    "@ts-rest/react-query": "workspace:*"
+  }
 }

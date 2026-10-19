@@ -1,4 +1,5 @@
-import * as fetchMock from 'fetch-mock-jest';
+import { vi, type Mock } from 'vitest';
+import fetchMock from '@fetch-mock/vitest';
 import {
   FetchOptions,
   HTTPStatusCode,
@@ -348,17 +349,18 @@ type TestClientStrictHealthResponse = Expect<
 describe('client', () => {
   beforeEach(() => {
     fetchMock.mockReset();
+    fetchMock.mockGlobal();
   });
 
   describe('get', () => {
     it('w/ no parameters', async () => {
       const value = { key: 'value' };
-      fetchMock.getOnce(
-        {
-          url: 'https://api.com/posts',
-        },
-        { body: value, status: 200 },
-      );
+      fetchMock.route({
+        url: 'https://api.com/posts',
+        response: { body: value, status: 200 },
+        method: 'GET',
+        repeat: 1,
+      });
 
       const result = await client.posts.getPosts({});
 
@@ -370,12 +372,12 @@ describe('client', () => {
 
     it('w/ no query parameters', async () => {
       const value = { key: 'value' };
-      fetchMock.getOnce(
-        {
-          url: 'https://api.com/posts',
-        },
-        { body: value, status: 200 },
-      );
+      fetchMock.route({
+        url: 'https://api.com/posts',
+        response: { body: value, status: 200 },
+        method: 'GET',
+        repeat: 1,
+      });
 
       const result = await client.posts.getPosts({ query: {} });
 
@@ -387,12 +389,12 @@ describe('client', () => {
 
     it('w/ no parameters (not provided)', async () => {
       const value = { key: 'value' };
-      fetchMock.getOnce(
-        {
-          url: 'https://api.com/posts',
-        },
-        { body: value, status: 200 },
-      );
+      fetchMock.route({
+        url: 'https://api.com/posts',
+        response: { body: value, status: 200 },
+        method: 'GET',
+        repeat: 1,
+      });
 
       const result = await client.posts.getPosts();
 
@@ -404,12 +406,12 @@ describe('client', () => {
 
     it('w/ query parameters', async () => {
       const value = { key: 'value' };
-      fetchMock.getOnce(
-        {
-          url: 'https://api.com/posts?take=10',
-        },
-        { body: value, status: 200 },
-      );
+      fetchMock.route({
+        url: 'https://api.com/posts?take=10',
+        response: { body: value, status: 200 },
+        method: 'GET',
+        repeat: 1,
+      });
 
       const result = await client.posts.getPosts({ query: { take: 10 } });
 
@@ -440,14 +442,14 @@ describe('client', () => {
       );
 
       const value = { key: 'value' };
-      fetchMock.getOnce(
-        {
-          url: `https://api.com/posts?take=10&order=asc&published=true&filter=${encodeURIComponent(
-            '{"title":"test"}',
-          )}`,
-        },
-        { body: value, status: 200 },
-      );
+      fetchMock.route({
+        url: `https://api.com/posts?take=10&order=asc&published=true&filter=${encodeURIComponent(
+          '{"title":"test"}',
+        )}`,
+        response: { body: value, status: 200 },
+        method: 'GET',
+        repeat: 1,
+      });
 
       const result = await client.getPosts({
         query: {
@@ -466,12 +468,12 @@ describe('client', () => {
 
     it('w/ undefined query parameters', async () => {
       const value = { key: 'value' };
-      fetchMock.getOnce(
-        {
-          url: 'https://api.com/posts?take=10',
-        },
-        { body: value, status: 200 },
-      );
+      fetchMock.route({
+        url: 'https://api.com/posts?take=10',
+        response: { body: value, status: 200 },
+        method: 'GET',
+        repeat: 1,
+      });
 
       const result = await client.posts.getPosts({
         query: { take: 10, skip: undefined },
@@ -484,12 +486,12 @@ describe('client', () => {
 
     it('w/ sub path', async () => {
       const value = { key: 'value' };
-      fetchMock.getOnce(
-        {
-          url: 'https://api.com/posts/1',
-        },
-        { body: value, status: 200 },
-      );
+      fetchMock.route({
+        url: 'https://api.com/posts/1',
+        response: { body: value, status: 200 },
+        method: 'GET',
+        repeat: 1,
+      });
 
       const result = await client.posts.getPost({ params: { id: '1' } });
 
@@ -501,12 +503,12 @@ describe('client', () => {
     describe('coerced params', () => {
       it('w/ sub path with non zero', async () => {
         const value = { key: 'value' };
-        fetchMock.getOnce(
-          {
-            url: 'https://api.com/posts/1',
-          },
-          { body: value, status: 200 },
-        );
+        fetchMock.route({
+          url: 'https://api.com/posts/1',
+          response: { body: value, status: 200 },
+          method: 'GET',
+          repeat: 1,
+        });
 
         const result = await client.posts.getPostWithCoercedParams({
           params: { id: 1 },
@@ -519,12 +521,12 @@ describe('client', () => {
 
       it('w/ sub path with zero', async () => {
         const value = { key: 'value' };
-        fetchMock.getOnce(
-          {
-            url: 'https://api.com/posts/0',
-          },
-          { body: value, status: 200 },
-        );
+        fetchMock.route({
+          url: 'https://api.com/posts/0',
+          response: { body: value, status: 200 },
+          method: 'GET',
+          repeat: 1,
+        });
 
         const result = await client.posts.getPostWithCoercedParams({
           params: { id: 0 },
@@ -537,12 +539,12 @@ describe('client', () => {
 
       it('w/ sub path with undefined', async () => {
         const value = { key: 'value' };
-        fetchMock.getOnce(
-          {
-            url: 'https://api.com/posts/undefined',
-          },
-          { body: value, status: 200 },
-        );
+        fetchMock.route({
+          url: 'https://api.com/posts/undefined',
+          response: { body: value, status: 200 },
+          method: 'GET',
+          repeat: 1,
+        });
 
         const result = await client.posts.getPostWithCoercedParams({
           params: { id: undefined },
@@ -555,18 +557,18 @@ describe('client', () => {
     });
 
     it('w/ a non json response (string, text/plain)', async () => {
-      fetchMock.getOnce(
-        {
-          url: 'https://api.com/posts',
-        },
-        {
+      fetchMock.route({
+        url: 'https://api.com/posts',
+        response: {
           headers: {
             'Content-Type': 'text/plain',
           },
           body: 'string',
           status: 200,
         },
-      );
+        method: 'GET',
+        repeat: 1,
+      });
 
       const result = await client.posts.getPosts({});
 
@@ -578,18 +580,18 @@ describe('client', () => {
   });
 
   it('w/ a non json response (string, text/html)', async () => {
-    fetchMock.getOnce(
-      {
-        url: 'https://api.com/posts',
-      },
-      {
+    fetchMock.route({
+      url: 'https://api.com/posts',
+      response: {
         headers: {
           'Content-Type': 'text/html',
         },
         body: 'string',
         status: 200,
       },
-    );
+      method: 'GET',
+      repeat: 1,
+    });
 
     const result = await client.posts.getPosts({});
 
@@ -602,15 +604,15 @@ describe('client', () => {
   describe('post', () => {
     it('w/ body', async () => {
       const value = { key: 'value' };
-      fetchMock.postOnce(
-        {
-          url: 'https://api.com/posts',
-          headers: {
-            'Content-Type': 'application/json',
-          },
+      fetchMock.route({
+        url: 'https://api.com/posts',
+        headers: {
+          'Content-Type': 'application/json',
         },
-        { body: value, status: 200 },
-      );
+        response: { body: value, status: 200 },
+        method: 'POST',
+        repeat: 1,
+      });
 
       const result = await client.posts.createPost({
         body: { title: 'title', content: 'content', authorId: 'authorId' },
@@ -623,16 +625,16 @@ describe('client', () => {
     });
 
     it('w/ query params', async () => {
-      fetchMock.postOnce(
-        {
-          url: 'https://api.com/posts?test=test',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: {},
+      fetchMock.route({
+        url: 'https://api.com/posts?test=test',
+        headers: {
+          'Content-Type': 'application/json',
         },
-        { body: {}, status: 200 },
-      );
+        body: {},
+        response: { body: {}, status: 200 },
+        method: 'POST',
+        repeat: 1,
+      });
 
       const result = await client.posts.mutationWithQuery({
         query: { test: 'test' },
@@ -649,20 +651,20 @@ describe('client', () => {
   describe('put', () => {
     it('w/ sub path and body', async () => {
       const value = { key: 'value' };
-      fetchMock.putOnce(
-        {
-          url: 'https://api.com/posts/1',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: {
-            title: 'title',
-            content: 'content',
-            authorId: 'authorId',
-          },
+      fetchMock.route({
+        url: 'https://api.com/posts/1',
+        headers: {
+          'Content-Type': 'application/json',
         },
-        { body: value, status: 200 },
-      );
+        body: {
+          title: 'title',
+          content: 'content',
+          authorId: 'authorId',
+        },
+        response: { body: value, status: 200 },
+        method: 'PUT',
+        repeat: 1,
+      });
 
       const result = await client.posts.updatePost({
         params: { id: '1' },
@@ -680,18 +682,18 @@ describe('client', () => {
     it('w/ body', async () => {
       const value = { key: 'value' };
 
-      fetchMock.patchOnce(
-        {
-          url: 'https://api.com/posts/1',
-        },
-        (_, req) => ({
+      fetchMock.route({
+        url: 'https://api.com/posts/1',
+        response: ({ options: req }) => ({
           body: {
             contentType: (req.headers as any)['content-type'],
             reqBody: JSON.parse(req.body as string),
           },
           status: 200,
         }),
-      );
+        method: 'PATCH',
+        repeat: 1,
+      });
 
       const result = await client.posts.patchPost({
         params: { id: '1' },
@@ -712,12 +714,13 @@ describe('client', () => {
 
   describe('delete', () => {
     it('w/ no body', async () => {
-      fetchMock.deleteOnce(
-        {
-          url: 'https://api.com/posts/1',
-        },
-        { status: 204 },
-      );
+      fetchMock.route({
+        url: 'https://api.com/posts/1',
+        response: { status: 204 },
+        method: 'DELETE',
+        repeat: 1,
+        includeContentLength: false,
+      });
 
       const result = await client.posts.deletePost({
         params: { id: '1' },
@@ -730,12 +733,13 @@ describe('client', () => {
     });
 
     it('w/ undefined body', async () => {
-      fetchMock.deleteOnce(
-        {
-          url: 'https://api.com/posts/1',
-        },
-        { status: 204 },
-      );
+      fetchMock.route({
+        url: 'https://api.com/posts/1',
+        response: { status: 204 },
+        method: 'DELETE',
+        repeat: 1,
+        includeContentLength: false,
+      });
 
       const result = await client.posts.deletePostUndefinedBody({
         params: { id: '1' },
@@ -748,17 +752,18 @@ describe('client', () => {
     });
 
     it('w/ undefined body and content-type json', async () => {
-      fetchMock.deleteOnce(
-        {
-          url: 'https://api.com/posts/2',
-        },
-        {
+      fetchMock.route({
+        url: 'https://api.com/posts/2',
+        response: {
           status: 204,
           headers: {
             'Content-Type': 'application/json; charset=utf-8',
           },
         },
-      );
+        method: 'DELETE',
+        repeat: 1,
+        includeContentLength: false,
+      });
 
       const result = await client.posts.deletePostUndefinedBody({
         params: { id: '2' },
@@ -776,12 +781,12 @@ describe('client', () => {
   describe('multipart/form-data', () => {
     it('w/ body', async () => {
       const value = { key: 'value' };
-      fetchMock.postOnce(
-        {
-          url: 'https://api.com/upload',
-        },
-        { body: value, status: 200 },
-      );
+      fetchMock.route({
+        url: 'https://api.com/upload',
+        response: { body: value, status: 200 },
+        method: 'POST',
+        repeat: 1,
+      });
 
       const file = new File([''], 'filename', { type: 'text/plain' });
 
@@ -794,8 +799,8 @@ describe('client', () => {
       expect(result.headers.get('Content-Length')).toBe('15');
       expect(result.headers.get('Content-Type')).toBe('application/json');
 
-      expect(fetchMock).toHaveLastFetched(true, {
-        matcher: (_, options) => {
+      expect(fetchMock).toHaveLastFetched('*', {
+        matcherFunction: ({ options }) => {
           const formData = options.body as FormData;
           return formData.get('file') === file;
         },
@@ -804,12 +809,12 @@ describe('client', () => {
 
     it('w/ FormData', async () => {
       const value = { key: 'value' };
-      fetchMock.postOnce(
-        {
-          url: 'https://api.com/upload',
-        },
-        { body: value, status: 200 },
-      );
+      fetchMock.route({
+        url: 'https://api.com/upload',
+        response: { body: value, status: 200 },
+        method: 'POST',
+        repeat: 1,
+      });
 
       const formData = new FormData();
       formData.append('test', 'test');
@@ -823,8 +828,8 @@ describe('client', () => {
       expect(result.headers.get('Content-Length')).toBe('15');
       expect(result.headers.get('Content-Type')).toBe('application/json');
 
-      expect(fetchMock).toHaveLastFetched(true, {
-        matcher: (_, options) => {
+      expect(fetchMock).toHaveLastFetched('*', {
+        matcherFunction: ({ options }) => {
           const formData = options.body as FormData;
           return formData.get('test') === 'test';
         },
@@ -833,12 +838,12 @@ describe('client', () => {
 
     it('w/ File Array', async () => {
       const value = { key: 'value' };
-      fetchMock.postOnce(
-        {
-          url: 'https://api.com/upload-array',
-        },
-        { body: value, status: 200 },
-      );
+      fetchMock.route({
+        url: 'https://api.com/upload-array',
+        response: { body: value, status: 200 },
+        method: 'POST',
+        repeat: 1,
+      });
 
       const files = [
         new File([''], 'filename-1', { type: 'text/plain' }),
@@ -854,8 +859,8 @@ describe('client', () => {
       expect(result.headers.get('Content-Length')).toBe('15');
       expect(result.headers.get('Content-Type')).toBe('application/json');
 
-      expect(fetchMock).toHaveLastFetched(true, {
-        matcher: (_, options) => {
+      expect(fetchMock).toHaveLastFetched('*', {
+        matcherFunction: ({ options }) => {
           const formData = options.body as FormData;
           const formDataFiles = formData.getAll('files');
           return formDataFiles[0] === files[0] && formDataFiles[1] === files[1];
@@ -866,14 +871,12 @@ describe('client', () => {
 
   describe('application/x-www-form-urlencoded', () => {
     it('w/object', async () => {
-      fetchMock.postOnce(
-        {
-          url: 'https://api.com/echo',
-          headers: {
-            'content-type': 'application/x-www-form-urlencoded',
-          },
+      fetchMock.route({
+        url: 'https://api.com/echo',
+        headers: {
+          'content-type': 'application/x-www-form-urlencoded',
         },
-        (_, req) => {
+        response: ({ options: req }) => {
           expect(req.body).toBeInstanceOf(URLSearchParams);
 
           return {
@@ -881,7 +884,9 @@ describe('client', () => {
             status: 200,
           };
         },
-      );
+        method: 'POST',
+        repeat: 1,
+      });
 
       const result = await client.posts.echoPostXForm({
         body: {
@@ -898,14 +903,12 @@ describe('client', () => {
     });
 
     it('w/string', async () => {
-      fetchMock.postOnce(
-        {
-          url: 'https://api.com/echo',
-          headers: {
-            'content-type': 'application/x-www-form-urlencoded',
-          },
+      fetchMock.route({
+        url: 'https://api.com/echo',
+        headers: {
+          'content-type': 'application/x-www-form-urlencoded',
         },
-        (_, req) => {
+        response: ({ options: req }) => {
           expect(typeof req.body).toBe('string');
 
           return {
@@ -913,7 +916,9 @@ describe('client', () => {
             status: 200,
           };
         },
-      );
+        method: 'POST',
+        repeat: 1,
+      });
 
       const result = await client.posts.echoPostXForm({
         body: 'foo=foo&bar=bar',
@@ -934,7 +939,7 @@ describe('client', () => {
         baseUrl: 'http://localhost:5002',
       });
 
-      globalThis.fetch = jest.fn(() =>
+      globalThis.fetch = vi.fn(() =>
         Promise.resolve({
           json: () =>
             Promise.resolve({
@@ -973,12 +978,12 @@ describe('client', () => {
           },
         },
       );
-      (globalThis.fetch as jest.Mock).mockClear();
+      (globalThis.fetch as Mock).mockClear();
     });
   });
 });
 
-const argsCalledMock = jest.fn();
+const argsCalledMock = vi.fn();
 
 const customClient = initClient(router, {
   baseUrl: 'https://api.com',
@@ -1026,10 +1031,11 @@ describe('custom api', () => {
   beforeEach(() => {
     argsCalledMock.mockReset();
     fetchMock.mockReset();
+    fetchMock.mockGlobal();
   });
 
   it('should allow a uploadProgress attribute on the api call', async () => {
-    const uploadProgress = jest.fn();
+    const uploadProgress = vi.fn();
     await customClient.posts.getPost({
       params: { id: '1' },
       uploadProgress,
@@ -1118,7 +1124,12 @@ describe('custom api', () => {
       throwOnUnknownStatus: true,
     });
 
-    fetchMock.getOnce({ url: 'https://api.com/posts' }, { status: 200 });
+    fetchMock.route({
+      url: 'https://api.com/posts',
+      response: { status: 200 },
+      method: 'GET',
+      repeat: 1,
+    });
 
     const result = await client.posts.getPosts({});
 
@@ -1134,7 +1145,12 @@ describe('custom api', () => {
   });
 
   it('has correct types when strictStatusCode is configured', async () => {
-    fetchMock.getOnce({ url: 'https://api.com/posts' }, { status: 200 });
+    fetchMock.route({
+      url: 'https://api.com/posts',
+      response: { status: 200 },
+      method: 'GET',
+      repeat: 1,
+    });
 
     const result = await clientStrict.posts.getPosts({});
 
@@ -1158,7 +1174,12 @@ describe('custom api', () => {
       throwOnUnknownStatus: true,
     });
 
-    fetchMock.getOnce({ url: 'https://isolated.com/posts' }, { status: 419 });
+    fetchMock.route({
+      url: 'https://isolated.com/posts',
+      response: { status: 419 },
+      method: 'GET',
+      repeat: 1,
+    });
 
     await expect(client.posts.getPosts({})).rejects.toThrowError(
       'Server returned unexpected response. Expected one of: 200 got: 419',
@@ -1173,10 +1194,12 @@ describe('custom api', () => {
       },
       validateResponse: true,
     });
-    fetchMock.getOnce(
-      { url: 'https://isolated.com/posts/1' },
-      { status: 200, body: { key: 'invalid value' } },
-    );
+    fetchMock.route({
+      url: 'https://isolated.com/posts/1',
+      response: { status: 200, body: { key: 'invalid value' } },
+      method: 'GET',
+      repeat: 1,
+    });
 
     await expect(
       client.posts.getPost({ params: { id: '1' } }),
@@ -1228,7 +1251,8 @@ describe('getCompleteUrl', () => {
   });
 });
 
-describe('valibot tests ', () => {
+// Compile-time Valibot inference assertions.
+{
   const contractValibot = c.router(
     {
       routeBasic: {
@@ -1322,4 +1346,4 @@ describe('valibot tests ', () => {
       } // <- Required
     >
   >;
-});
+}

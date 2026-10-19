@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { ApiFetcher, initContract } from '@ts-rest/core';
 import { z } from 'zod';
 import { initQueryClient } from './vue-query';
@@ -129,7 +130,7 @@ export const router = c.router({
   },
 });
 
-const api = jest.fn();
+const api = vi.fn();
 
 const client = initQueryClient(router, {
   baseUrl: 'https://api.com',
@@ -797,7 +798,7 @@ describe('vue-query', () => {
       },
     );
 
-    expect(result.current).resolves.toStrictEqual(ERROR_RESPONSE);
+    await expect(result.current).resolves.toStrictEqual(ERROR_RESPONSE);
 
     expect(api).toHaveBeenCalledWith({
       method: 'GET',

@@ -1,13 +1,13 @@
-import * as express from 'express';
+import express from 'express';
 import { initContract, ResponseValidationError } from '@ts-rest/core';
 import { apiBlog, contractTs } from '@ts-rest/example-contracts';
 import { createExpressEndpoints, initServer } from '@ts-rest/express';
 import { generateOpenApi } from '@ts-rest/open-api';
-import * as bodyParser from 'body-parser';
+import bodyParser from 'body-parser';
 import { Request, Response, NextFunction } from 'express';
 import { serve, setup } from 'swagger-ui-express';
 import { mockPostFixtureFactory } from './fixtures';
-import cors = require('cors');
+import cors from 'cors';
 import { tsRouter } from './ts-router';
 import { getPost } from './get-post';
 
