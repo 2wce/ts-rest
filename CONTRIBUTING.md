@@ -3,6 +3,20 @@
 Use Node 26.12.0 (see `.nvmrc`) and pnpm 12.14.0. Run `nvm use` and
 `pnpm install --frozen-lockfile`. Vite+ is pinned locally; no global CLI is needed.
 
+## Command roles
+
+Use `pnpm install` to manage dependencies and `pnpm <script>` as the user and CI
+entry point. Workspace scripts use `vp` for builds, tests, checks and task
+orchestration. When a workspace workflow calls another script, use `vp run`
+so Vite+ can expand its task graph and preserve prerequisites and caching.
+Use `pnpm exec` for one-off tools and `pnpm --filter <package> <script>` for
+individual packages.
+
+The docs app is part of the same pnpm workspace; root docs scripts select its
+Vite+ tasks. Bun remains in consumer compatibility fixtures that explicitly
+test Bun installs, builds and runtime behavior. It is not needed for normal
+workspace development or documentation.
+
 ## Commands
 
 - `pnpm build`: build published libraries with Vite+.
@@ -85,13 +99,18 @@ in `dependencies`, tooling/tests/types in `devDependencies`, and local packages
 use `workspace:*`. Use `catalog:` for versions shared through
 `pnpm-workspace.yaml`. Published library dependencies and peer ranges keep their
 consumer-facing version specs. Shared test tooling stays at the root.
+The root also declares esbuild 0.28.2 as a catalog toolchain peer so Vite+ and
+TanStack plugins resolve the same Vite runtime across root and docs. Without
+that shared peer, pnpm can create separate runtime copies whose development
+environment classes are incompatible.
 
 The workspace compiler is TypeScript 7.0.2, with Node types 26.6.5. The
 `typescript-legacy` alias pins 5.2.2 solely to check published declarations with
 older consumers. Next 13 and the Vue example also select that same 5.2.2 version
 locally because their build tools use the classic JavaScript compiler API.
-The pnpm `packageExtensions` entry declares Vue SFC compiler's missing
-TypeScript peer, so it resolves the example's local compiler automatically.
+The pnpm `packageExtensions` entry declares the Vue SFC compiler's missing
+TypeScript peer. Each app resolves its local compiler and React types
+automatically.
 No custom compiler registration or native bridge is needed. The ts-rest Vue
 adapter itself builds and checks with TypeScript 7. The Vue example's `.ts`
 files are checked by the native workspace checker; this does not add `.vue`
@@ -149,8 +168,34 @@ context objects.
 
 ## Documentation
 
-The current documentation is the Next.js project in `apps/docs`. Install its own
-pinned dependencies with `bun install` from `apps/docs`, then run `pnpm docs:start` or `pnpm docs:build`.
+The documentation in `apps/docs` uses TanStack Start and Fumadocs on Vite+.
+The root workspace installation and lockfile own its dependencies. Twoslash 4
+uses the native TypeScript 7 integration, so docs shares the catalog compiler.
+Published SDK snippets resolve Zod 3 through an alias; Fumadocs tooling uses
+Zod 4. Keep snippet diagnostics enabled. The hidden nested-router setup in the
+fetch example uses literal path annotations for the published SDK's inference
+regression on newer compilers.
+
+```sh
+pnpm install --frozen-lockfile
+pnpm docs:dev
+pnpm docs:build
+pnpm --filter @ts-rest/docs test
+pnpm docs:start
+```
+
+`docs:build` prerenders every content URL and `/api/search.json` into
+`apps/docs/dist/client`, then runs native type checking. The docs build/typecheck task is uncached, so
+new source type errors cannot be hidden by an incomplete native compiler cache. `docs:start` previews
+that static production output. Dev and preview tasks are uncached. Docs remains
+outside the main library lint/format scope and has its own build/type checks and
+static output regression tests, also run in CI.
+
+Deploy the client output on a static host with directory index support; no
+search or application server is required. Set `VITE_POSTHOG_KEY` and optionally
+`VITE_POSTHOG_HOST` at build time to enable analytics. The old Next environment
+names and `/ingest` rewrites no longer apply. See [the docs app README](apps/docs/README.md)
+for content structure and hosting details.
 
 ## Releases
 

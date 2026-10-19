@@ -26,6 +26,7 @@ jobs:
       - run: pnpm test:packages
       - run: pnpm build:examples
       - run: pnpm test:hosts
+      - run: pnpm --filter @ts-rest/docs test
 
   e2e:
     name: Compatibility Fixtures

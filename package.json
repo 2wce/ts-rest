@@ -5,7 +5,7 @@
   "scripts": {
     "version-packages": "changeset version",
     "version-packages-update-lockfile": "changeset version && pnpm install --no-frozen-lockfile",
-    "release": "pnpm build && node tools/vite/release-workspace.mjs && cd dist && node ../node_modules/@changesets/cli/bin.js publish",
+    "release": "vp run build && node tools/vite/release-workspace.mjs && cd dist && node ../node_modules/@changesets/cli/bin.js publish",
     "build": "vp run --filter \"./libs/ts-rest/*\" pack",
     "build:examples": "vp run --filter \"example-*\" build",
     "test": "vp run unit-tests",
@@ -18,12 +18,13 @@
     "format:check": "vp fmt --check",
     "check": "vp run check-workspace",
     "nest": "vp run example-nest#dev",
-    "docs:build": "bun --cwd apps/docs run build",
-    "docs:start": "bun --cwd apps/docs run dev",
+    "docs:build": "vp run @ts-rest/docs#build",
+    "docs:start": "vp run @ts-rest/docs#start",
     "example-microservice:serve": "vp run --parallel --filter \"example-microservice-*\" dev",
     "ts-rest:build-watch": "vp run --parallel --filter \"./libs/ts-rest/*\" pack -- --watch",
-    "build-test-all": "pnpm build && pnpm check && pnpm test:packages && pnpm build:examples",
-    "examples:generate": "vp run @ts-rest/example-database#generate"
+    "build-test-all": "vp run build && vp run check && vp run test:packages && vp run build:examples",
+    "examples:generate": "vp run @ts-rest/example-database#generate",
+    "docs:dev": "vp run @ts-rest/docs#dev"
   },
   "engines": {
     "pnpm": "12.14.0",
@@ -92,7 +93,8 @@
     "vue": "catalog:",
     "wrangler": "catalog:",
     "zod": "catalog:",
-    "zod4": "catalog:"
+    "zod4": "catalog:",
+    "esbuild": "catalog:"
   },
   "volta": {
     "node": "26.12.0"

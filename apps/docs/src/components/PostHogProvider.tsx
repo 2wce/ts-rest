@@ -2,19 +2,21 @@
 
 import posthog from 'posthog-js';
 import { PostHogProvider as PHProvider, usePostHog } from 'posthog-js/react';
-import { Suspense, useEffect } from 'react';
-import { usePathname, useSearchParams } from 'next/navigation';
+import { useEffect } from 'react';
+import { useLocation } from '@tanstack/react-router';
 import { cookieConsentGiven } from './CookieBanner';
 
 export function PostHogProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
-    posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY!, {
-      api_host: '/ingest',
+    const key = import.meta.env.VITE_POSTHOG_KEY;
+    if (!key) return;
+    posthog.init(key, {
+      api_host: import.meta.env.VITE_POSTHOG_HOST ?? 'https://eu.i.posthog.com',
       ui_host: 'https://eu.posthog.com',
       capture_pageview: false, // We capture pageviews manually
       capture_pageleave: true, // Enable pageleave capture
       capture_exceptions: true, // This enables capturing exceptions using Error Tracking, set to false if you don't want this
-      debug: process.env.NODE_ENV === 'development',
+      debug: import.meta.env.DEV,
       persistence:
         cookieConsentGiven() === 'yes' ? 'localStorage+cookie' : 'memory',
     });
@@ -22,35 +24,23 @@ export function PostHogProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <PHProvider client={posthog}>
-      <SuspendedPostHogPageView />
+      <PostHogPageView />
       {children}
     </PHProvider>
   );
 }
 
 function PostHogPageView() {
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
+  const href = useLocation({ select: (location) => location.href });
   const posthog = usePostHog();
 
   useEffect(() => {
-    if (pathname && posthog) {
-      let url = window.origin + pathname;
-      const search = searchParams.toString();
-      if (search) {
-        url += '?' + search;
-      }
-      posthog.capture('$pageview', { $current_url: url });
+    if (import.meta.env.VITE_POSTHOG_KEY && posthog) {
+      posthog.capture('$pageview', {
+        $current_url: new URL(href, window.origin).href,
+      });
     }
-  }, [pathname, searchParams, posthog]);
+  }, [href, posthog]);
 
   return null;
-}
-
-function SuspendedPostHogPageView() {
-  return (
-    <Suspense fallback={null}>
-      <PostHogPageView />
-    </Suspense>
-  );
 }

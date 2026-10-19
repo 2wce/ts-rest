@@ -103,7 +103,7 @@ export default defineConfig({
         cache: false,
       },
       'check-workspace': {
-        command: ['vp check', 'vp test run', 'pnpm typecheck'],
+        command: ['vp check', 'vp test run', 'vp run typecheck'],
         dependsOn: ['@ts-rest/example-database#generate'],
         cache: false,
       },

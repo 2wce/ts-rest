@@ -1,7 +1,6 @@
 packages:
   - 'apps/**/*'
   - 'libs/**/*'
-  - '!apps/docs'
   - '!**/dist/**'
   - '!**/generated/**'
   - '!**/.next/**'
@@ -31,6 +30,8 @@ allowBuilds:
   azure-functions-core-tools: true
   esbuild: true
   '@nestjs/core': true
+  '@tailwindcss/oxide': true
+  core-js: false
   '@swc/core': true
   sharp: true
   vue-demi: true
@@ -87,6 +88,7 @@ catalog:
   'classnames': '^2.3.1'
   'cors': '^2.8.5'
   'daisyui': '^2.24.0'
+  'esbuild': '0.28.2'
   'express': '^5.0.0'
   'fastify': '4.28.0'
   'itty-router': '^5.0.18'
@@ -131,3 +133,8 @@ catalog:
   'zod': '3.22.3'
   'zod4': 'npm:zod@3.25.47'
   'zustand': '^4.1.1'
+
+minimumReleaseAgeExclude:
+  - fumadocs-core@16.17.7
+  - fumadocs-mdx@15.4.8
+  - fumadocs-ui@16.17.7

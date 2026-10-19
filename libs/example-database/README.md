@@ -30,7 +30,7 @@ create the example tables:
 pnpm --filter @ts-rest/example-database exec prisma db push
 pnpm nest
 # Or start the Next example:
-pnpm exec vp run example-next#dev
+pnpm --filter example-next dev
 ```
 
 `prisma db push` changes the configured database schema; use a development
@@ -40,8 +40,8 @@ Controller tests mock their post services and do not require a running database.
 ## Build one example
 
 ```sh
-pnpm exec vp run example-nest#build
-pnpm exec vp run example-next#build
+pnpm --filter example-nest build
+pnpm --filter example-next build
 ```
 
 Nest runs from its local `dist` directory and keeps this package external, so the

@@ -5,15 +5,14 @@ import {
   metaSchema,
 } from 'fumadocs-mdx/config';
 import { transformerTwoslash } from 'fumadocs-twoslash';
+import { resolve } from 'node:path';
 import { rehypeCodeDefaultOptions } from 'fumadocs-core/mdx-plugins';
 import {
   transformerNotationDiff,
   transformerNotationHighlight,
-  transformerMetaHighlight,
 } from '@shikijs/transformers';
 
-// You can customise Zod schemas for frontmatter and `meta.json` here
-// see https://fumadocs.vercel.app/docs/mdx/collections#define-docs
+// Shared frontmatter and metadata validation for the Vite MDX collection.
 export const docs = defineDocs({
   docs: {
     schema: frontmatterSchema,
@@ -32,7 +31,14 @@ export default defineConfig({
       },
       transformers: [
         ...(rehypeCodeDefaultOptions.transformers ?? []),
-        transformerTwoslash({}),
+        transformerTwoslash({
+          twoslashOptions: {
+            compilerOptions: {
+              // Published SDK examples use Zod 3; Fumadocs tooling uses Zod 4.
+              paths: { zod: [resolve('node_modules/zod3/index.d.ts')] },
+            },
+          },
+        }),
         transformerNotationDiff({}),
 
         transformerNotationHighlight({}),

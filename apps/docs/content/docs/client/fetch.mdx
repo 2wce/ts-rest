@@ -18,7 +18,7 @@ const contract = c.router({
   pokemon: c.router({
     getPokemon: {
       method: 'GET',
-      path: '/pokemon/:id',
+      path: '/pokemon/:id' as const,
       responses: {
         200: z.object({
           id: z.string(),
@@ -29,7 +29,7 @@ const contract = c.router({
     },
     updatePokemon: {
       method: 'PUT',
-      path: '/pokemon/:id',
+      path: '/pokemon/:id' as const,
       body: z.object({
         name: z.string(),
         type: z.string(),
@@ -44,7 +44,7 @@ const contract = c.router({
     },
     deletePokemon: {
       method: 'DELETE',
-      path: '/pokemon/:id',
+      path: '/pokemon/:id' as const,
       responses: {
         204: c.noBody(),
       },

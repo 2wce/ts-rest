@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react';
 import { usePostHog } from 'posthog-js/react';
 import { X, Cookie, Check } from 'lucide-react';
-import Link from 'next/link';
 
 export function cookieConsentGiven() {
   if (typeof window === 'undefined') return 'undecided';
@@ -60,8 +59,8 @@ export function CookieBanner() {
           <div className="flex-1">
             <p className="text-sm text-zinc-700 dark:text-zinc-300 mb-4 md:mb-5">
               We use tracking cookies (
-              <Link href="https://posthog.com/">Posthog</Link>) to track docs
-              usage and help us improve.
+              <a href="https://posthog.com/">Posthog</a>) to track docs usage
+              and help us improve.
             </p>
             <div className="flex flex-col sm:flex-row gap-2">
               <button
@@ -85,6 +84,7 @@ export function CookieBanner() {
           <button
             type="button"
             onClick={handleDismiss}
+            aria-label="Dismiss cookie notice"
             className="text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 flex-shrink-0 p-1 touch-manipulation"
           >
             <X className="h-4 w-4" />
