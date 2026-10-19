@@ -222,7 +222,9 @@ describe('tsRestLambda', () => {
 
           const bodyBuffer = await request.arrayBuffer();
           const parts = parseMultipart(Buffer.from(bodyBuffer), boundary);
-          const blob = new Blob([parts[0].data], { type: parts[0].type });
+          const blob = new Blob([Uint8Array.from(parts[0].data)], {
+            type: parts[0].type,
+          });
 
           responseHeaders.set(
             'x-content-type-echo',

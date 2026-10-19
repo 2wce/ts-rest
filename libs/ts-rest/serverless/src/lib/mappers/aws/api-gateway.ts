@@ -73,7 +73,7 @@ export function requestBody(
   }
 
   if (event.isBase64Encoded) {
-    return Buffer.from(event.body, 'base64');
+    return Uint8Array.from(Buffer.from(event.body, 'base64')).buffer;
   }
 
   return event.body;
