@@ -18,8 +18,9 @@ Use Node 26.12.0 (see `.nvmrc`) and pnpm 12.14.0. Run `nvm use` and
 - `pnpm format` / `pnpm format:check`: Oxfmt.
 - `pnpm build:examples`: build framework examples with native commands.
 - `pnpm nest`: generate the example database client, build, run and restart Nest.
-- `pnpm exec vp run example-next#dev`: generate the client and start Next.
-- `pnpm exec vp run example-nest#build` / `example-next#build`: build one database example.
+- `pnpm --filter example-next dev`: generate the client and start Next.
+- `pnpm --filter example-nest build` / `pnpm --filter example-next build`:
+  build one database example.
 - `pnpm example-microservice:serve`: run microservice development tasks.
 - `make e2e`: isolated Nest, Express and validator compatibility fixtures.
 
@@ -27,6 +28,26 @@ Vite+ caches build scripts through `vp run`. Inference checks use `--no-cache`: 
 negative probe showed native compiler file reads were not fully captured on this
 host, so automatic caching could replay success after a new failing assertion. Workspace dependencies determine
 ordering. Build artifacts stay in `dist/libs/ts-rest` for Changesets releases.
+
+## Example commands
+
+All eleven example apps expose `build` and `dev` package scripts. From the
+repository root, use `pnpm --filter <package-name> build` or
+`pnpm --filter <package-name> dev`. Server examples also expose `start` where
+there is a built application to run; build them first.
+
+Nest and Next use thin script aliases to Vite+ `build-app` and `dev-app` tasks.
+Those tasks generate the shared database client before invoking the framework
+command. Vite+ expands nested task calls and preserves prerequisite ordering.
+Use `pnpm exec vp run <package-name>#build` or `#dev` for the same task graph.
+
+Microservice package names share the `example-microservice-` prefix, so
+`pnpm example-microservice:serve` selects both services and all three frontends.
+The users/posts services use ports 5002/5003; React, Solid and Vue use
+5004/5005/5006 respectively. React and Solid call the posts service. Vue calls
+the Nest blog API on port 3334; configure its database and run `pnpm nest`
+separately when using Vue. See the
+[database setup](libs/example-database/README.md#run-a-database-example).
 
 ## Shared configuration
 
@@ -119,10 +140,12 @@ layout used by Changesets and standalone compatibility fixtures.
 
 ## Host integration examples
 
-Azure and Cloudflare host smoke tests are explicit: `pnpm test:hosts`.
-Azure Functions Core Tools remains installed by the root workspace as before.
-Build the Azure example before its host test. Serverless adapter unit tests run
-directly against the SDK request and context objects.
+Azure and Cloudflare host smoke tests are explicit: `pnpm test:hosts`. Vite+
+builds the Azure example before running the tests, including on a fresh checkout.
+The tests launch the hosts through the Azure `start` and Cloudflare `dev` package
+scripts. Azure Functions Core Tools remains installed by the root workspace as
+before. Serverless adapter unit tests run directly against the SDK request and
+context objects.
 
 ## Documentation
 

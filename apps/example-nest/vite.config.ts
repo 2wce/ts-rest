@@ -6,11 +6,11 @@ import { decoratorOptions } from '../../tools/vite/swc';
 export default defineConfig({
   run: {
     tasks: {
-      build: {
+      'build-app': {
         command: 'vp pack',
         dependsOn: ['@ts-rest/example-database#generate'],
       },
-      dev: {
+      'dev-app': {
         command: 'vp pack --watch --on-success "node dist/main.cjs"',
         dependsOn: ['@ts-rest/example-database#generate'],
         cache: false,

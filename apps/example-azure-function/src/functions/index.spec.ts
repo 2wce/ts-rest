@@ -1,7 +1,6 @@
 import { vi } from 'vitest';
 import { spawn } from 'child_process';
 import waitOn from 'wait-on';
-import * as path from 'path';
 
 vi.setConfig({ testTimeout: 30000 });
 
@@ -10,11 +9,11 @@ describe('example-azure-function', () => {
 
   beforeAll(async () => {
     // Start the Azure Functions server in the background
-    serverProcess = spawn('pnpm', ['exec', 'func', 'start', '--javascript'], {
-      cwd: path.join(__dirname, '../../'),
-      stdio: 'pipe',
-      shell: true,
-    });
+    serverProcess = spawn(
+      'pnpm',
+      ['--filter', 'example-azure-function', 'run', 'start'],
+      { stdio: 'pipe' },
+    );
 
     // Optional: Log server output for debugging
     serverProcess.stdout.on('data', (data: any) => {

@@ -11,10 +11,9 @@ describe('example-cloudflare-worker', () => {
     // Start the server in the background
     serverProcess = spawn(
       'pnpm',
-      ['wrangler', 'dev', 'apps/example-cloudflare-worker/src/index.ts'],
+      ['--filter', 'example-cloudflare-worker', 'run', 'dev'],
       {
         stdio: 'pipe',
-        shell: true,
       },
     );
 

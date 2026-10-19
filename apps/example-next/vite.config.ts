@@ -3,11 +3,11 @@ import { defineConfig } from 'vite-plus';
 export default defineConfig({
   run: {
     tasks: {
-      build: {
+      'build-app': {
         command: 'next build',
         dependsOn: ['@ts-rest/example-database#generate'],
       },
-      dev: {
+      'dev-app': {
         command: 'next dev',
         dependsOn: ['@ts-rest/example-database#generate'],
         cache: false,

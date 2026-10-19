@@ -3,6 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
+    "build": "vp run build-app",
+    "dev": "vp run dev-app",
     "start": "node dist/main.cjs"
   },
   "devDependencies": {

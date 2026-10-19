@@ -87,6 +87,11 @@ export default defineConfig({
         dependsOn: ['@ts-rest/example-database#generate'],
         cache: false,
       },
+      'host-tests': {
+        command: 'vp test run --config vite.hosts.config.ts',
+        dependsOn: ['example-azure-function#build'],
+        cache: false,
+      },
       'watch-tests': {
         command: 'vp test',
         dependsOn: ['@ts-rest/example-database#generate'],
