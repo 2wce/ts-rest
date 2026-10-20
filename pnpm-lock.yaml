@@ -421,11 +421,11 @@ catalogs:
       specifier: ^3.1.0
       version: 3.114.17
     zod:
-      specifier: 3.22.3
-      version: 3.22.3
+      specifier: 3.25.76
+      version: 3.25.76
     zod4:
-      specifier: npm:zod@3.25.47
-      version: 3.25.47
+      specifier: npm:zod@4.6.7
+      version: 4.6.7
     zustand:
       specifier: ^4.1.1
       version: 4.5.7
@@ -444,7 +444,7 @@ importers:
     devDependencies:
       '@anatine/zod-openapi':
         specifier: 'catalog:'
-        version: 1.14.2(openapi3-ts@2.0.2)(zod@3.22.3)
+        version: 1.14.2(openapi3-ts@2.0.2)(zod@3.25.76)
       '@azure/functions':
         specifier: 'catalog:'
         version: 4.16.5
@@ -603,10 +603,10 @@ importers:
         version: 3.5.44(typescript@7.0.2)
       zod:
         specifier: 'catalog:'
-        version: 3.22.3
+        version: 3.25.76
       zod4:
         specifier: 'catalog:'
-        version: zod@3.25.47
+        version: zod@4.6.7
 
   apps/docs:
     dependencies:
@@ -1078,7 +1078,7 @@ importers:
         version: 2.8.6
       zod:
         specifier: 'catalog:'
-        version: 3.22.3
+        version: 3.25.76
     devDependencies:
       '@nestjs/testing':
         specifier: 'catalog:'
@@ -1160,7 +1160,7 @@ importers:
         version: 2.6.1(@types/react-dom@18.3.0)(@types/react@18.3.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       zod:
         specifier: 'catalog:'
-        version: 3.22.3
+        version: 3.25.76
       zustand:
         specifier: 'catalog:'
         version: 4.5.7(@types/react@18.3.1)(react@18.3.1)
@@ -1222,7 +1222,7 @@ importers:
         version: link:../ts-rest/core
       zod:
         specifier: 'catalog:'
-        version: 3.22.3
+        version: 3.25.76
 
   libs/example-database:
     dependencies:
@@ -1244,7 +1244,7 @@ importers:
         version: link:../../ts-rest/core
       zod:
         specifier: 'catalog:'
-        version: 3.22.3
+        version: 3.25.76
 
   libs/example-microservice/util-users-api:
     dependencies:
@@ -1253,7 +1253,7 @@ importers:
         version: link:../../ts-rest/core
       zod:
         specifier: 'catalog:'
-        version: 3.22.3
+        version: 3.25.76
 
   libs/non-strict-mode-test:
     devDependencies:
@@ -1262,7 +1262,7 @@ importers:
         version: link:../ts-rest/core
       zod:
         specifier: 'catalog:'
-        version: 3.22.3
+        version: 3.25.76
 
   libs/ts-rest/core:
     dependencies:
@@ -1273,6 +1273,9 @@ importers:
       '@ts-rest/build-config':
         specifier: workspace:*
         version: link:../../build-config
+      zod-legacy:
+        specifier: npm:zod@3.22.3
+        version: zod@3.22.3
 
   libs/ts-rest/express:
     dependencies:
@@ -1348,13 +1351,13 @@ importers:
     dependencies:
       '@anatine/zod-openapi':
         specifier: ^1.14.2
-        version: 1.14.2(openapi3-ts@2.0.2)(zod@3.22.3)
+        version: 1.14.2(openapi3-ts@2.0.2)(zod@3.25.47)
       openapi3-ts:
         specifier: ^2.0.2
         version: 2.0.2
       zod:
         specifier: ^3.22.3
-        version: 3.22.3
+        version: 3.25.47
     devDependencies:
       '@ts-rest/build-config':
         specifier: workspace:*
@@ -1414,7 +1417,7 @@ importers:
         version: 5.0.5(@types/node@26.6.5)(@vitest/browser-preview@5.0.5)(@vitest/ui@5.0.5)(@voidzero-dev/vite-plus-core@1.3.0(@types/node@26.6.5)(esbuild@0.28.2)(jiti@2.7.0)(typescript@7.0.2)(yaml@2.9.1))(jsdom@22.1.0(supports-color@7.2.0))
       zod:
         specifier: 'catalog:'
-        version: 3.22.3
+        version: 3.25.76
 
   libs/ts-rest/serverless:
     dependencies:
@@ -8088,6 +8091,9 @@ packages:
   zod@3.25.47:
     resolution: {integrity: sha512-+f8+agSYoT9niC0VUL60IuXnr81FJeJ27Lf5YPrmcxTWmygcpGBeEuAAovDDEjkyQ36KyqNswwbhISZ1Z7yY+A==}
 
+  zod@3.25.76:
+    resolution: {integrity: sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==}
+
   zod@4.6.7:
     resolution: {integrity: sha512-g8W2D2kU6a8untc053fX1uVBKzM7yqAxW/3zwk83+6RyF2+SKOuV+c0wBDhUwzV1PaGapmZH+rmcUzPf+3CGwg==}
 
@@ -8113,11 +8119,17 @@ snapshots:
 
   '@adobe/css-tools@4.5.0': {}
 
-  '@anatine/zod-openapi@1.14.2(openapi3-ts@2.0.2)(zod@3.22.3)':
+  '@anatine/zod-openapi@1.14.2(openapi3-ts@2.0.2)(zod@3.25.47)':
     dependencies:
       openapi3-ts: 2.0.2
       ts-deepmerge: 6.2.1
-      zod: 3.22.3
+      zod: 3.25.47
+
+  '@anatine/zod-openapi@1.14.2(openapi3-ts@2.0.2)(zod@3.25.76)':
+    dependencies:
+      openapi3-ts: 2.0.2
+      ts-deepmerge: 6.2.1
+      zod: 3.25.76
 
   '@apidevtools/json-schema-ref-parser@12.0.2':
     dependencies:
@@ -15511,6 +15523,8 @@ snapshots:
   zod@3.22.3: {}
 
   zod@3.25.47: {}
+
+  zod@3.25.76: {}
 
   zod@4.6.7: {}
 

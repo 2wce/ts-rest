@@ -2,7 +2,7 @@
   "name": "@ts-rest/core",
   "version": "3.52.1",
   "private": false,
-  "description": "RPC-like experience over a regular REST API, with type safe server implementations 🪄",
+  "description": "RPC-like experience over a regular REST API, with type safe server implementations \ud83e\ude84",
   "keywords": [
     "rpc",
     "rest",
@@ -36,7 +36,8 @@
     ".": "./src/index.ts"
   },
   "devDependencies": {
-    "@ts-rest/build-config": "workspace:*"
+    "@ts-rest/build-config": "workspace:*",
+    "zod-legacy": "npm:zod@3.22.3"
   },
   "files": [
     "dist",
