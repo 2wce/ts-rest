@@ -34,5 +34,8 @@
   "exports": {
     "./package.json": "./package.json",
     ".": "./src/index.ts"
+  },
+  "devDependencies": {
+    "@ts-rest/build-config": "workspace:*"
   }
 }

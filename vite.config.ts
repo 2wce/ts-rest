@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite-plus';
 import swc from 'unplugin-swc';
 import { resolve } from 'node:path';
-import { decoratorOptions } from './tools/vite/swc';
+import { decoratorOptions } from '@ts-rest/build-config';
 
 const projects = [
   'core',

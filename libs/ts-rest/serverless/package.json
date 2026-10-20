@@ -30,7 +30,8 @@
     "build": "vp pack"
   },
   "devDependencies": {
-    "@ts-rest/core": "workspace:*"
+    "@ts-rest/core": "workspace:*",
+    "@ts-rest/build-config": "workspace:*"
   },
   "types": "./src/index.ts",
   "exports": {

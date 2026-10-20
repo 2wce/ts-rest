@@ -31,7 +31,8 @@
   "devDependencies": {
     "@ts-rest/core": "workspace:*",
     "@tanstack/react-query": "4.36.1",
-    "@ts-rest/react-query-v5": "workspace:*"
+    "@ts-rest/react-query-v5": "workspace:*",
+    "@ts-rest/build-config": "workspace:*"
   },
   "types": "./src/index.ts",
   "exports": {

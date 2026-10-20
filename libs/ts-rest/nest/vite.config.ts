@@ -1,4 +1,4 @@
 import { defineConfig } from 'vite-plus';
-import { libraryConfig } from '../../../tools/vite/library';
+import { libraryConfig } from '@ts-rest/build-config';
 
 export default defineConfig(libraryConfig('nest', { index: 'src/index.ts' }));

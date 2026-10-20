@@ -79,12 +79,19 @@ owns build ordering; these references are for editor/checker project selection,
 and are not a `tsc --build` pipeline. Source-only private libraries and Node
 examples need one config. Next retains its framework-specific config.
 
-`tools/vite/library.ts` shares the library pack task and its explicit cache
-inputs/outputs. Package Vite configs declare entry points; React Query also
-declares its combined declaration config and v5 cache inputs. Pack overrides use
-Vite's `mergeConfig`. `tools/vite/pack.ts` owns public artifacts and the shared
-Node example pack preset. `tools/vite/swc.ts` shares the Nest decorator transform.
-Root Vitest settings are inherited by library projects with `extends: true`.
+The private `@ts-rest/build-config` workspace package shares the library pack
+task, cache inputs/outputs, public artifact generation, Node example pack preset
+and Nest decorator transform. Consumers declare it in `devDependencies` as
+`workspace:*` and import presets by package name. It owns its Vite+/SWC tooling
+and exports TypeScript source directly, so it needs no build task. Its source,
+manifest and compiler config are explicit library build cache inputs.
+
+Package Vite configs declare entry points; React Query also declares its combined
+declaration config and v5 cache inputs. Pack overrides use Vite's `mergeConfig`.
+Root `vite.config.ts` owns workspace orchestration, and library Vitest projects
+inherit its settings with `extends: true`. The [build-config README](libs/build-config/README.md)
+describes the presets. Release staging and package consumer checks remain under
+`tools/vite`.
 
 ## Workspace packages and dependencies
 

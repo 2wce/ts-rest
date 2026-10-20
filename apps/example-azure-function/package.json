@@ -13,7 +13,8 @@
     "vite-plus": "catalog:",
     "vitest": "catalog:",
     "wait-on": "catalog:",
-    "@types/wait-on": "catalog:"
+    "@types/wait-on": "catalog:",
+    "@ts-rest/build-config": "workspace:*"
   },
   "dependencies": {
     "@azure/functions": "catalog:",

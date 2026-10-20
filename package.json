@@ -12,7 +12,7 @@
     "test:watch": "vp run watch-tests",
     "test:packages": "node tools/vite/package-check.mjs",
     "test:hosts": "vp run host-tests",
-    "typecheck": "vp run --no-cache --filter \"./libs/ts-rest/*\" --filter @ts-rest/non-strict-mode-test typecheck",
+    "typecheck": "vp run --no-cache --filter \"./libs/ts-rest/*\" --filter @ts-rest/non-strict-mode-test --filter @ts-rest/build-config typecheck",
     "lint": "vp run lint-workspace",
     "format": "vp fmt",
     "format:check": "vp fmt --check",
@@ -87,7 +87,8 @@
     "vue": "catalog:",
     "zod": "catalog:",
     "zod4": "catalog:",
-    "esbuild": "catalog:"
+    "esbuild": "catalog:",
+    "@ts-rest/build-config": "workspace:*"
   },
   "volta": {
     "node": "26.12.0"

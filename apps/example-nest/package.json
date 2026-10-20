@@ -16,7 +16,8 @@
     "unplugin-swc": "catalog:",
     "vite-plus": "catalog:",
     "vitest": "catalog:",
-    "typescript": "catalog:classic-tooling"
+    "typescript": "catalog:classic-tooling",
+    "@ts-rest/build-config": "workspace:*"
   },
   "dependencies": {
     "@nestjs/common": "catalog:",

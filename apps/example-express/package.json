@@ -18,7 +18,8 @@
     "supertest": "catalog:",
     "@types/supertest": "catalog:",
     "@types/swagger-ui-express": "catalog:",
-    "vite-plus": "catalog:"
+    "vite-plus": "catalog:",
+    "@ts-rest/build-config": "workspace:*"
   },
   "dependencies": {
     "@ts-rest/core": "workspace:*",

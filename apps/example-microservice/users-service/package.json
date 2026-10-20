@@ -14,7 +14,8 @@
     "@ts-rest/example-microservice-util-posts-api": "workspace:*",
     "@types/multer": "catalog:",
     "unplugin-swc": "catalog:",
-    "vite-plus": "catalog:"
+    "vite-plus": "catalog:",
+    "@ts-rest/build-config": "workspace:*"
   },
   "dependencies": {
     "@nestjs/common": "catalog:",

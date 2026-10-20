@@ -1,12 +1,57 @@
 import { readFile, writeFile, copyFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
-import swc from 'unplugin-swc';
+import { mergeConfig, type UserConfig } from 'vite-plus';
 import type { PackUserConfig } from 'vite-plus/pack';
-import { decoratorOptions } from './swc';
+import swc, { type Options } from 'unplugin-swc';
+
+// Vite+ tasks are declared per package; share policy through a normal Vite config.
+export function libraryConfig(
+  name: string,
+  entry: Record<string, string>,
+  options: { pack?: PackUserConfig; workspaceInputs?: string[] } = {},
+): UserConfig {
+  const config: UserConfig = {
+    run: {
+      tasks: {
+        pack: {
+          command: 'vp pack',
+          dependsOn: [
+            { task: 'pack', from: ['dependencies', 'devDependencies'] },
+          ],
+          cache: {
+            input: [
+              'src/**',
+              'package.json',
+              'vite.config.ts',
+              'tsconfig*.json',
+              'README.md',
+              'CHANGELOG.md',
+              { pattern: 'LICENCE', base: 'workspace' },
+              { pattern: 'libs/build-config/src/**', base: 'workspace' },
+              { pattern: 'libs/build-config/package.json', base: 'workspace' },
+              { pattern: 'libs/build-config/tsconfig.json', base: 'workspace' },
+              { pattern: 'tsconfig*.json', base: 'workspace' },
+              { pattern: 'pnpm-lock.yaml', base: 'workspace' },
+              ...(options.workspaceInputs ?? []).map((pattern) => ({
+                pattern,
+                base: 'workspace' as const,
+              })),
+            ],
+            output: [
+              { pattern: `dist/libs/ts-rest/${name}/**`, base: 'workspace' },
+            ],
+          },
+        },
+      },
+    },
+    pack: libraryPack(name, entry),
+  };
+  return mergeConfig(config, { pack: options.pack ?? {} });
+}
 
 // Keep release metadata generation in a supported build hook, rather than
 // intercepting logs from the build tool. Changesets still versions source manifests.
-export function libraryPack(
+function libraryPack(
   name: string,
   entry: Record<string, string>,
 ): PackUserConfig {
@@ -80,5 +125,24 @@ export function nodePack(entry = 'src/main.ts'): PackUserConfig {
     dts: false,
     tsconfig: 'tsconfig.json',
     deps: { neverBundle: true, alwaysBundle: [/^@ts-rest\//] },
+  };
+}
+
+// The packer and test transformer both need Nest's legacy decorator metadata.
+export function decoratorOptions(tsconfigFile: string, jsx = false): Options {
+  return {
+    tsconfigFile,
+    swcrc: false,
+    jsc: {
+      parser: { syntax: 'typescript', decorators: true },
+      transform: {
+        legacyDecorator: true,
+        decoratorMetadata: true,
+        ...(jsx ? { react: { runtime: 'automatic' as const } } : {}),
+      },
+      target: 'es2019',
+      keepClassNames: true,
+    },
+    module: { type: 'es6' },
   };
 }

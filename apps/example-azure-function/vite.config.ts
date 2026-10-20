@@ -1,5 +1,5 @@
 import { defineConfig } from 'vite-plus';
-import { nodePack } from '../../tools/vite/pack';
+import { nodePack } from '@ts-rest/build-config';
 
 export default defineConfig({
   pack: nodePack('src/functions/index.ts'),
