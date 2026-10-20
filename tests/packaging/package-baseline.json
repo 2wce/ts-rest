@@ -2,9 +2,15 @@
   "next": {
     "name": "@ts-rest/next",
     "peerDependencies": {
-      "next": "^12.0.0 || ^13.0.0 || ^14.0.0 || ^15.0.0 || ^16.0.0"
+      "next": "^12.0.0 || ^13.0.0 || ^14.0.0 || ^15.0.0 || ^16.0.0",
+      "zod": "^3.22.3 || ^4.0.0"
     },
-    "subpaths": ["./package.json", "."]
+    "subpaths": ["./package.json", ".", "./zod3"],
+    "peerDependenciesMeta": {
+      "zod": {
+        "optional": true
+      }
+    }
   },
   "vue-query": {
     "name": "@ts-rest/vue-query",
@@ -24,28 +30,39 @@
   "core": {
     "name": "@ts-rest/core",
     "peerDependencies": {
-      "@types/node": "^18.18.7 || >=20.8.4"
+      "@types/node": "^18.18.7 || >=20.8.4",
+      "zod": "^3.22.3 || ^4.0.0"
     },
     "peerDependenciesMeta": {
       "@types/node": {
         "optional": true
+      },
+      "zod": {
+        "optional": true
       }
     },
-    "subpaths": ["./package.json", "."]
+    "subpaths": ["./package.json", ".", "./zod3"]
   },
   "express": {
     "name": "@ts-rest/express",
     "peerDependencies": {
-      "express": "^4.0.0 || ^5.0.0"
+      "express": "^4.0.0 || ^5.0.0",
+      "zod": "^3.22.3 || ^4.0.0"
     },
-    "subpaths": ["./package.json", "."]
+    "subpaths": ["./package.json", ".", "./zod3"],
+    "peerDependenciesMeta": {
+      "zod": {
+        "optional": true
+      }
+    }
   },
   "serverless": {
     "name": "@ts-rest/serverless",
     "peerDependencies": {
       "@azure/functions": "^4.0.0",
       "@types/aws-lambda": "^8.10.115",
-      "next": "^12.0.0 || ^13.0.0 || ^14.0.0 || ^15.0.0 || ^16.0.0"
+      "next": "^12.0.0 || ^13.0.0 || ^14.0.0 || ^15.0.0 || ^16.0.0",
+      "zod": "^3.22.3 || ^4.0.0"
     },
     "peerDependenciesMeta": {
       "@azure/functions": {
@@ -56,9 +73,20 @@
       },
       "next": {
         "optional": true
+      },
+      "zod": {
+        "optional": true
       }
     },
-    "subpaths": ["./package.json", ".", "./fetch", "./aws", "./next", "./azure"]
+    "subpaths": [
+      "./package.json",
+      ".",
+      "./fetch",
+      "./aws",
+      "./next",
+      "./azure",
+      "./zod3"
+    ]
   },
   "solid-query": {
     "name": "@ts-rest/solid-query",
@@ -79,15 +107,27 @@
     "peerDependencies": {
       "@nestjs/common": "^9.0.0 || ^10.0.0 || ^11.0.0 || ^12.0.0",
       "@nestjs/core": "^9.0.0 || ^10.0.0 || ^11.0.0 || ^12.0.0",
-      "rxjs": "^7.1.0"
+      "rxjs": "^7.1.0",
+      "zod": "^3.22.3 || ^4.0.0"
     },
-    "subpaths": ["./package.json", "."]
+    "subpaths": ["./package.json", ".", "./zod3"],
+    "peerDependenciesMeta": {
+      "zod": {
+        "optional": true
+      }
+    }
   },
   "fastify": {
     "name": "@ts-rest/fastify",
     "peerDependencies": {
-      "fastify": "^4.0.0"
+      "fastify": "^4.0.0",
+      "zod": "^3.22.3 || ^4.0.0"
     },
-    "subpaths": ["./package.json", "."]
+    "subpaths": ["./package.json", ".", "./zod3"],
+    "peerDependenciesMeta": {
+      "zod": {
+        "optional": true
+      }
+    }
   }
 }

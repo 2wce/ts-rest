@@ -1,5 +1,5 @@
 import express from 'express';
-import { initContract, ResponseValidationError } from '@ts-rest/core';
+import { initContract, TsRestResponseValidationError } from '@ts-rest/core';
 import { apiBlog, contractTs } from '@ts-rest/example-contracts';
 import { createExpressEndpoints, initServer } from '@ts-rest/express';
 import { generateOpenApi } from '@ts-rest/open-api';
@@ -109,7 +109,7 @@ createExpressEndpoints(
 );
 
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
-  if (err instanceof ResponseValidationError) {
+  if (err instanceof TsRestResponseValidationError) {
     console.error(err.cause);
   }
 

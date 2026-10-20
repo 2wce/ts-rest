@@ -1072,22 +1072,29 @@ packages:
     resolution: {integrity: sha512-OvjF+z51L3ov0OyAU0duzsYuvO01PH7x4t6DJx+guahgTnBHkhJdG7soQeTSFLWN3efnHyibZ4Z8l2EuWwJN3A==}
 
   '@ts-rest/core@file:../../dist/packages/ts-rest-core.tgz':
-    resolution: {integrity: sha512-JVNwBSWZqTRy+20S3E9KXorYKABjD9vES7EIVEAVKS0FW9IelMhrlVPqi3lSjbg7a8FDHmoG7jUwSHmFM64lmg==, tarball: file:../../dist/packages/ts-rest-core.tgz}
+    resolution: {integrity: sha512-chQGn85XyzrLES0gwVLdrz0ZAblOOs/l7YfWqfCDbBvcdTYtE1/rMlBnDJaStw0eS5FdXBNaodmy2aeKetnr/A==, tarball: file:../../dist/packages/ts-rest-core.tgz}
     version: 3.52.1
     peerDependencies:
       '@types/node': ^18.18.7 || >=20.8.4
+      zod: ^3.22.3 || ^4.0.0
     peerDependenciesMeta:
       '@types/node':
         optional: true
+      zod:
+        optional: true
 
   '@ts-rest/nest@file:../../dist/packages/ts-rest-nest.tgz':
-    resolution: {integrity: sha512-xoRiKphxD9FG9UgXeojyVbT4onqYkIUBgBstH82qUTrXkFlqOWg4DEciJEnvSSDPKKm+WVkrEWQ+4oug9x+6HQ==, tarball: file:../../dist/packages/ts-rest-nest.tgz}
+    resolution: {integrity: sha512-APjNEItLxFuWlJRwOxBrXGr58M3c+OMkxfE+c9dHwwalKkxVQOZFrlh/RkrRmvXzE41umr/JjMTZTrIhQn9/Zg==, tarball: file:../../dist/packages/ts-rest-nest.tgz}
     version: 3.52.1
     peerDependencies:
       '@nestjs/common': ^9.0.0 || ^10.0.0 || ^11.0.0 || ^12.0.0
       '@nestjs/core': ^9.0.0 || ^10.0.0 || ^11.0.0 || ^12.0.0
       '@ts-rest/core': ^3.52.1
       rxjs: ^7.1.0
+      zod: ^3.22.3 || ^4.0.0
+    peerDependenciesMeta:
+      zod:
+        optional: true
 
   '@tsconfig/node10@1.0.11':
     resolution: {integrity: sha512-DcRjDCujK/kCk/cUe8Xz8ZSpm8mS3mNNpta+jGCA6USEDfktlNvm1+IuZ9eTcDbNk41BHwpHHeW+N1lKCz4zOw==}

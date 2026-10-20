@@ -5,8 +5,7 @@ import {
   type SchemaTransformerAsync,
 } from '@ts-rest/open-api';
 import request from 'supertest';
-import { isZodObject, isZodType } from '@ts-rest/core';
-import { z } from 'zod/v4';
+import { z } from 'zod';
 import { convert } from '@openapi-contrib/json-schema-to-openapi-schema';
 
 const expectRes = (res: any) => {
@@ -14,7 +13,7 @@ const expectRes = (res: any) => {
 };
 
 const SCHEMA_TRANSFORMER: SchemaTransformerAsync = async ({ schema }) => {
-  if (isZodObject(schema)) {
+  if (schema instanceof z.ZodObject) {
     const jsonSchema = z.toJSONSchema(schema as any);
 
     return await convert(jsonSchema);

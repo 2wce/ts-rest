@@ -553,20 +553,27 @@ packages:
       '@testing-library/dom': '>=7.21.4'
 
   '@ts-rest/core@file:../../dist/packages/ts-rest-core.tgz':
-    resolution: {integrity: sha512-EZpHtsTRvsbSUmCq7cYcv+ZAtzxi42XwBMgDOu6t2mtq2HcuqR6Ue/lv3XuzIQGsW74BtRU8vSxsxUO37Ud8cw==, tarball: file:../../dist/packages/ts-rest-core.tgz}
+    resolution: {integrity: sha512-chQGn85XyzrLES0gwVLdrz0ZAblOOs/l7YfWqfCDbBvcdTYtE1/rMlBnDJaStw0eS5FdXBNaodmy2aeKetnr/A==, tarball: file:../../dist/packages/ts-rest-core.tgz}
     version: 3.52.1
     peerDependencies:
       '@types/node': ^18.18.7 || >=20.8.4
+      zod: ^3.22.3 || ^4.0.0
     peerDependenciesMeta:
       '@types/node':
         optional: true
+      zod:
+        optional: true
 
   '@ts-rest/express@file:../../dist/packages/ts-rest-express.tgz':
-    resolution: {integrity: sha512-pyQJywKjDI6bRwICKih/jSBaNNKKEAAJYesst+KfHR2riv9f9oNV8i1ZujdOIILK2pJ1y7KwPh//hjjYFUh8hA==, tarball: file:../../dist/packages/ts-rest-express.tgz}
+    resolution: {integrity: sha512-9VK/PaCQ9R6EoZPQITNFBmwLOSV79T26a4z0m+oLk2Z5auUV7Pkp7KnZh4WxW9wCksQn2Jn8A8p7SjnLfcXlwg==, tarball: file:../../dist/packages/ts-rest-express.tgz}
     version: 3.52.1
     peerDependencies:
       '@ts-rest/core': ^3.52.1
       express: ^4.0.0 || ^5.0.0
+      zod: ^3.22.3 || ^4.0.0
+    peerDependenciesMeta:
+      zod:
+        optional: true
 
   '@types/aria-query@5.0.4':
     resolution: {integrity: sha512-rfT93uj5s0PRL7EzccGMs3brplhcrghnDoV26NqKhCAS1hVo+WdNsPvE/yb6ilfr5hi2MEk6d5EWJTKdxg8jVw==}

@@ -114,7 +114,7 @@ describe('Authenticated App Endpoints', () => {
             received: 'nan',
           },
         ],
-        name: 'ZodError',
+        name: 'ValidationError',
       },
       pathParameterErrors: null,
       queryParameterErrors: null,

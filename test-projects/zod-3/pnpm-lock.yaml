@@ -172,13 +172,13 @@ importers:
     dependencies:
       '@ts-rest/core':
         specifier: file:../../dist/packages/ts-rest-core.tgz
-        version: file:../../dist/packages/ts-rest-core.tgz(@types/node@22.13.1)
+        version: file:../../dist/packages/ts-rest-core.tgz(@types/node@22.13.1)(zod@3.22.3)
       '@ts-rest/express':
         specifier: file:../../dist/packages/ts-rest-express.tgz
-        version: file:../../dist/packages/ts-rest-express.tgz(@ts-rest/core@file:../../dist/packages/ts-rest-core.tgz(@types/node@22.13.1))(express@5.0.1)
+        version: file:../../dist/packages/ts-rest-express.tgz(@ts-rest/core@file:../../dist/packages/ts-rest-core.tgz(@types/node@22.13.1)(zod@3.22.3))(express@5.0.1)(zod@3.22.3)
       '@ts-rest/open-api':
         specifier: file:../../dist/packages/ts-rest-open-api.tgz
-        version: file:../../dist/packages/ts-rest-open-api.tgz(@ts-rest/core@file:../../dist/packages/ts-rest-core.tgz(@types/node@22.13.1))(zod@3.22.3)
+        version: file:../../dist/packages/ts-rest-open-api.tgz(@ts-rest/core@file:../../dist/packages/ts-rest-core.tgz(@types/node@22.13.1)(zod@3.22.3))(zod@3.22.3)
       body-parser:
         specifier: 2.0.2
         version: 2.0.2
@@ -556,23 +556,30 @@ packages:
       '@testing-library/dom': '>=7.21.4'
 
   '@ts-rest/core@file:../../dist/packages/ts-rest-core.tgz':
-    resolution: {integrity: sha512-EZpHtsTRvsbSUmCq7cYcv+ZAtzxi42XwBMgDOu6t2mtq2HcuqR6Ue/lv3XuzIQGsW74BtRU8vSxsxUO37Ud8cw==, tarball: file:../../dist/packages/ts-rest-core.tgz}
+    resolution: {integrity: sha512-chQGn85XyzrLES0gwVLdrz0ZAblOOs/l7YfWqfCDbBvcdTYtE1/rMlBnDJaStw0eS5FdXBNaodmy2aeKetnr/A==, tarball: file:../../dist/packages/ts-rest-core.tgz}
     version: 3.52.1
     peerDependencies:
       '@types/node': ^18.18.7 || >=20.8.4
+      zod: ^3.22.3 || ^4.0.0
     peerDependenciesMeta:
       '@types/node':
         optional: true
+      zod:
+        optional: true
 
   '@ts-rest/express@file:../../dist/packages/ts-rest-express.tgz':
-    resolution: {integrity: sha512-pyQJywKjDI6bRwICKih/jSBaNNKKEAAJYesst+KfHR2riv9f9oNV8i1ZujdOIILK2pJ1y7KwPh//hjjYFUh8hA==, tarball: file:../../dist/packages/ts-rest-express.tgz}
+    resolution: {integrity: sha512-9VK/PaCQ9R6EoZPQITNFBmwLOSV79T26a4z0m+oLk2Z5auUV7Pkp7KnZh4WxW9wCksQn2Jn8A8p7SjnLfcXlwg==, tarball: file:../../dist/packages/ts-rest-express.tgz}
     version: 3.52.1
     peerDependencies:
       '@ts-rest/core': ^3.52.1
       express: ^4.0.0 || ^5.0.0
+      zod: ^3.22.3 || ^4.0.0
+    peerDependenciesMeta:
+      zod:
+        optional: true
 
   '@ts-rest/open-api@file:../../dist/packages/ts-rest-open-api.tgz':
-    resolution: {integrity: sha512-FDXN39zwmIKXHEmAg9/NYx/LR50gPfEOna8FyJbw9Ty5gT2RMU9U/FQGKR5NBummUKwoluHYkXVGqoOP15Vq0A==, tarball: file:../../dist/packages/ts-rest-open-api.tgz}
+    resolution: {integrity: sha512-Kr/mfwlrm4fjnzA8qb9O8dkOmiYqMjUVHZjMeBspoi0LlyCEEMUR26p+4rFay1/TRBWschlOjmsoYJ+DgF5kMA==, tarball: file:../../dist/packages/ts-rest-open-api.tgz}
     version: 3.52.1
     peerDependencies:
       '@ts-rest/core': ^3.52.1
@@ -1790,19 +1797,22 @@ snapshots:
     dependencies:
       '@testing-library/dom': 10.4.2
 
-  '@ts-rest/core@file:../../dist/packages/ts-rest-core.tgz(@types/node@22.13.1)':
+  '@ts-rest/core@file:../../dist/packages/ts-rest-core.tgz(@types/node@22.13.1)(zod@3.22.3)':
     optionalDependencies:
       '@types/node': 22.13.1
+      zod: 3.22.3
 
-  '@ts-rest/express@file:../../dist/packages/ts-rest-express.tgz(@ts-rest/core@file:../../dist/packages/ts-rest-core.tgz(@types/node@22.13.1))(express@5.0.1)':
+  '@ts-rest/express@file:../../dist/packages/ts-rest-express.tgz(@ts-rest/core@file:../../dist/packages/ts-rest-core.tgz(@types/node@22.13.1)(zod@3.22.3))(express@5.0.1)(zod@3.22.3)':
     dependencies:
-      '@ts-rest/core': file:../../dist/packages/ts-rest-core.tgz(@types/node@22.13.1)
+      '@ts-rest/core': file:../../dist/packages/ts-rest-core.tgz(@types/node@22.13.1)(zod@3.22.3)
       express: 5.0.1
+    optionalDependencies:
+      zod: 3.22.3
 
-  '@ts-rest/open-api@file:../../dist/packages/ts-rest-open-api.tgz(@ts-rest/core@file:../../dist/packages/ts-rest-core.tgz(@types/node@22.13.1))(zod@3.22.3)':
+  '@ts-rest/open-api@file:../../dist/packages/ts-rest-open-api.tgz(@ts-rest/core@file:../../dist/packages/ts-rest-core.tgz(@types/node@22.13.1)(zod@3.22.3))(zod@3.22.3)':
     dependencies:
       '@anatine/zod-openapi': 1.14.2(openapi3-ts@2.0.2)(zod@3.22.3)
-      '@ts-rest/core': file:../../dist/packages/ts-rest-core.tgz(@types/node@22.13.1)
+      '@ts-rest/core': file:../../dist/packages/ts-rest-core.tgz(@types/node@22.13.1)(zod@3.22.3)
       openapi3-ts: 2.0.2
       zod: 3.22.3
 

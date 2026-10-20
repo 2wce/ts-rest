@@ -114,7 +114,7 @@ The current workspace framework baselines are Next 16.4.2 and Nest 12.2.0
 (with Swagger 12.0.2). Nest tests use the matching platform adapters and their
 local Fastify 5.12.7 dependency. The standalone Fastify adapter retains its 4.x
 baseline. Nest 9/10/11 compatibility fixtures keep their separate installations.
-The docs' published SDK examples use local Nest 11 dependencies.
+The docs' workspace SDK examples use local Nest 11 dependencies.
 
 Contracts keep `:param?` optional path syntax. The Nest adapter registers
 concrete path alternatives through Nest's built-in path arrays so the same
@@ -250,10 +250,11 @@ context objects.
 The documentation in `apps/docs` uses TanStack Start and Fumadocs on Vite+.
 The root workspace installation and lockfile own its dependencies. Twoslash 4
 uses the native TypeScript 7 integration, so docs shares the catalog compiler.
-Published SDK snippets resolve Zod 3 through an alias; Fumadocs tooling uses
-Zod 4. Keep snippet diagnostics enabled. The hidden nested-router setup in the
-fetch example uses literal path annotations for the published SDK's inference
-regression on newer compilers.
+SDK snippets compile against the local workspace packages for the fork's
+unreleased major version. They resolve modern Zod 3 through an alias; Fumadocs
+tooling uses Zod 4. Keep snippet diagnostics enabled. The hidden nested-router
+setup in the fetch example uses literal path annotations to preserve inference
+on newer compilers.
 
 ```sh
 pnpm install --frozen-lockfile

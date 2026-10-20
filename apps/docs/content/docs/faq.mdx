@@ -87,5 +87,5 @@ If you've correctly enabled `strict` and `strictNullChecks`, and you're still ex
 starts to feel fairly sluggish.
 
 1. **Try split up your clients/contracts** We've had some success with _splitting up our clients_ into different domains, for instance `postClient`, `userClient`, `authClient` etc. this splits up the client into smaller chunks, which can help with intellisense performance.
-2. **Move to a more tsc friendly validator** Zod 3 was fairly renowned for it's affect on intellisense in large codebases, [Zod 4](https://zod.dev/v4) improves greatly on this, and is supported from `ts-rest 3.53.0` with our acceptance of the Standard Schema spec.
+2. **Move to a more tsc friendly validator** Zod 3 was fairly renowned for it's affect on intellisense in large codebases, [Zod 4](https://zod.dev/v4) improves greatly on this, and works through Standard Schema in the fork's unreleased major version. See the [migration guide](/standard-schema-migration) for the compatibility boundary.
 3. **Utilise monorepo tooling** - NX (and probably others) offers some ways to pre-compile modules, emitting .d.ts files for your modules, this could be a good way to speed up intellisense.

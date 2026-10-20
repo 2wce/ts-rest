@@ -71,12 +71,12 @@ export default createNextRouter(contract, router, { jsonQuery: true });
 
 ### Response Validation
 
-To enable response parsing and validation, you can use the `validateResponses` option.
-If there is a corresponding response Zod schema defined in the contract for the returned status code, the response will be parsed and validated.
-If validation fails a `ResponseValidationError` will be thrown causing a 500 response to be returned.
+To enable response parsing and validation, you can use the `responseValidation` option.
+If there is a corresponding response Standard Schema defined in the contract for the returned status code, the response will be parsed and validated.
+If validation fails a `TsRestResponseValidationError` will be thrown causing a 500 response to be returned.
 
 ```typescript
-export default createNextRouter(contract, router, { validateResponses: true });
+export default createNextRouter(contract, router, { responseValidation: true });
 ```
 
 ### Error Handling
@@ -85,10 +85,12 @@ You can create a global error handler to handle any thrown errors by using the `
 This includes response validation errors.
 
 ```typescript
+import { TsRestResponseValidationError } from '@ts-rest/core';
+
 export default createNextRouter(contract, router, {
   responseValidation: true,
   errorHandler: (error: unknown, req: NextApiRequest, res: NextApiResponse) => {
-    if (error instanceof ResponseValidationError) {
+    if (error instanceof TsRestResponseValidationError) {
       console.log(error.cause);
       res.status(500).json({ message: 'Internal Server Error' });
       return;
