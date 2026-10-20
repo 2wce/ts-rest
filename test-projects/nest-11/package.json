@@ -24,8 +24,8 @@
     "@nestjs/platform-express": "^11.0.0",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
-    "@ts-rest/core": "file:../../dist/libs/ts-rest/core",
-    "@ts-rest/nest": "file:../../dist/libs/ts-rest/nest"
+    "@ts-rest/core": "file:../../dist/packages/ts-rest-core.tgz",
+    "@ts-rest/nest": "file:../../dist/packages/ts-rest-nest.tgz"
   },
   "devDependencies": {
     "@swc/cli": "^0.6.0",

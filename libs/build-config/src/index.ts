@@ -1,5 +1,3 @@
-import { readFile, writeFile, copyFile } from 'node:fs/promises';
-import { resolve } from 'node:path';
 import { mergeConfig, type UserConfig } from 'vite-plus';
 import type { PackUserConfig } from 'vite-plus/pack';
 import swc, { type Options } from 'unplugin-swc';
@@ -24,9 +22,6 @@ export function libraryConfig(
               'package.json',
               'vite.config.ts',
               'tsconfig*.json',
-              'README.md',
-              'CHANGELOG.md',
-              { pattern: 'LICENCE', base: 'workspace' },
               { pattern: 'libs/build-config/src/**', base: 'workspace' },
               { pattern: 'libs/build-config/package.json', base: 'workspace' },
               { pattern: 'libs/build-config/tsconfig.json', base: 'workspace' },
@@ -37,9 +32,7 @@ export function libraryConfig(
                 base: 'workspace' as const,
               })),
             ],
-            output: [
-              { pattern: `dist/libs/ts-rest/${name}/**`, base: 'workspace' },
-            ],
+            output: ['dist/**'],
           },
         },
       },
@@ -49,16 +42,14 @@ export function libraryConfig(
   return mergeConfig(config, { pack: options.pack ?? {} });
 }
 
-// Keep release metadata generation in a supported build hook, rather than
-// intercepting logs from the build tool. Changesets still versions source manifests.
+// Publishing metadata lives in package.json; pnpm applies it when packing.
 function libraryPack(
   name: string,
   entry: Record<string, string>,
 ): PackUserConfig {
-  const outDir = resolve('../../../dist/libs/ts-rest', name);
   return {
     entry,
-    outDir,
+    outDir: 'dist',
     format: ['esm', 'cjs'] as Array<'esm' | 'cjs'>,
     target: 'es2019',
     dts: true,
@@ -74,45 +65,6 @@ function libraryPack(
       name === 'nest'
         ? [swc.rollup(decoratorOptions('tsconfig.lib.json'))]
         : [],
-    hooks: {
-      'build:done': async () => {
-        const pkg = JSON.parse(await readFile('package.json', 'utf8'));
-        delete pkg.scripts;
-        delete pkg.devDependencies;
-        if (name !== 'core') {
-          const coreVersion = pkg.version.includes('-')
-            ? pkg.version
-            : `~${pkg.version.split('.').slice(0, 2).join('.')}.0`;
-          pkg.peerDependencies = {
-            ...pkg.peerDependencies,
-            '@ts-rest/core': coreVersion,
-          };
-        }
-        pkg.main = './index.cjs.js';
-        pkg.module = './index.esm.mjs';
-        pkg.types = './index.cjs.d.ts';
-        pkg.exports = { './package.json': './package.json' };
-        const subpaths: Record<string, string[]> = {};
-        for (const key of Object.keys(entry)) {
-          pkg.exports[key === 'index' ? '.' : `./${key}`] = {
-            import: {
-              types: `./${key}.esm.d.mts`,
-              default: `./${key}.esm.mjs`,
-            },
-            require: { types: `./${key}.cjs.d.ts`, default: `./${key}.cjs.js` },
-          };
-          if (key !== 'index') subpaths[key] = [`./${key}.cjs.d.ts`];
-        }
-        if (Object.keys(subpaths).length) pkg.typesVersions = { '*': subpaths };
-        await writeFile(
-          resolve(outDir, 'package.json'),
-          JSON.stringify(pkg, null, 2) + '\n',
-        );
-        await copyFile(resolve('../../../LICENCE'), resolve(outDir, 'LICENSE'));
-        await copyFile('README.md', resolve(outDir, 'README.md'));
-        await copyFile('CHANGELOG.md', resolve(outDir, 'CHANGELOG.md'));
-      },
-    },
   };
 }
 

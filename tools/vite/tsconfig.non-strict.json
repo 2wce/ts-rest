@@ -4,7 +4,7 @@
     "strict": false,
     "strictNullChecks": false,
     "paths": {
-      "@ts-rest/core": ["../../dist/libs/ts-rest/core/index.cjs.d.ts"]
+      "@ts-rest/core": ["../../libs/ts-rest/core/dist/index.cjs.d.ts"]
     }
   },
   "include": ["../../libs/non-strict-mode-test/src/**/*.spec.ts"]

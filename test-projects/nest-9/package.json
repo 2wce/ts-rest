@@ -28,8 +28,8 @@
     "@nestjs/platform-express": "9.4.0",
     "reflect-metadata": "0.1.13",
     "rxjs": "^7.0.0",
-    "@ts-rest/core": "file:../../dist/libs/ts-rest/core",
-    "@ts-rest/nest": "file:../../dist/libs/ts-rest/nest"
+    "@ts-rest/core": "file:../../dist/packages/ts-rest-core.tgz",
+    "@ts-rest/nest": "file:../../dist/packages/ts-rest-nest.tgz"
   },
   "devDependencies": {
     "@nestjs/cli": "9.4.0",

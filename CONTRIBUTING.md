@@ -41,7 +41,8 @@ workspace development or documentation.
 Vite+ caches build scripts through `vp run`. Inference checks use `--no-cache`: a
 negative probe showed native compiler file reads were not fully captured on this
 host, so automatic caching could replay success after a new failing assertion. Workspace dependencies determine
-ordering. Build artifacts stay in `dist/libs/ts-rest` for Changesets releases.
+ordering. Public libraries emit into their own `dist` directories. Native pnpm
+packing creates consumer tarballs under root `dist/packages`.
 
 ## Example commands
 
@@ -80,7 +81,7 @@ and are not a `tsc --build` pipeline. Source-only private libraries and Node
 examples need one config. Next retains its framework-specific config.
 
 The private `@ts-rest/build-config` workspace package shares the library pack
-task, cache inputs/outputs, public artifact generation, Node example pack preset
+task, cache inputs/outputs, ESM/CJS builds, Node example pack preset
 and Nest decorator transform. Consumers declare it in `devDependencies` as
 `workspace:*` and import presets by package name. It owns its Vite+/SWC tooling
 and exports TypeScript source directly, so it needs no build task. Its source,
@@ -90,8 +91,8 @@ Package Vite configs declare entry points; React Query also declares its combine
 declaration config and v5 cache inputs. Pack overrides use Vite's `mergeConfig`.
 Root `vite.config.ts` owns workspace orchestration, and library Vitest projects
 inherit its settings with `extends: true`. The [build-config README](libs/build-config/README.md)
-describes the presets. Release staging and package consumer checks remain under
-`tools/vite`.
+describes the presets. Package consumer and versioning checks remain under
+`tools/vite`; there is no release staging workspace.
 
 ## Workspace packages and dependencies
 
@@ -183,8 +184,16 @@ Node resolve dependencies from the owning application's `node_modules`.
 Workspace discovery excludes `dist`, `.next` and generated-client directories,
 so artifact manifests never become additional workspace packages.
 
-Published libraries still build into `dist/libs/ts-rest`, the release staging
-layout used by Changesets and standalone compatibility fixtures.
+Public libraries build into `libs/ts-rest/<package>/dist`. `pnpm pack:packages`
+builds them and runs native recursive pnpm packing for the ten public packages,
+excluding the private React Query v5 package. `make e2e` packs first, then installs
+the tarballs in temporary copies of each compatibility fixture. External versions
+stay locked; build tarball checksums are refreshed only in the temporary copy, so
+repeated builds do not dirty the fixture locks. Bun fixtures explicitly update
+only their local ts-rest archive dependencies to bypass stale tarball caches. Each
+installed ts-rest file is compared with its archive before tests run. To run one
+fixture, first run
+`pnpm pack:packages`, then `make -C test-projects/<fixture> e2e`.
 
 ## Release automation
 
@@ -239,7 +248,37 @@ for content structure and hosting details.
 
 ## Releases
 
-Changesets versions source manifests. The library build generates release
-manifests with existing public peer ranges and conditional exports. Release CI
-publishes the packages under `dist/libs/ts-rest`. Do not publish from a source
-package directory.
+Changesets versions the original workspace manifests. Each public package keeps
+source exports for development and declares `publishConfig` overrides for the
+compiled `main`, `module`, `types`, conditional exports and subpath `typesVersions`.
+Its `files` allowlist includes `dist` and the changelog. pnpm also includes package
+readmes and the workspace license. Packing uses normal pnpm metadata handling;
+development dependency metadata may remain in the manifest, but consumers do not
+install those dependencies.
+
+`pnpm pack:packages` creates `dist/packages/ts-rest-<package>.tgz` without publishing.
+`pnpm test:packages` runs real Changesets versioning probes and installs these
+tarballs into a temporary consumer. It checks ESM/CJS exports, declaration
+resolution, public peer ranges, Nest metadata and React directives.
+
+Core peers use native `workspace:^`, which pnpm converts to `^<core-version>` in
+the packed manifest. Compared with the old generated `~<major>.<minor>.0` rule,
+this raises the minimum to the current core patch and allows later compatible
+minor releases. Changesets updates peer dependents only when the core version
+leaves their range, avoiding a major adapter bump for a compatible core minor.
+This is configured through Changesets' built-in experimental
+`onlyUpdatePeerDependentsWhenOutOfRange` option and covered by release probes.
+
+Prereleases use Changesets snapshots: `pnpm version-packages --snapshot rc`
+produces versions such as `3.53.0-rc.20261020120000` and native caret core peers.
+Snapshot versions are disposable CI outputs. Versioning consumes the checkout
+copies of the changesets; the workflow does not commit or push those changes, so
+the stable branch retains its pending changesets. No persistent prerelease mode
+is needed. The disabled prerelease workflow
+publishes them with `changeset publish --tag <tag>`. There is no registry-version
+lookup or custom peer normalizer.
+
+Once publishing is ready to resume, `pnpm release` builds the libraries and runs
+`changeset publish` from the source workspace. It does not generate release
+manifests or copy Changesets into a second workspace. Both release workflows
+remain disabled during the fork groundwork.

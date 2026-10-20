@@ -186,11 +186,11 @@ importers:
         specifier: ^1.3.62
         version: 1.3.62
       '@ts-rest/core':
-        specifier: file:../../dist/libs/ts-rest/core
-        version: file:../../dist/libs/ts-rest/core(@types/node@20.3.1)
+        specifier: file:../../dist/packages/ts-rest-core.tgz
+        version: file:../../dist/packages/ts-rest-core.tgz(@types/node@20.3.1)
       '@ts-rest/nest':
-        specifier: file:../../dist/libs/ts-rest/nest
-        version: file:../../dist/libs/ts-rest/nest(@nestjs/common@10.0.0(reflect-metadata@0.1.13)(rxjs@7.8.1))(@nestjs/core@10.0.0)(@ts-rest/core@file:../../dist/libs/ts-rest/core(@types/node@20.3.1))(rxjs@7.8.1)
+        specifier: file:../../dist/packages/ts-rest-nest.tgz
+        version: file:../../dist/packages/ts-rest-nest.tgz(@nestjs/common@10.0.0(reflect-metadata@0.1.13)(rxjs@7.8.1))(@nestjs/core@10.0.0)(@ts-rest/core@file:../../dist/packages/ts-rest-core.tgz(@types/node@20.3.1))(rxjs@7.8.1)
       reflect-metadata:
         specifier: ^0.1.13
         version: 0.1.13
@@ -824,20 +824,22 @@ packages:
   '@tokenizer/token@0.3.0':
     resolution: {integrity: sha512-OvjF+z51L3ov0OyAU0duzsYuvO01PH7x4t6DJx+guahgTnBHkhJdG7soQeTSFLWN3efnHyibZ4Z8l2EuWwJN3A==}
 
-  '@ts-rest/core@file:../../dist/libs/ts-rest/core':
-    resolution: {directory: ../../dist/libs/ts-rest/core, type: directory}
+  '@ts-rest/core@file:../../dist/packages/ts-rest-core.tgz':
+    resolution: {integrity: sha512-JVNwBSWZqTRy+20S3E9KXorYKABjD9vES7EIVEAVKS0FW9IelMhrlVPqi3lSjbg7a8FDHmoG7jUwSHmFM64lmg==, tarball: file:../../dist/packages/ts-rest-core.tgz}
+    version: 3.52.1
     peerDependencies:
       '@types/node': ^18.18.7 || >=20.8.4
     peerDependenciesMeta:
       '@types/node':
         optional: true
 
-  '@ts-rest/nest@file:../../dist/libs/ts-rest/nest':
-    resolution: {directory: ../../dist/libs/ts-rest/nest, type: directory}
+  '@ts-rest/nest@file:../../dist/packages/ts-rest-nest.tgz':
+    resolution: {integrity: sha512-xoRiKphxD9FG9UgXeojyVbT4onqYkIUBgBstH82qUTrXkFlqOWg4DEciJEnvSSDPKKm+WVkrEWQ+4oug9x+6HQ==, tarball: file:../../dist/packages/ts-rest-nest.tgz}
+    version: 3.52.1
     peerDependencies:
       '@nestjs/common': ^9.0.0 || ^10.0.0 || ^11.0.0 || ^12.0.0
       '@nestjs/core': ^9.0.0 || ^10.0.0 || ^11.0.0 || ^12.0.0
-      '@ts-rest/core': ~3.52.0
+      '@ts-rest/core': ^3.52.1
       rxjs: ^7.1.0
 
   '@tsconfig/node10@1.0.9':
@@ -3534,15 +3536,15 @@ snapshots:
 
   '@tokenizer/token@0.3.0': {}
 
-  '@ts-rest/core@file:../../dist/libs/ts-rest/core(@types/node@20.3.1)':
+  '@ts-rest/core@file:../../dist/packages/ts-rest-core.tgz(@types/node@20.3.1)':
     optionalDependencies:
       '@types/node': 20.3.1
 
-  '@ts-rest/nest@file:../../dist/libs/ts-rest/nest(@nestjs/common@10.0.0(reflect-metadata@0.1.13)(rxjs@7.8.1))(@nestjs/core@10.0.0)(@ts-rest/core@file:../../dist/libs/ts-rest/core(@types/node@20.3.1))(rxjs@7.8.1)':
+  '@ts-rest/nest@file:../../dist/packages/ts-rest-nest.tgz(@nestjs/common@10.0.0(reflect-metadata@0.1.13)(rxjs@7.8.1))(@nestjs/core@10.0.0)(@ts-rest/core@file:../../dist/packages/ts-rest-core.tgz(@types/node@20.3.1))(rxjs@7.8.1)':
     dependencies:
       '@nestjs/common': 10.0.0(reflect-metadata@0.1.13)(rxjs@7.8.1)
       '@nestjs/core': 10.0.0(@nestjs/common@10.0.0(reflect-metadata@0.1.13)(rxjs@7.8.1))(@nestjs/platform-express@10.0.0)(reflect-metadata@0.1.13)(rxjs@7.8.1)
-      '@ts-rest/core': file:../../dist/libs/ts-rest/core(@types/node@20.3.1)
+      '@ts-rest/core': file:../../dist/packages/ts-rest-core.tgz(@types/node@20.3.1)
       rxjs: 7.8.1
 
   '@tsconfig/node10@1.0.9': {}

@@ -1,4 +1,2 @@
-e2e:
-	pnpm install --frozen-lockfile
-	pnpm test
-	pnpm build
+FIXTURE_RUNTIME := pnpm
+include ../fixture.mk

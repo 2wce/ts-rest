@@ -5,12 +5,12 @@
   "scripts": {
     "version-packages": "changeset version",
     "version-packages-update-lockfile": "changeset version && pnpm install --no-frozen-lockfile",
-    "release": "vp run build && node tools/vite/release-workspace.mjs && cd dist && node ../node_modules/@changesets/cli/bin.js publish",
+    "release": "pnpm build && changeset publish",
     "build": "vp run --filter \"./libs/ts-rest/*\" pack",
     "build:examples": "vp run --filter \"example-*\" build",
     "test": "vp run unit-tests",
     "test:watch": "vp run watch-tests",
-    "test:packages": "node tools/vite/package-check.mjs",
+    "test:packages": "vp run check-packages",
     "test:hosts": "vp run host-tests",
     "typecheck": "vp run --no-cache --filter \"./libs/ts-rest/*\" --filter @ts-rest/non-strict-mode-test --filter @ts-rest/build-config typecheck",
     "lint": "vp run lint-workspace",
@@ -24,7 +24,8 @@
     "ts-rest:build-watch": "vp run --parallel --filter \"./libs/ts-rest/*\" pack -- --watch",
     "build-test-all": "vp run build && vp run check && vp run test:packages && vp run build:examples",
     "examples:generate": "vp run @ts-rest/example-database#generate",
-    "docs:dev": "vp run @ts-rest/docs#dev"
+    "docs:dev": "vp run @ts-rest/docs#dev",
+    "pack:packages": "vp run pack-artifacts"
   },
   "engines": {
     "pnpm": "12.14.0",

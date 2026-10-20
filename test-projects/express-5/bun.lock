@@ -5,8 +5,8 @@
     "": {
       "name": "express-4",
       "dependencies": {
-        "@ts-rest/core": "../../dist/libs/ts-rest/core",
-        "@ts-rest/express": "../../dist/libs/ts-rest/express",
+        "@ts-rest/core": "file:../../dist/packages/ts-rest-core.tgz",
+        "@ts-rest/express": "file:../../dist/packages/ts-rest-express.tgz",
         "express": "5.0.1",
         "zod": "3.22.3",
       },
@@ -23,9 +23,9 @@
     },
   },
   "packages": {
-    "@ts-rest/core": ["@ts-rest/core@file:../../dist/libs/ts-rest/core", { "peerDependencies": { "@types/node": "^18.18.7 || >=20.8.4", "zod": "^3.22.3" }, "optionalPeers": ["@types/node", "zod"] }],
+    "@ts-rest/core": ["@ts-rest/core@../../dist/packages/ts-rest-core.tgz", { "peerDependencies": { "@types/node": "^18.18.7 || >=20.8.4" }, "optionalPeers": ["@types/node"] }, "sha512-JVNwBSWZqTRy+20S3E9KXorYKABjD9vES7EIVEAVKS0FW9IelMhrlVPqi3lSjbg7a8FDHmoG7jUwSHmFM64lmg=="],
 
-    "@ts-rest/express": ["@ts-rest/express@file:../../dist/libs/ts-rest/express", { "peerDependencies": { "@ts-rest/core": "~3.51.0", "express": "^4.0.0 || ^5.0.0", "zod": "^3.22.3" }, "optionalPeers": ["zod"] }],
+    "@ts-rest/express": ["@ts-rest/express@../../dist/packages/ts-rest-express.tgz", { "peerDependencies": { "@ts-rest/core": "^3.52.1", "express": "^4.0.0 || ^5.0.0" } }, "sha512-pyQJywKjDI6bRwICKih/jSBaNNKKEAAJYesst+KfHR2riv9f9oNV8i1ZujdOIILK2pJ1y7KwPh//hjjYFUh8hA=="],
 
     "@types/body-parser": ["@types/body-parser@1.19.5", "", { "dependencies": { "@types/connect": "*", "@types/node": "*" } }, "sha512-fB3Zu92ucau0iQ0JMCFQE7b/dv8Ot07NI3KaZIkIUNXq82k4eBAqUaneXfleGY9JWskeS9y+u0nXMyspcuQrCg=="],
 
@@ -236,8 +236,6 @@
     "wrappy": ["wrappy@1.0.2", "", {}, "sha512-l4Sp/DRseor9wL6EvV2+TuQn63dMkPjZ/sp9XkghTEbV9KlPS1xUsZ3u7/IQO4wxtcFB4bgpQPRcR3QCvezPcQ=="],
 
     "zod": ["zod@3.22.3", "", {}, "sha512-EjIevzuJRiRPbVH4mGc8nApb/lVLKVpmUhAaR5R5doKGfAnGJ6Gr3CViAVjP+4FWSxCsybeWQdcgCtbX+7oZug=="],
-
-    "@ts-rest/express/@ts-rest/core": ["@ts-rest/core@file:../../dist/libs/ts-rest/core", { "peerDependencies": { "@types/node": "^18.18.7 || >=20.8.4", "zod": "^3.22.3" }, "optionalPeers": ["@types/node", "zod"] }],
 
     "body-parser/debug": ["debug@3.1.0", "", { "dependencies": { "ms": "2.0.0" } }, "sha512-OX8XqP7/1a9cqkxYw2yXss15f26NKWBpDXQd0/uK/KPqdQhxbPa994hnzjcE2VqQpDslf55723cKPUOGSmMY3g=="],
 

@@ -82,6 +82,19 @@ export default defineConfig({
   run: {
     cache: { scripts: true },
     tasks: {
+      'pack-artifacts': {
+        command:
+          'pnpm build && pnpm --filter "./libs/ts-rest/*" --filter "!@ts-rest/react-query-v5" -r pack --out dist/packages/%s.tgz --silent',
+        cache: false,
+      },
+      'check-packages': {
+        command: [
+          'pnpm pack:packages',
+          'node --test tools/vite/versioning.test.mjs',
+          'node tools/vite/package-check.mjs',
+        ],
+        cache: false,
+      },
       'unit-tests': {
         command: 'vp test run',
         dependsOn: ['@ts-rest/example-database#generate'],

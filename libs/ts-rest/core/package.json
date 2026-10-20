@@ -2,7 +2,7 @@
   "name": "@ts-rest/core",
   "version": "3.52.1",
   "private": false,
-  "description": "RPC-like experience over a regular REST API, with type safe server implementations \ud83e\ude84",
+  "description": "RPC-like experience over a regular REST API, with type safe server implementations 🪄",
   "keywords": [
     "rpc",
     "rest",
@@ -37,5 +37,28 @@
   },
   "devDependencies": {
     "@ts-rest/build-config": "workspace:*"
+  },
+  "files": [
+    "dist",
+    "CHANGELOG.md"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "main": "./dist/index.cjs.js",
+    "module": "./dist/index.esm.mjs",
+    "types": "./dist/index.cjs.d.ts",
+    "exports": {
+      "./package.json": "./package.json",
+      ".": {
+        "import": {
+          "types": "./dist/index.esm.d.mts",
+          "default": "./dist/index.esm.mjs"
+        },
+        "require": {
+          "types": "./dist/index.cjs.d.ts",
+          "default": "./dist/index.cjs.js"
+        }
+      }
+    }
   }
 }

@@ -23,7 +23,10 @@ Consumers declare this package in `devDependencies` using `workspace:*`.
 The package owns the Vite+/SWC dependencies used by its presets. Root
 `vite.config.ts` continues to own workspace tasks, tests, lint and formatting.
 
-Published libraries retain their existing `dist/libs/ts-rest` staging layout and
-public exports. The build-config dependency is removed from release manifests
-with other development dependencies. Shared preset changes invalidate library
-build caches. Release staging and package consumer checks remain in `tools/vite`.
+Published libraries emit ESM/CJS and declaration files into their own `dist`.
+The preset does not generate manifests or copy release metadata. Each public
+package declares `files` and pnpm `publishConfig` overrides in its source manifest;
+native pnpm packing includes compiled output, readme, changelog and license.
+
+Shared preset changes invalidate library build caches. Consumer and versioning
+checks remain in `tools/vite`; native tarball tasks live in root `vite.config.ts`.

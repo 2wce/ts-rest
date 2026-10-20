@@ -13,7 +13,8 @@
   "peerDependencies": {
     "@azure/functions": "^4.0.0",
     "@types/aws-lambda": "^8.10.115",
-    "next": "^12.0.0 || ^13.0.0 || ^14.0.0 || ^15.0.0 || ^16.0.0"
+    "next": "^12.0.0 || ^13.0.0 || ^14.0.0 || ^15.0.0 || ^16.0.0",
+    "@ts-rest/core": "workspace:^"
   },
   "peerDependenciesMeta": {
     "@azure/functions": {
@@ -41,5 +42,84 @@
     "./aws": "./src/aws.ts",
     "./next": "./src/next.ts",
     "./azure": "./src/azure.ts"
+  },
+  "files": [
+    "dist",
+    "CHANGELOG.md"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "main": "./dist/index.cjs.js",
+    "module": "./dist/index.esm.mjs",
+    "types": "./dist/index.cjs.d.ts",
+    "exports": {
+      "./package.json": "./package.json",
+      ".": {
+        "import": {
+          "types": "./dist/index.esm.d.mts",
+          "default": "./dist/index.esm.mjs"
+        },
+        "require": {
+          "types": "./dist/index.cjs.d.ts",
+          "default": "./dist/index.cjs.js"
+        }
+      },
+      "./fetch": {
+        "import": {
+          "types": "./dist/fetch.esm.d.mts",
+          "default": "./dist/fetch.esm.mjs"
+        },
+        "require": {
+          "types": "./dist/fetch.cjs.d.ts",
+          "default": "./dist/fetch.cjs.js"
+        }
+      },
+      "./aws": {
+        "import": {
+          "types": "./dist/aws.esm.d.mts",
+          "default": "./dist/aws.esm.mjs"
+        },
+        "require": {
+          "types": "./dist/aws.cjs.d.ts",
+          "default": "./dist/aws.cjs.js"
+        }
+      },
+      "./next": {
+        "import": {
+          "types": "./dist/next.esm.d.mts",
+          "default": "./dist/next.esm.mjs"
+        },
+        "require": {
+          "types": "./dist/next.cjs.d.ts",
+          "default": "./dist/next.cjs.js"
+        }
+      },
+      "./azure": {
+        "import": {
+          "types": "./dist/azure.esm.d.mts",
+          "default": "./dist/azure.esm.mjs"
+        },
+        "require": {
+          "types": "./dist/azure.cjs.d.ts",
+          "default": "./dist/azure.cjs.js"
+        }
+      }
+    },
+    "typesVersions": {
+      "*": {
+        "fetch": [
+          "./dist/fetch.cjs.d.ts"
+        ],
+        "aws": [
+          "./dist/aws.cjs.d.ts"
+        ],
+        "next": [
+          "./dist/next.cjs.d.ts"
+        ],
+        "azure": [
+          "./dist/azure.cjs.d.ts"
+        ]
+      }
+    }
   }
 }

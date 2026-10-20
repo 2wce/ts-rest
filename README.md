@@ -99,6 +99,20 @@ Create a contract, implement it on your server then consume it in your client. I
   <h3>👉 Start reading the official <a href="https://ts-rest.com/docs/quickstart?utm_source=github&utm_medium=documentation&utm_campaign=readme">Quickstart Guide</a> 👈</h3>
 </div>
 
+## Workspace development
+
+Use Node 26.12.0 and pnpm 12.14.0. Vite+ builds, checks and tests the workspace.
+Public packages build into package-local `dist` directories; pnpm applies their
+published exports when packing.
+
+- `pnpm build`: build the ten public libraries.
+- `pnpm pack:packages`: build and create installable tarballs without publishing.
+- `pnpm test:packages`: verify packed exports, types and versioning.
+- `make e2e`: install those tarballs in the framework and validator fixtures.
+
+Releases remain paused. See [CONTRIBUTING.md](CONTRIBUTING.md) for workspace,
+compatibility and release commands.
+
 ## Contributors ✨
 
 MASSIVE Thanks to all of these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)), who have helped make ts-rest possible:
