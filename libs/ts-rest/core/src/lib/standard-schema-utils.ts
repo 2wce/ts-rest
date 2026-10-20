@@ -26,6 +26,27 @@ export const isStandardSchema = (
   return standard.version === 1 && typeof standard.validate === 'function';
 };
 
+const isContractTypeMarker = (
+  schema: unknown,
+): schema is symbol | null | undefined =>
+  schema === null || schema === undefined || typeof schema === 'symbol';
+
+function assertHeaderSchema(
+  schema: unknown,
+): asserts schema is
+  | Record<string, ContractAnyType>
+  | ContractAnyType
+  | undefined {
+  if (isContractTypeMarker(schema) || isStandardSchema(schema)) return;
+  if (typeof schema === 'object' && schema !== null) {
+    const prototype = Object.getPrototypeOf(schema);
+    if (prototype === Object.prototype || prototype === null) return;
+  }
+  throw new Error(
+    'Invalid header schema supplied; use a Standard Schema, a plain field record or a contract type marker',
+  );
+}
+
 /** Return a supplied Standard Schema without adapting or mutating it. */
 export const parseAsStandardSchema = (
   schema: unknown,
@@ -49,6 +70,7 @@ export const validateMultiSchemaObject = (
   error?: StandardSchemaError;
   schemasUsed: Array<StandardSchemaV1<unknown, unknown>>;
 } => {
+  assertHeaderSchema(schemaObject);
   const schema = parseAsStandardSchema(schemaObject);
 
   // If the top level is not null we know it's a valid schema we can validate against
@@ -179,16 +201,16 @@ export const mergeHeaderSchemasForRoute = (
   baseSchema: unknown,
   routeSchema: unknown,
 ): unknown => {
-  if (!baseSchema) {
+  assertHeaderSchema(baseSchema);
+  assertHeaderSchema(routeSchema);
+
+  if (isContractTypeMarker(baseSchema)) {
     return routeSchema;
   }
 
-  if (!routeSchema) {
+  if (isContractTypeMarker(routeSchema)) {
     return baseSchema;
   }
-
-  if (typeof baseSchema === 'symbol') return routeSchema;
-  if (typeof routeSchema === 'symbol') return baseSchema;
 
   if (isStandardSchema(baseSchema) && isStandardSchema(routeSchema)) {
     return combineStandardSchemas(baseSchema, routeSchema);

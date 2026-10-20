@@ -89,3 +89,48 @@ describe('explicit Standard Schema boundary', () => {
     ]);
   });
 });
+
+describe('whole-header schema categories', () => {
+  class UnsupportedValidator {
+    safeParse() {
+      return { success: false };
+    }
+  }
+
+  it.each([
+    { name: 'class instance', schema: new UnsupportedValidator() },
+    { name: 'number', schema: 42 },
+    { name: 'true', schema: true },
+    { name: 'false', schema: false },
+    { name: 'array', schema: [] },
+  ])(
+    'rejects an unsupported supplied whole-header schema: $name',
+    ({ schema }) => {
+      expect(() =>
+        validateMultiSchemaObject({ token: 'hello' }, schema as never),
+      ).toThrow(/Standard Schema/);
+    },
+  );
+
+  it.each([{}, Object.create(null), null, undefined, Symbol('contract-type')])(
+    'passes through markers and valid empty field records: %s',
+    (schema) => {
+      expect(validateMultiSchemaObject({ token: 'hello' }, schema)).toEqual({
+        value: { token: 'hello' },
+        schemasUsed: [],
+      });
+    },
+  );
+
+  it('retains an unsupported whole-header schema signal when merging with a field map', () => {
+    expect(() =>
+      mergeHeaderSchemasForRoute({}, new UnsupportedValidator()),
+    ).toThrow(/Standard Schema/);
+  });
+
+  it('rejects a false whole-header schema instead of treating it as absent during merge', () => {
+    expect(() => mergeHeaderSchemasForRoute(false, {})).toThrow(
+      /Standard Schema/,
+    );
+  });
+});
