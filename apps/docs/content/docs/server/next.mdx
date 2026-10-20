@@ -99,7 +99,7 @@ export default createNextRouter(contract, router, {
 
 #### Request Validation Error Handling
 
-The default behavior when validating request schema is to return a 400 status with the corresponding ZodError.
+The default behavior when validating request schema is to return a 400 status with the corresponding validation error.
 To customize handling of the request validation errors enable the `throwRequestValidation` option.
 This option allows you to handle the request validation error in the global `errorHandler` function.
 
@@ -111,7 +111,7 @@ export default createNextRouter(contract, router, {
       if (error.body !== null) {
         res
           .status(400)
-          .json({ message: 'Malformed Body', errors: error.body.flatten() });
+          .json({ message: 'Malformed Body', errors: error.body.issues });
         return;
       }
 
@@ -125,10 +125,10 @@ export default createNextRouter(contract, router, {
 ```typescript
 export class RequestValidationError extends Error {
   constructor(
-    public pathParams: z.ZodError | null,
-    public headers: z.ZodError | null,
-    public query: z.ZodError | null,
-    public body: z.ZodError | null,
+    public pathParams: StandardSchemaError | null,
+    public headers: StandardSchemaError | null,
+    public query: StandardSchemaError | null,
+    public body: StandardSchemaError | null,
   ) {
     super('[ts-rest] request validation failed');
   }

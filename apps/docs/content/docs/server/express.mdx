@@ -74,10 +74,10 @@ You can pass `combined` to the `requestValidationErrorHandler` option to return 
 
 ```typescript
 {
-  pathParameterErrors: z.ZodError | null;
-  headerErrors: z.ZodError | null;
-  queryParameterErrors: z.ZodError | null;
-  bodyErrors: z.ZodError | null;
+  pathParameterErrors: StandardSchemaError | null;
+  headerErrors: StandardSchemaError | null;
+  queryParameterErrors: StandardSchemaError | null;
+  bodyErrors: StandardSchemaError | null;
 }
 ```
 
