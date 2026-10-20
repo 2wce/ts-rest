@@ -4,24 +4,31 @@ import * as bodyParser from 'body-parser';
 import { initClient, initContract } from '@ts-rest/core';
 import { generateOpenApi } from '@ts-rest/open-api';
 import { z } from 'zod';
+import { toStandardSchema } from '@ts-rest/core/zod3';
 
 const c = initContract();
 
-const PokemonSchema = z.object({
-  id: z.number(),
-  name: z.string(),
-});
+const PokemonSchema = toStandardSchema(
+  z.object({
+    id: z.number(),
+    name: z.string(),
+  }),
+);
 
 const contract = c.router({
   getPokemon: {
     method: 'GET',
     path: '/pokemon/:id',
-    headers: z.object({
-      'x-test': z.coerce.number().optional(),
-    }),
-    pathParams: z.object({
-      id: z.coerce.number(),
-    }),
+    headers: toStandardSchema(
+      z.object({
+        'x-test': z.coerce.number().optional(),
+      }),
+    ),
+    pathParams: toStandardSchema(
+      z.object({
+        id: z.coerce.number(),
+      }),
+    ),
     responses: {
       200: PokemonSchema,
     },
@@ -29,9 +36,11 @@ const contract = c.router({
   deletePokemon: {
     method: 'DELETE',
     path: '/pokemon/:id',
-    pathParams: z.object({
-      id: z.coerce.number(),
-    }),
+    pathParams: toStandardSchema(
+      z.object({
+        id: z.coerce.number(),
+      }),
+    ),
     responses: {
       200: c.noBody(),
     },
@@ -39,15 +48,19 @@ const contract = c.router({
   updatePokemon: {
     method: 'PATCH',
     path: '/pokemon/:id',
-    pathParams: z.object({
-      id: z.coerce.number(),
-    }),
-    body: z.object({
-      name: z.string(),
-    }),
+    pathParams: toStandardSchema(
+      z.object({
+        id: z.coerce.number(),
+      }),
+    ),
+    body: toStandardSchema(
+      z.object({
+        name: z.string(),
+      }),
+    ),
     responses: {
-      200: z.object({ message: z.string() }),
-      403: z.object({ message: z.string() }),
+      200: toStandardSchema(z.object({ message: z.string() })),
+      403: toStandardSchema(z.object({ message: z.string() })),
     },
   },
 });

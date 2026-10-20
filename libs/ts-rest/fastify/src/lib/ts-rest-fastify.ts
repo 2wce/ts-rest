@@ -15,20 +15,17 @@ import {
   validateMultiSchemaObject,
 } from '@ts-rest/core';
 import * as fastify from 'fastify';
-import { type ZodError } from 'zod';
 
 export class RequestValidationError extends Error {
   constructor(
-    public pathParams: ZodError | StandardSchemaError | null,
-    public headers: ZodError | StandardSchemaError | null,
-    public query: ZodError | StandardSchemaError | null,
-    public body: ZodError | StandardSchemaError | null,
+    public pathParams: StandardSchemaError | null,
+    public headers: StandardSchemaError | null,
+    public query: StandardSchemaError | null,
+    public body: StandardSchemaError | null,
   ) {
     super('[ts-rest] request validation failed');
   }
 }
-
-export { RequestValidationErrorSchemaWithoutMessage as RequestValidationErrorSchema } from '@ts-rest/core';
 
 type FastifyContextConfig<T extends AppRouter | AppRoute> = {
   tsRestRoute: T extends AppRoute ? T : FlattenAppRouter<T>;

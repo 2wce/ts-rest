@@ -34,7 +34,7 @@ describe('express 4', () => {
             received: 'nan',
           },
         ],
-        name: 'ZodError',
+        name: 'ValidationError',
       },
     });
   });

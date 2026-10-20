@@ -37,9 +37,9 @@ function RootComponent() {
       </head>
       <body className="flex min-h-screen flex-col">
         <PostHogProvider>
-          <Banner variant="rainbow" id="3-53-0-release">
-            Zod 4 (and all other Standard Schema support) is available as a
-            release candidate `3.53.0-rc.1`
+          <Banner variant="rainbow" id="standard-schema-major-preview">
+            Documentation for the fork's unreleased major version.{' '}
+            <a href="/standard-schema-migration">Read the migration guide.</a>
           </Banner>
           <RootProvider
             search={{ options: { type: 'static', api: '/api/search.json' } }}

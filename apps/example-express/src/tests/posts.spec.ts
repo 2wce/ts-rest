@@ -40,7 +40,7 @@ describe('Posts Endpoints', () => {
           received: 'nan',
         },
       ],
-      name: 'ZodError',
+      name: 'ValidationError',
     });
   });
 
@@ -58,7 +58,7 @@ describe('Posts Endpoints', () => {
           received: 'undefined',
         },
       ],
-      name: 'ZodError',
+      name: 'ValidationError',
     });
   });
 
@@ -79,7 +79,7 @@ describe('Posts Endpoints', () => {
           received: 'number',
         },
       ],
-      name: 'ZodError',
+      name: 'ValidationError',
     });
   });
 
@@ -97,7 +97,7 @@ describe('Posts Endpoints', () => {
           received: 'undefined',
         },
       ],
-      name: 'ZodError',
+      name: 'ValidationError',
     });
   });
 

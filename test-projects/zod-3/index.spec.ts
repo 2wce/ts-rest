@@ -5,7 +5,7 @@ import {
   RequestValidationErrorSchema,
   RequestValidationErrorSchemaForNest,
   RequestValidationErrorSchemaWithoutMessage,
-} from '@ts-rest/core';
+} from '@ts-rest/core/zod3';
 
 const expectRes = (res: any) => {
   return expect({ body: res.body, status: res.status });
@@ -111,7 +111,7 @@ describe('zod 3', () => {
             received: 'nan',
           },
         ],
-        name: 'ZodError',
+        name: 'ValidationError',
       },
     });
   });

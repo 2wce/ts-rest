@@ -36,9 +36,11 @@ peer keeps docs and the root Vite+ CLI on the same Vite runtime.
 - `vite.config.ts`: Vite+ tasks, plugins and static prerendering.
 
 Fumadocs Twoslash 4 uses the workspace's native TypeScript 7 compiler integration.
-Checked snippets retain diagnostics, hover types and completion popups. Published
-alpha SDK examples resolve `zod` to the `zod3` alias, while Fumadocs itself uses
-Zod 4. The hidden nested-router setup in `client/fetch.mdx` preserves literal
+Checked snippets retain diagnostics, hover types and completion popups. Examples
+compile against the local workspace SDKs for the fork's unreleased major version.
+They resolve `zod` to the modern Zod 3 `zod3` alias, while Fumadocs itself uses Zod 4.
+The migration guide explains the validator-independent defaults and explicit
+`/zod3` compatibility imports. The hidden nested-router setup in `client/fetch.mdx` preserves literal
 paths with `as const` to avoid the SDK's inference regression on newer compilers.
 Do not disable diagnostics to accommodate SDK or compiler upgrades.
 

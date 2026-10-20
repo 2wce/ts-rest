@@ -34,7 +34,7 @@ export default defineConfig({
         transformerTwoslash({
           twoslashOptions: {
             compilerOptions: {
-              // Published SDK examples use Zod 3; Fumadocs tooling uses Zod 4.
+              // Workspace SDK examples use modern Zod 3; Fumadocs uses Zod 4.
               paths: { zod: [resolve('node_modules/zod3/index.d.ts')] },
             },
           },

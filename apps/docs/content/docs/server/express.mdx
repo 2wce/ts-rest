@@ -56,9 +56,9 @@ type Options = {
 
 ### Response Validation
 
-To enable response parsing and validation, you can use the `validateResponses` option.
-If a corresponding response Zod schema is defined in the contract for the returned status code, the response will be parsed and validated.
-If validation fails, a `ResponseValidationError` will be thrown, causing a 500 response to be returned.
+To enable response parsing and validation, you can use the `responseValidation` option.
+If a corresponding response Standard Schema is defined in the contract for the returned status code, the response will be parsed and validated.
+If validation fails, a `TsRestResponseValidationError` will be thrown, causing a 500 response to be returned.
 
 ```typescript
 createExpressEndpoints(contract, router, app, {
@@ -74,10 +74,10 @@ You can pass `combined` to the `requestValidationErrorHandler` option to return 
 
 ```typescript
 {
-  pathParameterErrors: z.ZodError | null;
-  headerErrors: z.ZodError | null;
-  queryParameterErrors: z.ZodError | null;
-  bodyErrors: z.ZodError | null;
+  pathParameterErrors: StandardSchemaError | null;
+  headerErrors: StandardSchemaError | null;
+  queryParameterErrors: StandardSchemaError | null;
+  bodyErrors: StandardSchemaError | null;
 }
 ```
 

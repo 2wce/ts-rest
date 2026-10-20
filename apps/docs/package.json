@@ -13,10 +13,10 @@
   },
   "dependencies": {
     "@shikijs/transformers": "4.5.0",
-    "@ts-rest/core": "3.53.0-alpha.3",
-    "@ts-rest/express": "3.53.0-alpha.3",
-    "@ts-rest/nest": "3.53.0-alpha.3",
-    "@ts-rest/react-query": "3.53.0-alpha.3",
+    "@ts-rest/core": "workspace:*",
+    "@ts-rest/express": "workspace:*",
+    "@ts-rest/nest": "workspace:*",
+    "@ts-rest/react-query": "workspace:*",
     "fumadocs-core": "16.17.7",
     "fumadocs-mdx": "15.4.8",
     "fumadocs-twoslash": "4.0.2",
@@ -29,7 +29,7 @@
     "zod": "4.6.7",
     "@tanstack/react-start": "1.169.3",
     "@tanstack/react-router": "1.170.45",
-    "zod3": "npm:zod@3.22.3"
+    "zod3": "npm:zod@3.25.76"
   },
   "devDependencies": {
     "@types/mdx": "^2.0.13",

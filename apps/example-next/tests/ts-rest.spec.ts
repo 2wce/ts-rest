@@ -130,7 +130,7 @@ describe('/posts', () => {
           received: 'undefined',
         },
       ],
-      name: 'ZodError',
+      name: 'ValidationError',
     });
   });
 });

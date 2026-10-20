@@ -114,7 +114,7 @@ The current workspace framework baselines are Next 16.4.2 and Nest 12.2.0
 (with Swagger 12.0.2). Nest tests use the matching platform adapters and their
 local Fastify 5.12.7 dependency. The standalone Fastify adapter retains its 4.x
 baseline. Nest 9/10/11 compatibility fixtures keep their separate installations.
-The docs' published SDK examples use local Nest 11 dependencies.
+The docs' workspace SDK examples use local Nest 11 dependencies.
 
 Contracts keep `:param?` optional path syntax. The Nest adapter registers
 concrete path alternatives through Nest's built-in path arrays so the same
@@ -250,10 +250,11 @@ context objects.
 The documentation in `apps/docs` uses TanStack Start and Fumadocs on Vite+.
 The root workspace installation and lockfile own its dependencies. Twoslash 4
 uses the native TypeScript 7 integration, so docs shares the catalog compiler.
-Published SDK snippets resolve Zod 3 through an alias; Fumadocs tooling uses
-Zod 4. Keep snippet diagnostics enabled. The hidden nested-router setup in the
-fetch example uses literal path annotations for the published SDK's inference
-regression on newer compilers.
+SDK snippets compile against the local workspace packages for the fork's
+unreleased major version. They resolve modern Zod 3 through an alias; Fumadocs
+tooling uses Zod 4. Keep snippet diagnostics enabled. The hidden nested-router
+setup in the fetch example uses literal path annotations to preserve inference
+on newer compilers.
 
 ```sh
 pnpm install --frozen-lockfile
@@ -275,6 +276,25 @@ search or application server is required. Set `VITE_POSTHOG_KEY` and optionally
 `VITE_POSTHOG_HOST` at build time to enable analytics. The old Next environment
 names and `/ingest` rewrites no longer apply. See [the docs app README](apps/docs/README.md)
 for content structure and hosting details.
+
+## Validator-independent boundary
+
+The default core and adapter entries use Standard Schema types and validation.
+They must not import or bundle Zod, including through shared build chunks.
+Zod-specific helpers live in explicit `/zod3` entries. Their compatibility code
+must remain separate from the default runtime and declaration graph.
+
+`pnpm test:packages` installs the real tarballs into isolated consumers for minimal
+Standard Schema, Valibot, stable Zod 4 and explicitly bridged legacy Zod 3. It
+checks ESM and CommonJS imports and strict declarations without `skipLibCheck`.
+The no-Zod profiles also reject Zod in the installed dependency graph. The full
+`test-projects` compatibility matrix remains CI-only.
+
+The strict adapter consumer uses a supported Next 12 baseline to isolate the
+validator boundary from independent upstream Next 16 declaration errors. The
+regular workspace and Next example keep their current Next 16 baseline.
+See the [unreleased major migration guide](apps/docs/content/docs/standard-schema-migration.mdx)
+for error identity, moved exports, old-schema bridging and header merge behavior.
 
 ## Releases
 

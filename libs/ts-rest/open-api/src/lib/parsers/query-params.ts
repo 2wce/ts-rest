@@ -1,4 +1,5 @@
-import { AppRoute, isStandardSchema, isZodObject } from '@ts-rest/core';
+import { AppRoute, isStandardSchema } from '@ts-rest/core';
+import { isZodObject } from '@ts-rest/core/zod3';
 import {
   AsyncAndSyncHelper,
   GetAsyncFunction,

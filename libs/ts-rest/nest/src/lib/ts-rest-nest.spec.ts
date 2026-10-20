@@ -684,7 +684,7 @@ describe('ts-rest-nest', () => {
                 received: 'string',
               },
             ],
-            name: 'ZodError',
+            name: 'ValidationError',
           },
         });
       });
@@ -727,7 +727,7 @@ describe('ts-rest-nest', () => {
                 received: 'string',
               },
             ],
-            name: 'ZodError',
+            name: 'ValidationError',
           },
         });
       });

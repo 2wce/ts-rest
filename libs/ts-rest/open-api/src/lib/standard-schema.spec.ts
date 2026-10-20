@@ -1,5 +1,5 @@
 import * as v from 'valibot';
-import { initContract } from '@ts-rest/core';
+import { initContract, type StandardSchemaV1 } from '@ts-rest/core';
 import { generateOpenApi, generateOpenApiAsync } from './ts-rest-open-api';
 import { VALIBOT_ASYNC } from './parsers/test-helpers';
 
@@ -460,4 +460,56 @@ describe('standard schema', () => {
       },
     ]);
   });
+});
+
+describe('Standard Schema response description metadata', () => {
+  it.each([
+    {
+      label: 'object metadata',
+      description: { text: 'not an OpenAPI description' },
+      expected: '200',
+    },
+    { label: 'numeric metadata', description: 42, expected: '200' },
+    { label: 'empty description', description: '', expected: '200' },
+    {
+      label: 'string description',
+      description: 'The requested value',
+      expected: 'The requested value',
+    },
+  ])(
+    'uses an OpenAPI string description for $label',
+    ({ description, expected }) => {
+      const responseSchema: StandardSchemaV1<string> & {
+        description: unknown;
+      } = {
+        description,
+        '~standard': {
+          version: 1,
+          vendor: 'description-test',
+          validate: (value) =>
+            typeof value === 'string'
+              ? { value }
+              : { issues: [{ message: 'Expected a string' }] },
+        },
+      };
+      const document = generateOpenApi(
+        c.router({
+          getValue: {
+            method: 'GET',
+            path: '/metadata',
+            responses: { 200: responseSchema },
+          },
+        }),
+        { info: { title: 'Metadata API', version: '1.0' } },
+        {
+          schemaTransformer: ({ type }) =>
+            type === 'response' ? { type: 'string' } : null,
+        },
+      );
+      expect(document.paths['/metadata'].get?.responses['200']).toEqual({
+        description: expected,
+        content: { 'application/json': { schema: { type: 'string' } } },
+      });
+    },
+  );
 });

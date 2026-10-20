@@ -1,0 +1,114 @@
+---
+title: Standard Schema migration
+description: Prepare for the fork's unreleased validator-independent major version.
+---
+
+This guide describes the next major version in the fork. Releases remain disabled.
+Existing published v3 packages keep their current behavior.
+
+## Modern validators
+
+Keep `initContract`, `initClient` and the usual adapter setup. Use a schema that
+implements Standard Schema, such as modern Zod 3, Zod 4 or Valibot. Core uses only
+`~standard.validate` and Standard Schema input/output types. It does not choose a
+validation path from the validator name or version.
+
+Core and the default adapters no longer require Zod to be installed. This also
+applies to their published TypeScript declarations. Validation must remain
+synchronous; asynchronous schema validation is still unsupported.
+
+## Older Zod 3
+
+Wrap a schema that does not provide `~standard` explicitly:
+
+```typescript twoslash
+import { initContract } from '@ts-rest/core';
+import { toStandardSchema } from '@ts-rest/core/zod3';
+import { z } from 'zod';
+
+const c = initContract();
+const contract = c.router({
+  convert: {
+    method: 'POST',
+    path: '/convert',
+    body: toStandardSchema(z.string().transform(Number)),
+    responses: { 200: toStandardSchema(z.number()) },
+  },
+});
+```
+
+The bridge preserves inferred input/output types, validator issue fields and Zod
+object introspection. It does not change the supplied schema. Apply it to the
+schema supplied to the contract; do not wrap every nested field.
+
+An unsupported schema now throws a clear configuration error. Core no longer
+automatically recognizes a `safeParse` method or silently skips that schema.
+
+## Validation errors
+
+Default validation errors are `StandardSchemaError`, with `name: 'ValidationError'`
+and a structural `issues` array. Validator-specific fields on each issue remain
+available at runtime. Treat issue paths and messages as the portable interface;
+do not assume Zod-only methods such as `flatten()` or `format()` exist.
+
+The HTTP status codes and request-error locations remain the same. Applications
+that inspect `instanceof ZodError`, expect the serialized name `ZodError`, or
+parse responses with the historical Zod error schemas must update those checks.
+An explicitly bridged old Zod schema also uses the new default error class.
+
+Use `TsRestResponseValidationError` from core when handling server response
+validation failures. Adapter request errors expose `StandardSchemaError` in each
+failed request location. Nest also exposes its existing
+`TsRestResponseValidationError` for response validation.
+
+## Historical helpers
+
+Import Zod guards, `zodMerge`, `zodErrorResponse`, `ZodErrorSchema`,
+`ZodInferOrType`, `ZodInputOrType` and the historical request-error schemas from
+`@ts-rest/core/zod3`. Prefer `SchemaInputOrType` and `SchemaOutputOrType` from the
+default core entry for new code.
+
+Adapter-specific historical error classes and schemas move to the adapter's
+`/zod3` entry point where they existed. Those helpers describe the historical
+payloads. Importing them does not switch default handlers back to Zod errors.
+The compatibility entry points support Zod 3; Zod 4 uses the default entry points.
+
+## Whole-object headers
+
+Record-of-field-schema headers keep their route override semantics. Combining
+two whole-object Standard Schemas validates both and merges successful outputs.
+Both input requirements must be satisfied; the route output takes precedence.
+This differs from Zod's `.merge()`, which can replace a field's validation rule.
+
+If an old contract relies on Zod object overrides, merge before bridging:
+
+```typescript twoslash
+import { initContract } from '@ts-rest/core';
+import { toStandardSchema } from '@ts-rest/core/zod3';
+import { z } from 'zod';
+
+const baseHeaders = z.object({ role: z.literal('user') });
+const routeHeaders = z.object({ role: z.literal('admin') });
+const headers = toStandardSchema(baseHeaders.merge(routeHeaders));
+const c = initContract();
+const contract = c.router({
+  read: {
+    method: 'GET',
+    path: '/headers',
+    headers,
+    responses: { 200: c.type<{ ok: boolean }>() },
+  },
+});
+```
+
+Supply that combined schema once, or convert headers to field records. Mixing
+whole-object schemas with field records remains unsupported. Further header
+inference changes are tracked separately in issue #3.
+
+## OpenAPI
+
+This change makes runtime validation independent from the validator. It does not
+make JSON Schema generation independent. The OpenAPI package still uses its
+existing Zod 3 transformer by default; other validators need the existing custom
+transformer option. The old-Zod bridge preserves the introspection that transformer
+needs. Validator-independent OpenAPI work is tracked in issue #4.

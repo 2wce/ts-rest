@@ -1,4 +1,3 @@
-import type { z } from 'zod';
 import { ContractNoBodyType, ContractNullType, ContractPlainType } from './dsl';
 import { StandardSchemaV1 } from './standard-schema';
 
@@ -58,16 +57,9 @@ export type SchemaOutputOrType<T> = T extends ContractNullType
     ? undefined
     : T extends ContractPlainType<infer U>
       ? U
-      : // @deprecated - remove in next major version when zod (standard schema) is required
-        T extends z.ZodTypeAny
-        ? z.output<T>
-        : T extends StandardSchemaV1
-          ? StandardSchemaV1.InferOutput<T>
-          : T;
-
-// TODO: remove in next major version
-/** @deprecated use SchemaOutputOrType */
-export type ZodInferOrType<T> = SchemaOutputOrType<T>;
+      : T extends StandardSchemaV1
+        ? StandardSchemaV1.InferOutput<T>
+        : T;
 
 export type SchemaInputOrType<T> = T extends ContractNullType
   ? null
@@ -75,16 +67,9 @@ export type SchemaInputOrType<T> = T extends ContractNullType
     ? undefined
     : T extends ContractPlainType<infer U>
       ? U
-      : // @deprecated - remove in next major version when zod (standard schema) is required
-        T extends z.ZodTypeAny
-        ? z.input<T>
-        : T extends StandardSchemaV1
-          ? StandardSchemaV1.InferInput<T>
-          : T;
-
-// TODO: remove in next major version
-/** @deprecated use SchemaInputOrType */
-export type ZodInputOrType<T> = SchemaInputOrType<T>;
+      : T extends StandardSchemaV1
+        ? StandardSchemaV1.InferInput<T>
+        : T;
 
 export type Merge<T, U> = Omit<T, keyof U> & U;
 

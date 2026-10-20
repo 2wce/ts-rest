@@ -86,7 +86,7 @@ describe('PostController', () => {
               received: 'undefined',
             },
           ],
-          name: 'ZodError',
+          name: 'ValidationError',
         });
     });
   });
@@ -111,7 +111,7 @@ describe('PostController', () => {
               received: 'number',
             },
           ],
-          name: 'ZodError',
+          name: 'ValidationError',
         });
     });
 

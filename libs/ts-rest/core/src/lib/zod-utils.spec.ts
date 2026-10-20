@@ -1,5 +1,5 @@
-import { zodMerge } from './zod-utils';
-import { z } from 'zod';
+import { zodMerge } from '../zod3';
+import { z } from 'zod-legacy';
 
 describe('zodMerge', () => {
   it('should merge two strict schemas', () => {

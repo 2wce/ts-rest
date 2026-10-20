@@ -1,7 +1,7 @@
 import { vi } from 'vitest';
 import {
   initContract,
-  ResponseValidationError,
+  TsRestResponseValidationError as ResponseValidationError,
   TsRestResponseError,
 } from '@ts-rest/core';
 import { NextApiRequest, NextApiResponse } from 'next';
@@ -10,9 +10,23 @@ import {
   createNextRouter,
   createSingleRouteHandler,
   RequestValidationError,
-  RequestValidationErrorSchema,
+  TsRestRequestValidationError,
 } from './ts-rest-next';
 import { z } from 'zod';
+
+// Applications can describe validation responses with their chosen validator.
+const ValidationErrorSchema = z.object({
+  name: z.literal('ValidationError'),
+  issues: z.array(
+    z
+      .object({
+        message: z.string(),
+        path: z.array(z.union([z.string(), z.number()])).optional(),
+      })
+      .passthrough(),
+  ),
+});
+const RequestValidationErrorSchema = ValidationErrorSchema;
 
 const c = initContract();
 
@@ -398,10 +412,19 @@ describe('createNextRouter', () => {
       await resultingRouter(req, mockRes);
 
       expect(errorHandler).toHaveBeenCalledWith(
-        expect.any(RequestValidationError),
+        expect.any(TsRestRequestValidationError),
         expect.anything(),
         expect.anything(),
       );
+      const error = errorHandler.mock.calls[0][0];
+      expect(error).toBeInstanceOf(RequestValidationError);
+      expect(error.query).toMatchObject({
+        name: 'ValidationError',
+        issues: [{ code: 'invalid_type', path: ['field'] }],
+      });
+      expect(error.pathParams).toBeNull();
+      expect(error.headers).toBeNull();
+      expect(error.body).toBeNull();
     });
 
     it('does not throw with invalid query type', async () => {

@@ -1,8 +1,8 @@
 import { createExpressEndpoints, initServer } from '@ts-rest/express';
 import express from 'express';
 import * as bodyParser from 'body-parser';
-import { initClient, initContract, isZodType } from '@ts-rest/core';
-import { z } from 'zod/v4';
+import { initClient, initContract } from '@ts-rest/core';
+import { z } from 'zod';
 
 const c = initContract();
 

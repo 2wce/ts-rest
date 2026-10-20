@@ -127,12 +127,12 @@ You can see an example of its usage in the code snippet above.
 #### Transformer Implementation
 
 ```typescript
-import { z } from 'zod/v4';
-import { SchemaTransformerAsync } from './types';
-import convert from '@openapi-contrib/json-schema-to-openapi-schema';
+import { z } from 'zod';
+import type { SchemaTransformerAsync } from '@ts-rest/open-api';
+import { convert } from '@openapi-contrib/json-schema-to-openapi-schema';
 
 export const ZOD_4_ASYNC: SchemaTransformerAsync = async ({ schema }) => {
-  if (schema instanceof z.core.$ZodAny) {
+  if (schema instanceof z.core.$ZodType) {
     const jsonSchema = z.toJSONSchema(schema);
 
     return await convert(jsonSchema);
