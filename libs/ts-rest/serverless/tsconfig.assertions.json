@@ -1,0 +1,4 @@
+{
+  "extends": "../../../tsconfig.assertions.json",
+  "include": ["src/lib/router-builder/router-builder.spec.ts"]
+}

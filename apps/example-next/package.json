@@ -1,4 +1,42 @@
 {
   "name": "example-next",
-  "version": "0.0.0"
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "build": "vp run build-app",
+    "dev": "vp run dev-app",
+    "start": "next start"
+  },
+  "devDependencies": {
+    "@tailwindcss/typography": "catalog:",
+    "autoprefixer": "catalog:",
+    "daisyui": "catalog:",
+    "node-mocks-http": "catalog:",
+    "postcss": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "tailwindcss": "catalog:",
+    "vitest": "catalog:",
+    "typescript": "catalog:classic-tooling",
+    "vite-plus": "catalog:"
+  },
+  "dependencies": {
+    "@tanstack/query-core": "catalog:",
+    "@tanstack/react-query": "catalog:",
+    "@tanstack/react-query-devtools": "catalog:",
+    "@ts-rest/core": "workspace:*",
+    "@ts-rest/example-contracts": "workspace:*",
+    "@ts-rest/example-database": "workspace:*",
+    "@ts-rest/next": "workspace:*",
+    "@ts-rest/react-query": "workspace:*",
+    "@ts-rest/serverless": "workspace:*",
+    "classnames": "catalog:",
+    "next": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "react-hook-form": "catalog:",
+    "react-hot-toast": "catalog:",
+    "zod": "catalog:",
+    "zustand": "catalog:"
+  }
 }

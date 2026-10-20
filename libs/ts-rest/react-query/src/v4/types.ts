@@ -85,8 +85,8 @@ type GetClientArgs<
 > = TClientArgsOrClient extends ReactQueryClientArgs
   ? TClientArgsOrClient
   : TClientArgsOrClient extends TsRestReactQueryClient<any, any>
-  ? InferClientArgs<TClientArgsOrClient>
-  : never;
+    ? InferClientArgs<TClientArgsOrClient>
+    : never;
 
 export type UseMutationOptions<
   TAppRoute extends AppRoute,

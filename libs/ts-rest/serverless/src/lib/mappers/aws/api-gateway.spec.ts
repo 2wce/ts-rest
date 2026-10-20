@@ -106,6 +106,18 @@ describe('ApiGateway', () => {
   });
 
   describe('requestBody', () => {
+    it('should decode base64 into an ArrayBuffer with only the body bytes', () => {
+      const bytes = Uint8Array.from([0, 255, 128, 1]);
+      const body = requestBody({
+        ...apiGatewayPostEventV1,
+        body: Buffer.from(bytes).toString('base64'),
+        isBase64Encoded: true,
+      } as any);
+
+      expect(body).toBeInstanceOf(ArrayBuffer);
+      expect(new Uint8Array(body as ArrayBuffer)).toEqual(bytes);
+    });
+
     it('should work for v1 event', () => {
       const body = requestBody(apiGatewayPostEventV1 as any);
 

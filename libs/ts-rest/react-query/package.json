@@ -21,7 +21,78 @@
   },
   "license": "MIT",
   "peerDependencies": {
-    "@tanstack/react-query": "^4.0.0",
-    "react": "^16.8.0 || ^17.0.0 || ^18.0.0"
+    "@tanstack/react-query": "^4.0.0 || ^5.0.0",
+    "react": "^16.8.0 || ^17.0.0 || ^18.0.0",
+    "@ts-rest/core": "workspace:^"
+  },
+  "scripts": {
+    "build": "vp pack",
+    "typecheck": "tsc --noEmit -p tsconfig.assertions.json"
+  },
+  "devDependencies": {
+    "@ts-rest/core": "workspace:*",
+    "@tanstack/react-query": "4.36.1",
+    "@ts-rest/react-query-v5": "workspace:*",
+    "@ts-rest/build-config": "workspace:*"
+  },
+  "types": "./src/index.ts",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": "./src/index.ts",
+    "./tanstack": "./src/tanstack.ts",
+    "./v5": "./src/v5.ts"
+  },
+  "files": [
+    "dist",
+    "CHANGELOG.md"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "main": "./dist/index.cjs.js",
+    "module": "./dist/index.esm.mjs",
+    "types": "./dist/index.cjs.d.ts",
+    "exports": {
+      "./package.json": "./package.json",
+      ".": {
+        "import": {
+          "types": "./dist/index.esm.d.mts",
+          "default": "./dist/index.esm.mjs"
+        },
+        "require": {
+          "types": "./dist/index.cjs.d.ts",
+          "default": "./dist/index.cjs.js"
+        }
+      },
+      "./tanstack": {
+        "import": {
+          "types": "./dist/tanstack.esm.d.mts",
+          "default": "./dist/tanstack.esm.mjs"
+        },
+        "require": {
+          "types": "./dist/tanstack.cjs.d.ts",
+          "default": "./dist/tanstack.cjs.js"
+        }
+      },
+      "./v5": {
+        "import": {
+          "types": "./dist/v5.esm.d.mts",
+          "default": "./dist/v5.esm.mjs"
+        },
+        "require": {
+          "types": "./dist/v5.cjs.d.ts",
+          "default": "./dist/v5.cjs.js"
+        }
+      }
+    },
+    "typesVersions": {
+      "*": {
+        "tanstack": [
+          "./dist/tanstack.cjs.d.ts"
+        ],
+        "v5": [
+          "./dist/v5.cjs.d.ts"
+        ]
+      }
+    }
   }
 }

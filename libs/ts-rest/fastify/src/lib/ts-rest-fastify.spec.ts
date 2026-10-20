@@ -1,8 +1,9 @@
+import { vi } from 'vitest';
 import { initContract, TsRestResponseError } from '@ts-rest/core';
 import { initServer, RequestValidationErrorSchema } from './ts-rest-fastify';
 import { z } from 'zod';
 import fastify from 'fastify';
-import * as supertest from 'supertest';
+import supertest from 'supertest';
 import * as v from 'valibot';
 
 declare module 'fastify' {
@@ -67,7 +68,7 @@ const contract = c.router({
   },
 });
 
-jest.setTimeout(30000);
+vi.setConfig({ testTimeout: 30000 });
 
 describe('ts-rest-fastify', () => {
   const s = initServer();
@@ -935,7 +936,7 @@ describe('ts-rest-fastify', () => {
       },
     });
 
-    const fn = jest.fn();
+    const fn = vi.fn();
 
     const app = fastify();
     app.register(s.plugin(router), {
@@ -982,7 +983,7 @@ describe('ts-rest-fastify', () => {
       },
     });
 
-    const fn = jest.fn();
+    const fn = vi.fn();
 
     const app = fastify();
     app.decorateReply('errorMessage', undefined);

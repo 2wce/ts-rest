@@ -1,0 +1,20 @@
+{
+  "name": "example-fastify",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "build": "vp pack",
+    "dev": "vp pack --watch --on-success \"node dist/main.cjs\"",
+    "start": "node dist/main.cjs"
+  },
+  "devDependencies": {
+    "@ts-rest/core": "workspace:*",
+    "vite-plus": "catalog:",
+    "@ts-rest/build-config": "workspace:*"
+  },
+  "dependencies": {
+    "@ts-rest/example-contracts": "workspace:*",
+    "@ts-rest/fastify": "workspace:*",
+    "fastify": "catalog:"
+  }
+}

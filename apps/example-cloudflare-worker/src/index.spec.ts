@@ -1,7 +1,8 @@
-import * as waitOn from 'wait-on';
+import { vi } from 'vitest';
+import waitOn from 'wait-on';
 import { spawn } from 'child_process';
 
-jest.setTimeout(60000);
+vi.setConfig({ testTimeout: 60000, hookTimeout: 60000 });
 
 describe('example-cloudflare-worker', () => {
   let serverProcess: any;
@@ -10,10 +11,9 @@ describe('example-cloudflare-worker', () => {
     // Start the server in the background
     serverProcess = spawn(
       'pnpm',
-      ['wrangler', 'dev', 'apps/example-cloudflare-worker/src/index.ts'],
+      ['--filter', 'example-cloudflare-worker', 'run', 'dev'],
       {
         stdio: 'pipe',
-        shell: true,
       },
     );
 

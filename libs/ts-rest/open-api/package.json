@@ -8,10 +8,46 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@anatine/zod-openapi": "^1.12.0",
+    "@anatine/zod-openapi": "^1.14.2",
     "openapi3-ts": "^2.0.2"
   },
   "peerDependencies": {
-    "zod": "^3.22.3"
+    "zod": "^3.22.3",
+    "@ts-rest/core": "workspace:^"
+  },
+  "scripts": {
+    "build": "vp pack"
+  },
+  "devDependencies": {
+    "@ts-rest/core": "workspace:*",
+    "@ts-rest/build-config": "workspace:*"
+  },
+  "types": "./src/index.ts",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "dist",
+    "CHANGELOG.md"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "main": "./dist/index.cjs.js",
+    "module": "./dist/index.esm.mjs",
+    "types": "./dist/index.cjs.d.ts",
+    "exports": {
+      "./package.json": "./package.json",
+      ".": {
+        "import": {
+          "types": "./dist/index.esm.d.mts",
+          "default": "./dist/index.esm.mjs"
+        },
+        "require": {
+          "types": "./dist/index.cjs.d.ts",
+          "default": "./dist/index.cjs.js"
+        }
+      }
+    }
   }
 }

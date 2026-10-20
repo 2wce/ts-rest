@@ -1,0 +1,93 @@
+{
+  "next": {
+    "name": "@ts-rest/next",
+    "peerDependencies": {
+      "next": "^12.0.0 || ^13.0.0 || ^14.0.0 || ^15.0.0 || ^16.0.0"
+    },
+    "subpaths": ["./package.json", "."]
+  },
+  "vue-query": {
+    "name": "@ts-rest/vue-query",
+    "peerDependencies": {
+      "@tanstack/vue-query": "^4.0.0"
+    },
+    "subpaths": ["./package.json", "."]
+  },
+  "react-query": {
+    "name": "@ts-rest/react-query",
+    "peerDependencies": {
+      "@tanstack/react-query": "^4.0.0 || ^5.0.0",
+      "react": "^16.8.0 || ^17.0.0 || ^18.0.0"
+    },
+    "subpaths": ["./package.json", ".", "./tanstack", "./v5"]
+  },
+  "core": {
+    "name": "@ts-rest/core",
+    "peerDependencies": {
+      "@types/node": "^18.18.7 || >=20.8.4"
+    },
+    "peerDependenciesMeta": {
+      "@types/node": {
+        "optional": true
+      }
+    },
+    "subpaths": ["./package.json", "."]
+  },
+  "express": {
+    "name": "@ts-rest/express",
+    "peerDependencies": {
+      "express": "^4.0.0 || ^5.0.0"
+    },
+    "subpaths": ["./package.json", "."]
+  },
+  "serverless": {
+    "name": "@ts-rest/serverless",
+    "peerDependencies": {
+      "@azure/functions": "^4.0.0",
+      "@types/aws-lambda": "^8.10.115",
+      "next": "^12.0.0 || ^13.0.0 || ^14.0.0 || ^15.0.0 || ^16.0.0"
+    },
+    "peerDependenciesMeta": {
+      "@azure/functions": {
+        "optional": true
+      },
+      "@types/aws-lambda": {
+        "optional": true
+      },
+      "next": {
+        "optional": true
+      }
+    },
+    "subpaths": ["./package.json", ".", "./fetch", "./aws", "./next", "./azure"]
+  },
+  "solid-query": {
+    "name": "@ts-rest/solid-query",
+    "peerDependencies": {
+      "@tanstack/solid-query": "^4.0.0"
+    },
+    "subpaths": ["./package.json", "."]
+  },
+  "open-api": {
+    "name": "@ts-rest/open-api",
+    "peerDependencies": {
+      "zod": "^3.22.3"
+    },
+    "subpaths": ["./package.json", "."]
+  },
+  "nest": {
+    "name": "@ts-rest/nest",
+    "peerDependencies": {
+      "@nestjs/common": "^9.0.0 || ^10.0.0 || ^11.0.0 || ^12.0.0",
+      "@nestjs/core": "^9.0.0 || ^10.0.0 || ^11.0.0 || ^12.0.0",
+      "rxjs": "^7.1.0"
+    },
+    "subpaths": ["./package.json", "."]
+  },
+  "fastify": {
+    "name": "@ts-rest/fastify",
+    "peerDependencies": {
+      "fastify": "^4.0.0"
+    },
+    "subpaths": ["./package.json", "."]
+  }
+}

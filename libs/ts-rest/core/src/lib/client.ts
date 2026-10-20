@@ -25,8 +25,8 @@ type RecursiveProxyObj<T extends AppRouter, TClientArgs extends ClientArgs> = {
   [TKey in keyof T]: T[TKey] extends AppRoute
     ? AppRouteFunction<T[TKey], TClientArgs>
     : T[TKey] extends AppRouter
-    ? RecursiveProxyObj<T[TKey], TClientArgs>
-    : never;
+      ? RecursiveProxyObj<T[TKey], TClientArgs>
+      : never;
 };
 
 /**
@@ -48,9 +48,14 @@ export type AppRouteFunction<
   TRoute extends AppRoute,
   TClientArgs extends ClientArgs,
   TArgs = PartialClientInferRequest<TRoute, TClientArgs>,
-> = AreAllPropertiesOptional<TArgs> extends true
-  ? (args?: Prettify<TArgs>) => Promise<Prettify<ClientInferResponses<TRoute>>>
-  : (args: Prettify<TArgs>) => Promise<Prettify<ClientInferResponses<TRoute>>>;
+> =
+  AreAllPropertiesOptional<TArgs> extends true
+    ? (
+        args?: Prettify<TArgs>,
+      ) => Promise<Prettify<ClientInferResponses<TRoute>>>
+    : (
+        args: Prettify<TArgs>,
+      ) => Promise<Prettify<ClientInferResponses<TRoute>>>;
 
 export type FetchOptions = typeof globalThis extends {
   Request: infer T extends typeof Request;

@@ -25,9 +25,9 @@ type RequestShapes = NestRequestShapes<typeof c>;
 
 @TsRest({ jsonQuery: true })
 @Controller()
-export class PostJsonQueryController
-  implements NestControllerInterface<typeof c>
-{
+export class PostJsonQueryController implements NestControllerInterface<
+  typeof c
+> {
   constructor(private readonly postService: PostService) {}
 
   @TsRest(c.getPosts)

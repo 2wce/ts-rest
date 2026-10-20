@@ -1,0 +1,4 @@
+{
+  "extends": "../../../tsconfig.assertions.json",
+  "include": ["src/**/*.spec.ts", "src/**/*.spec.tsx"]
+}

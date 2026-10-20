@@ -201,7 +201,7 @@ const traversedPathsToOpenApi = (
 
     const contentType =
       path.route?.method !== 'GET' && 'contentType' in path.route
-        ? path.route?.contentType ?? 'application/json'
+        ? (path.route?.contentType ?? 'application/json')
         : 'application/json';
 
     const pathOperation: OperationObject = {

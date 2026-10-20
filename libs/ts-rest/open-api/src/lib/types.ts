@@ -63,26 +63,18 @@ export type AsyncAndSyncHelper<T, TFuncSyncArgs, TFuncAsyncArgs, TReturn> = {
 /**
  * @hidden
  */
-export type GetSyncFunction<THelper> = THelper extends AsyncAndSyncHelper<
-  any,
-  any,
-  any,
-  any
->
-  ? THelper['sync']
-  : never;
+export type GetSyncFunction<THelper> =
+  THelper extends AsyncAndSyncHelper<any, any, any, any>
+    ? THelper['sync']
+    : never;
 
 /**
  * @hidden
  */
-export type GetAsyncFunction<THelper> = THelper extends AsyncAndSyncHelper<
-  any,
-  any,
-  any,
-  any
->
-  ? THelper['async']
-  : never;
+export type GetAsyncFunction<THelper> =
+  THelper extends AsyncAndSyncHelper<any, any, any, any>
+    ? THelper['async']
+    : never;
 
 /**
  * @hidden

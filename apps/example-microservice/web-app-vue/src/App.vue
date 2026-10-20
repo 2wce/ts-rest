@@ -55,12 +55,12 @@ const {
 } = useInfinitePosts();
 
 const postId = computed(
-  () => createdPosts.value[createdPosts.value.length - 1]?.id
+  () => createdPosts.value[createdPosts.value.length - 1]?.id,
 );
 const { data, error, isFetching, isSuccess } = client.getPost.useQuery(
   ['posts', postId],
   () => ({ params: { id: postId.value } }),
-  { enabled: computed(() => !!postId.value) }
+  { enabled: computed(() => !!postId.value) },
 );
 
 const onDelete = (id: string) => {

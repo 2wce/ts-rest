@@ -60,4 +60,11 @@ web-build/
 uploads/ 
 .env
 
-.nx/cache
+node_modules/.vite
+.superpowers/
+*.tsbuildinfo
+# Ignore cache files left by the former toolchain
+.nx/
+
+# Next.js build artifacts
+.next/

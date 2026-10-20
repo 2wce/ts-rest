@@ -34,8 +34,8 @@ export type AppRouteImplementation<T extends AppRoute> =
   T extends AppRouteMutation
     ? AppRouteMutationImplementation<T>
     : T extends AppRouteQuery | AppRouteDeleteNoBody
-    ? AppRouteQueryImplementation<T>
-    : never;
+      ? AppRouteQueryImplementation<T>
+      : never;
 
 export type TsRestRequest<
   T extends AppRouter | AppRoute,
@@ -64,8 +64,8 @@ export interface AppRouteOptions<TRoute extends AppRoute> {
   handler: TRoute extends AppRouteQuery | AppRouteDeleteNoBody
     ? AppRouteQueryImplementation<TRoute>
     : TRoute extends AppRouteMutation
-    ? AppRouteMutationImplementation<TRoute>
-    : never;
+      ? AppRouteMutationImplementation<TRoute>
+      : never;
 }
 
 export type AppRouteImplementationOrOptions<TRoute extends AppRoute> =
@@ -82,8 +82,8 @@ export type RouterImplementation<T extends AppRouter> = {
   [TKey in keyof T]: T[TKey] extends AppRouter
     ? RouterImplementation<T[TKey]>
     : T[TKey] extends AppRoute
-    ? AppRouteImplementationOrOptions<T[TKey]>
-    : never;
+      ? AppRouteImplementationOrOptions<T[TKey]>
+      : never;
 };
 
 export type TsRestExpressOptions<T extends AppRouter> = {

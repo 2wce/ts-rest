@@ -60,10 +60,7 @@ export async function blobToArrayBuffer(blob: Blob): Promise<ArrayBuffer> {
     if (symbolKey.description === 'impl') {
       const blobImpl = (blob as any)[symbolKey];
       const buffer = blobImpl._buffer as Buffer;
-      return buffer.buffer.slice(
-        buffer.byteOffset,
-        buffer.byteOffset + buffer.byteLength,
-      );
+      return Uint8Array.from(buffer).buffer;
     }
   }
 

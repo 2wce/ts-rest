@@ -1,5 +1,23 @@
 {
-  "name": "web-app-vue",
+  "name": "example-microservice-web-app-vue",
   "version": "0.0.0",
-  "description": ""
+  "description": "",
+  "private": true,
+  "scripts": {
+    "build": "vp build",
+    "dev": "vp dev"
+  },
+  "devDependencies": {
+    "@ts-rest/core": "workspace:*",
+    "@ts-rest/example-microservice-util-posts-api": "workspace:*",
+    "@vitejs/plugin-vue": "catalog:",
+    "vite-plus": "catalog:",
+    "typescript": "5.2.2"
+  },
+  "dependencies": {
+    "@tanstack/vue-query": "catalog:",
+    "@ts-rest/example-contracts": "workspace:*",
+    "@ts-rest/vue-query": "workspace:*",
+    "vue": "catalog:"
+  }
 }

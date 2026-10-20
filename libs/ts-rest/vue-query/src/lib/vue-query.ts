@@ -41,8 +41,8 @@ type RecursiveProxyObj<T extends AppRouter, TClientArgs extends ClientArgs> = {
   [TKey in keyof T]: T[TKey] extends AppRoute
     ? Without<UseQueryArgs<T[TKey], TClientArgs>, never>
     : T[TKey] extends AppRouter
-    ? RecursiveProxyObj<T[TKey], TClientArgs>
-    : never;
+      ? RecursiveProxyObj<T[TKey], TClientArgs>
+      : never;
 };
 
 /** @deprecated Use `TsRestVueQueryClient` instead */

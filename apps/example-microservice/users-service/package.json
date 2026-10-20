@@ -1,0 +1,28 @@
+{
+  "name": "example-microservice-users-service",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "build": "vp pack",
+    "dev": "vp pack --watch --on-success \"node dist/main.cjs\"",
+    "start": "node dist/main.cjs"
+  },
+  "devDependencies": {
+    "@ts-rest/core": "workspace:*",
+    "@ts-rest/example-contracts": "workspace:*",
+    "@ts-rest/express": "workspace:*",
+    "@ts-rest/example-microservice-util-posts-api": "workspace:*",
+    "@types/multer": "catalog:",
+    "unplugin-swc": "catalog:",
+    "vite-plus": "catalog:",
+    "@ts-rest/build-config": "workspace:*"
+  },
+  "dependencies": {
+    "@nestjs/common": "catalog:",
+    "@nestjs/core": "catalog:",
+    "@nestjs/platform-express": "catalog:",
+    "@ts-rest/example-microservice-util-users-api": "workspace:*",
+    "@ts-rest/nest": "workspace:*",
+    "multer": "catalog:"
+  }
+}

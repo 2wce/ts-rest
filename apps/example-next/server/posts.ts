@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@ts-rest/example-database';
 
 const prisma = new PrismaClient();
 

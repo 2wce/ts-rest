@@ -1,4 +1,34 @@
 {
   "name": "example-nest",
-  "version": "0.0.0"
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "build": "vp run build-app",
+    "dev": "vp run dev-app",
+    "start": "node dist/main.cjs"
+  },
+  "devDependencies": {
+    "@ts-rest/core": "workspace:*",
+    "@nestjs/testing": "catalog:",
+    "@types/cors": "catalog:",
+    "supertest": "catalog:",
+    "@types/supertest": "catalog:",
+    "unplugin-swc": "catalog:",
+    "vite-plus": "catalog:",
+    "vitest": "catalog:",
+    "typescript": "catalog:classic-tooling",
+    "@ts-rest/build-config": "workspace:*"
+  },
+  "dependencies": {
+    "@nestjs/common": "catalog:",
+    "@nestjs/core": "catalog:",
+    "@nestjs/swagger": "catalog:",
+    "@ts-rest/example-contracts": "workspace:*",
+    "@ts-rest/example-database": "workspace:*",
+    "@ts-rest/nest": "workspace:*",
+    "@ts-rest/open-api": "workspace:*",
+    "cors": "catalog:",
+    "zod": "catalog:",
+    "@nestjs/platform-express": "catalog:"
+  }
 }

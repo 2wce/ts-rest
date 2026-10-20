@@ -4,18 +4,32 @@
   "type": "module",
   "devDependencies": {
     "@types/body-parser": "1.19.5",
-    "@types/bun": "latest",
     "@types/express": "4.17.21",
     "@types/supertest": "^6.0.2",
-    "supertest": "^7.0.0"
-  },
-  "peerDependencies": {
-    "typescript": "^5.0.0"
+    "supertest": "^7.0.0",
+    "@ts-rest/open-api": "file:../../dist/packages/ts-rest-open-api.tgz",
+    "@types/node": "22.13.1",
+    "typescript": "5.7.3",
+    "vite-plus": "1.3.0",
+    "vite": "npm:@voidzero-dev/vite-plus-core@1.3.0",
+    "vitest": "5.0.5",
+    "@openapi-contrib/json-schema-to-openapi-schema": "4.0.0"
   },
   "dependencies": {
-    "@ts-rest/core": "../../dist/libs/ts-rest/core",
-    "@ts-rest/express": "../../dist/libs/ts-rest/express",
+    "@ts-rest/core": "file:../../dist/packages/ts-rest-core.tgz",
+    "@ts-rest/express": "file:../../dist/packages/ts-rest-express.tgz",
     "express": "5.0.1",
-    "zod": "3.25.28"
+    "zod": "3.25.28",
+    "body-parser": "2.0.2"
+  },
+  "private": true,
+  "packageManager": "pnpm@12.14.0",
+  "engines": {
+    "pnpm": "12.14.0",
+    "node": "26.12.0"
+  },
+  "scripts": {
+    "test": "vp test run",
+    "build": "vp pack && tsc --noEmit"
   }
 }

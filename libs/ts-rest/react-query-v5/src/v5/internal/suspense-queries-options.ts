@@ -33,24 +33,27 @@ export type SuspenseQueriesOptions<
 > = TDepth['length'] extends MAXIMUM_DEPTH
   ? Array<UseSuspenseQueryOptions<TAppRoute, TClientArgs>>
   : T extends []
-  ? []
-  : T extends [infer Head]
-  ? [...TResults, GetUseSuspenseQueryOptions<TAppRoute, TClientArgs, Head>]
-  : T extends [infer Head, ...infer Tails]
-  ? SuspenseQueriesOptions<
-      TAppRoute,
-      TClientArgs,
-      [...Tails],
-      [...TResults, GetUseSuspenseQueryOptions<TAppRoute, TClientArgs, Head>],
-      [...TDepth, 1]
-    >
-  : Array<unknown> extends T
-  ? T
-  : T extends Array<
-      UseSuspenseQueryOptions<TAppRoute, TClientArgs, infer TData>
-    >
-  ? Array<UseSuspenseQueryOptions<TAppRoute, TClientArgs, TData>>
-  : Array<UseSuspenseQueryOptions<TAppRoute, TClientArgs>>;
+    ? []
+    : T extends [infer Head]
+      ? [...TResults, GetUseSuspenseQueryOptions<TAppRoute, TClientArgs, Head>]
+      : T extends [infer Head, ...infer Tails]
+        ? SuspenseQueriesOptions<
+            TAppRoute,
+            TClientArgs,
+            [...Tails],
+            [
+              ...TResults,
+              GetUseSuspenseQueryOptions<TAppRoute, TClientArgs, Head>,
+            ],
+            [...TDepth, 1]
+          >
+        : Array<unknown> extends T
+          ? T
+          : T extends Array<
+                UseSuspenseQueryOptions<TAppRoute, TClientArgs, infer TData>
+              >
+            ? Array<UseSuspenseQueryOptions<TAppRoute, TClientArgs, TData>>
+            : Array<UseSuspenseQueryOptions<TAppRoute, TClientArgs>>;
 
 export type SuspenseQueriesResults<
   TAppRoute extends AppRoute,
@@ -60,21 +63,23 @@ export type SuspenseQueriesResults<
 > = TDepth['length'] extends MAXIMUM_DEPTH
   ? Array<UseSuspenseQueryResult>
   : T extends []
-  ? []
-  : T extends [infer Head]
-  ? [...TResults, GetUseSuspenseQueryResult<TAppRoute, Head>]
-  : T extends [infer Head, ...infer Tails]
-  ? SuspenseQueriesResults<
-      TAppRoute,
-      [...Tails],
-      [...TResults, GetUseSuspenseQueryResult<TAppRoute, Head>],
-      [...TDepth, 1]
-    >
-  : T extends Array<UseSuspenseQueryOptions<TAppRoute, ClientArgs, infer TData>>
-  ? Array<
-      UseSuspenseQueryResult<
-        unknown extends TData ? DataResponse<TAppRoute> : TData,
-        ErrorResponse<TAppRoute>
-      >
-    >
-  : Array<UseSuspenseQueryResult>;
+    ? []
+    : T extends [infer Head]
+      ? [...TResults, GetUseSuspenseQueryResult<TAppRoute, Head>]
+      : T extends [infer Head, ...infer Tails]
+        ? SuspenseQueriesResults<
+            TAppRoute,
+            [...Tails],
+            [...TResults, GetUseSuspenseQueryResult<TAppRoute, Head>],
+            [...TDepth, 1]
+          >
+        : T extends Array<
+              UseSuspenseQueryOptions<TAppRoute, ClientArgs, infer TData>
+            >
+          ? Array<
+              UseSuspenseQueryResult<
+                unknown extends TData ? DataResponse<TAppRoute> : TData,
+                ErrorResponse<TAppRoute>
+              >
+            >
+          : Array<UseSuspenseQueryResult>;

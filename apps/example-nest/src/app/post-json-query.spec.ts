@@ -1,8 +1,9 @@
+import { vi } from 'vitest';
 import { PostService } from './post.service';
 import { Test } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
-import { Post } from '@prisma/client';
-import * as request from 'supertest';
+import { Post } from '@ts-rest/example-database';
+import request from 'supertest';
 import { PostJsonQueryController } from './post-json-query.controller';
 
 describe('PostJsonQueryController', () => {
@@ -16,8 +17,8 @@ describe('PostJsonQueryController', () => {
         {
           provide: PostService,
           useValue: {
-            getPosts: jest.fn(),
-            createPost: jest.fn(),
+            getPosts: vi.fn(),
+            createPost: vi.fn(),
           },
         },
       ],
@@ -31,12 +32,12 @@ describe('PostJsonQueryController', () => {
 
   describe('GET /posts-json-query', () => {
     it('should correctly parse number values', async () => {
-      jest
-        .spyOn(postService, 'getPosts')
-        .mockImplementation(async ({ search }) => ({
+      vi.spyOn(postService, 'getPosts').mockImplementation(
+        async ({ search }) => ({
           posts: [{ title: search } as Post],
           totalPosts: 1,
-        }));
+        }),
+      );
 
       return request(app.getHttpServer())
         .get('/posts-json-query')

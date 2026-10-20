@@ -1,2 +1,1 @@
-// placeholder for v5 exports
-export {};
+export * from '@ts-rest/react-query-v5';

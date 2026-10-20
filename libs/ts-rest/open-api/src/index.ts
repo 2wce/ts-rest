@@ -1,5 +1,5 @@
 export * from './lib/ts-rest-open-api';
-export {
+export type {
   SchemaTransformer,
   SchemaTransformerAsync,
   SchemaTransformerSync,

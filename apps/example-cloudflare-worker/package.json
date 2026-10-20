@@ -1,0 +1,20 @@
+{
+  "name": "example-cloudflare-worker",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "build": "wrangler deploy --dry-run --outdir dist",
+    "dev": "wrangler dev src/index.ts"
+  },
+  "devDependencies": {
+    "vitest": "catalog:",
+    "wait-on": "catalog:",
+    "@types/wait-on": "catalog:",
+    "wrangler": "catalog:",
+    "@cloudflare/workers-types": "catalog:"
+  },
+  "dependencies": {
+    "@ts-rest/example-contracts": "workspace:*",
+    "@ts-rest/serverless": "workspace:*"
+  }
+}

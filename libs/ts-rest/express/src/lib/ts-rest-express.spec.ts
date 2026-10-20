@@ -5,11 +5,11 @@ import {
   ResponseValidationError,
   TsRestResponseError,
 } from '@ts-rest/core';
-import * as supertest from 'supertest';
-import * as express from 'express';
+import supertest from 'supertest';
+import express from 'express';
 import { z } from 'zod';
 import { createExpressEndpoints, initServer } from './ts-rest-express';
-import * as multer from 'multer';
+import multer from 'multer';
 import {
   CombinedRequestValidationErrorSchema,
   DefaultRequestValidationErrorSchema,

@@ -17,7 +17,10 @@ import {
 import { Reflector } from '@nestjs/core';
 import { TsRestAppRouteMetadataKey } from './constants';
 import type { Response } from 'express';
-import { evaluateTsRestOptions, MaybeTsRestOptions } from './ts-rest-options';
+import {
+  evaluateTsRestOptions,
+  type MaybeTsRestOptions,
+} from './ts-rest-options';
 import { TS_REST_MODULE_OPTIONS_TOKEN } from './ts-rest.module';
 import { FastifyReply } from 'fastify';
 

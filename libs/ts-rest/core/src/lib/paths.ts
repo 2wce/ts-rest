@@ -14,16 +14,18 @@ type ResolveOptionalPathParam<T extends string> =
 type RecursivelyExtractPathParams<T extends string> = T extends ''
   ? Record<never, never>
   : T extends `${infer Left}/:${infer PathParam}/${infer Right}`
-  ? ResolveOptionalPathParam<PathParam> &
-      RecursivelyExtractPathParams<Left> &
-      RecursivelyExtractPathParams<Right>
-  : T extends `:${infer PathParam}/${infer Right}`
-  ? ResolveOptionalPathParam<PathParam> & RecursivelyExtractPathParams<Right>
-  : T extends `${infer Left}/:${infer PathParam}`
-  ? ResolveOptionalPathParam<PathParam> & RecursivelyExtractPathParams<Left>
-  : T extends `:${infer PathParam}`
-  ? ResolveOptionalPathParam<PathParam>
-  : Record<never, never>;
+    ? ResolveOptionalPathParam<PathParam> &
+        RecursivelyExtractPathParams<Left> &
+        RecursivelyExtractPathParams<Right>
+    : T extends `:${infer PathParam}/${infer Right}`
+      ? ResolveOptionalPathParam<PathParam> &
+          RecursivelyExtractPathParams<Right>
+      : T extends `${infer Left}/:${infer PathParam}`
+        ? ResolveOptionalPathParam<PathParam> &
+            RecursivelyExtractPathParams<Left>
+        : T extends `:${infer PathParam}`
+          ? ResolveOptionalPathParam<PathParam>
+          : Record<never, never>;
 
 /**
  * Extract path params from path function

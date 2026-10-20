@@ -1,3 +1,4 @@
+import { getNestRoutePaths } from './route-paths';
 import { Reflector } from '@nestjs/core';
 import { mergeMap, Observable } from 'rxjs';
 import type { Request, Response } from 'express';
@@ -43,8 +44,8 @@ import { TsRestRequestShape } from './ts-rest-request.decorator';
 import { TS_REST_MODULE_OPTIONS_TOKEN } from './ts-rest.module';
 import {
   evaluateTsRestOptions,
-  MaybeTsRestOptions,
-  TsRestOptions,
+  type MaybeTsRestOptions,
+  type TsRestOptions,
 } from './ts-rest-options';
 import { type ZodError } from 'zod';
 
@@ -126,15 +127,15 @@ export class ResponseValidationError extends InternalServerErrorException {
 const getHttpVerbDecorator = (route: AppRoute) => {
   switch (route.method) {
     case 'GET':
-      return Get(route.path);
+      return Get(getNestRoutePaths(route.path));
     case 'POST':
-      return Post(route.path);
+      return Post(getNestRoutePaths(route.path));
     case 'PUT':
-      return Put(route.path);
+      return Put(getNestRoutePaths(route.path));
     case 'PATCH':
-      return Patch(route.path);
+      return Patch(getNestRoutePaths(route.path));
     case 'DELETE':
-      return Delete(route.path);
+      return Delete(getNestRoutePaths(route.path));
   }
 };
 

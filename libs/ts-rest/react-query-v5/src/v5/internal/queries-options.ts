@@ -51,27 +51,34 @@ export type QueriesOptions<
 > = TDepth['length'] extends MAXIMUM_DEPTH
   ? Array<UseQueryOptionsForUseQueries<TAppRoute, TClientArgs>>
   : T extends []
-  ? []
-  : T extends [infer Head]
-  ? [...TResults, GetUseQueryOptionsForUseQueries<TAppRoute, TClientArgs, Head>]
-  : T extends [infer Head, ...infer Tails]
-  ? QueriesOptions<
-      TAppRoute,
-      TClientArgs,
-      [...Tails],
-      [
-        ...TResults,
-        GetUseQueryOptionsForUseQueries<TAppRoute, TClientArgs, Head>,
-      ],
-      [...TDepth, 1]
-    >
-  : ReadonlyArray<unknown> extends T
-  ? T
-  : T extends Array<
-      UseQueryOptionsForUseQueries<TAppRoute, TClientArgs, infer TData>
-    >
-  ? Array<UseQueryOptionsForUseQueries<TAppRoute, TClientArgs, TData>>
-  : Array<UseQueryOptionsForUseQueries<TAppRoute, TClientArgs>>;
+    ? []
+    : T extends [infer Head]
+      ? [
+          ...TResults,
+          GetUseQueryOptionsForUseQueries<TAppRoute, TClientArgs, Head>,
+        ]
+      : T extends [infer Head, ...infer Tails]
+        ? QueriesOptions<
+            TAppRoute,
+            TClientArgs,
+            [...Tails],
+            [
+              ...TResults,
+              GetUseQueryOptionsForUseQueries<TAppRoute, TClientArgs, Head>,
+            ],
+            [...TDepth, 1]
+          >
+        : ReadonlyArray<unknown> extends T
+          ? T
+          : T extends Array<
+                UseQueryOptionsForUseQueries<
+                  TAppRoute,
+                  TClientArgs,
+                  infer TData
+                >
+              >
+            ? Array<UseQueryOptionsForUseQueries<TAppRoute, TClientArgs, TData>>
+            : Array<UseQueryOptionsForUseQueries<TAppRoute, TClientArgs>>;
 
 export type QueriesResults<
   TAppRoute extends AppRoute,
@@ -81,26 +88,26 @@ export type QueriesResults<
 > = TDepth['length'] extends MAXIMUM_DEPTH
   ? Array<UseQueryResult>
   : T extends []
-  ? []
-  : T extends [infer Head]
-  ? [...TResults, GetUseQueryResult<TAppRoute, Head>]
-  : T extends [infer Head, ...infer Tails]
-  ? QueriesResults<
-      TAppRoute,
-      [...Tails],
-      [...TResults, GetUseQueryResult<TAppRoute, Head>],
-      [...TDepth, 1]
-    >
-  : T extends Array<
-      UseQueryOptionsForUseQueries<TAppRoute, ClientArgs, infer TData>
-    >
-  ? Array<
-      UseQueryResult<
-        unknown extends TData ? DataResponse<TAppRoute> : TData,
-        ErrorResponse<TAppRoute>
-      >
-    >
-  : Array<UseQueryResult>;
+    ? []
+    : T extends [infer Head]
+      ? [...TResults, GetUseQueryResult<TAppRoute, Head>]
+      : T extends [infer Head, ...infer Tails]
+        ? QueriesResults<
+            TAppRoute,
+            [...Tails],
+            [...TResults, GetUseQueryResult<TAppRoute, Head>],
+            [...TDepth, 1]
+          >
+        : T extends Array<
+              UseQueryOptionsForUseQueries<TAppRoute, ClientArgs, infer TData>
+            >
+          ? Array<
+              UseQueryResult<
+                unknown extends TData ? DataResponse<TAppRoute> : TData,
+                ErrorResponse<TAppRoute>
+              >
+            >
+          : Array<UseQueryResult>;
 
 type GetDefinedOrUndefinedQueryResult<T, TData, TError> = T extends {
   initialData?: infer TInitialData;
@@ -108,12 +115,12 @@ type GetDefinedOrUndefinedQueryResult<T, TData, TError> = T extends {
   ? unknown extends TInitialData
     ? UseQueryResult<TData, TError>
     : TInitialData extends TData
-    ? DefinedUseQueryResult<TData, TError>
-    : TInitialData extends () => infer TInitialDataResult
-    ? unknown extends TInitialDataResult
-      ? UseQueryResult<TData, TError>
-      : TInitialDataResult extends TData
       ? DefinedUseQueryResult<TData, TError>
-      : UseQueryResult<TData, TError>
-    : UseQueryResult<TData, TError>
+      : TInitialData extends () => infer TInitialDataResult
+        ? unknown extends TInitialDataResult
+          ? UseQueryResult<TData, TError>
+          : TInitialDataResult extends TData
+            ? DefinedUseQueryResult<TData, TError>
+            : UseQueryResult<TData, TError>
+        : UseQueryResult<TData, TError>
   : UseQueryResult<TData, TError>;

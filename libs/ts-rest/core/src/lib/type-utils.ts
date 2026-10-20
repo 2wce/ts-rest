@@ -5,12 +5,12 @@ import { StandardSchemaV1 } from './standard-schema';
 type GetIndexedField<T, K> = K extends keyof T
   ? T[K]
   : K extends `${number}`
-  ? '0' extends keyof T
-    ? undefined
-    : number extends keyof T
-    ? T[number]
-    : undefined
-  : undefined;
+    ? '0' extends keyof T
+      ? undefined
+      : number extends keyof T
+        ? T[number]
+        : undefined
+    : undefined;
 
 type FieldWithPossiblyUndefined<T, Key> =
   | GetFieldType<Exclude<T, undefined>, Key>
@@ -24,20 +24,20 @@ export type GetFieldType<T, P> = P extends `${infer Left}.${infer Right}`
   ? Left extends keyof T
     ? FieldWithPossiblyUndefined<T[Left], Right>
     : Left extends `${infer FieldKey}[${infer IndexKey}]`
-    ? FieldKey extends keyof T
-      ? FieldWithPossiblyUndefined<
-          IndexedFieldWithPossiblyUndefined<T[FieldKey], IndexKey>,
-          Right
-        >
+      ? FieldKey extends keyof T
+        ? FieldWithPossiblyUndefined<
+            IndexedFieldWithPossiblyUndefined<T[FieldKey], IndexKey>,
+            Right
+          >
+        : undefined
       : undefined
-    : undefined
   : P extends keyof T
-  ? T[P]
-  : P extends `${infer FieldKey}[${infer IndexKey}]`
-  ? FieldKey extends keyof T
-    ? IndexedFieldWithPossiblyUndefined<T[FieldKey], IndexKey>
-    : undefined
-  : undefined;
+    ? T[P]
+    : P extends `${infer FieldKey}[${infer IndexKey}]`
+      ? FieldKey extends keyof T
+        ? IndexedFieldWithPossiblyUndefined<T[FieldKey], IndexKey>
+        : undefined
+      : undefined;
 
 // https://stackoverflow.com/questions/63447660/typescript-remove-all-properties-with-particular-type
 // Nested solution also available ^
@@ -55,15 +55,15 @@ export type With<T, V> = Pick<T, ExcludeKeysWithoutTypeOf<T, V>>;
 export type SchemaOutputOrType<T> = T extends ContractNullType
   ? null
   : T extends ContractNoBodyType
-  ? undefined
-  : T extends ContractPlainType<infer U>
-  ? U
-  : // @deprecated - remove in next major version when zod (standard schema) is required
-  T extends z.ZodTypeAny
-  ? z.output<T>
-  : T extends StandardSchemaV1
-  ? StandardSchemaV1.InferOutput<T>
-  : T;
+    ? undefined
+    : T extends ContractPlainType<infer U>
+      ? U
+      : // @deprecated - remove in next major version when zod (standard schema) is required
+        T extends z.ZodTypeAny
+        ? z.output<T>
+        : T extends StandardSchemaV1
+          ? StandardSchemaV1.InferOutput<T>
+          : T;
 
 // TODO: remove in next major version
 /** @deprecated use SchemaOutputOrType */
@@ -72,15 +72,15 @@ export type ZodInferOrType<T> = SchemaOutputOrType<T>;
 export type SchemaInputOrType<T> = T extends ContractNullType
   ? null
   : T extends ContractNoBodyType
-  ? undefined
-  : T extends ContractPlainType<infer U>
-  ? U
-  : // @deprecated - remove in next major version when zod (standard schema) is required
-  T extends z.ZodTypeAny
-  ? z.input<T>
-  : T extends StandardSchemaV1
-  ? StandardSchemaV1.InferInput<T>
-  : T;
+    ? undefined
+    : T extends ContractPlainType<infer U>
+      ? U
+      : // @deprecated - remove in next major version when zod (standard schema) is required
+        T extends z.ZodTypeAny
+        ? z.input<T>
+        : T extends StandardSchemaV1
+          ? StandardSchemaV1.InferInput<T>
+          : T;
 
 // TODO: remove in next major version
 /** @deprecated use SchemaInputOrType */
@@ -125,20 +125,19 @@ type OptionalKeys<T> = T extends unknown
   : never;
 
 // TODO: Replace all usages of this with IfAllPropertiesOptional
-export type AreAllPropertiesOptional<T> = T extends Record<string, unknown>
-  ? Exclude<keyof T, OptionalKeys<T>> extends never
-    ? true
-    : false
-  : false;
+export type AreAllPropertiesOptional<T> =
+  T extends Record<string, unknown>
+    ? Exclude<keyof T, OptionalKeys<T>> extends never
+      ? true
+      : false
+    : false;
 
-export type IfAllPropertiesOptional<T, TIf, TElse> = T extends Record<
-  string,
-  unknown
->
-  ? Exclude<keyof T, OptionalKeys<T>> extends never
-    ? TIf
-    : TElse
-  : TElse;
+export type IfAllPropertiesOptional<T, TIf, TElse> =
+  T extends Record<string, unknown>
+    ? Exclude<keyof T, OptionalKeys<T>> extends never
+      ? TIf
+      : TElse
+    : TElse;
 
 export type OptionalIfAllOptional<
   T,
@@ -226,9 +225,11 @@ type CommonKeys<T, R = {}> = R extends T
 type Common<T> = Pick<T, CommonKeys<T>>;
 
 type RemoveUnionProperties<T> = {
-  [TKey in keyof T as [T[TKey]] extends [UnionToIntersection<T[TKey]>]
-    ? TKey
-    : never]: T[TKey];
+  [
+    TKey in keyof T as [T[TKey]] extends [UnionToIntersection<T[TKey]>]
+      ? TKey
+      : never
+  ]: T[TKey];
 };
 
 export type CommonAndEqual<T> = RemoveUnionProperties<Common<T>>;

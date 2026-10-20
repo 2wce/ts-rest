@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import {
   ContractAnyType,
   initContract,
@@ -32,7 +33,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
-import * as supertest from 'supertest';
+import supertest from 'supertest';
 import { TsRest } from './ts-rest.decorator';
 import { FileInterceptor } from '@nestjs/platform-express';
 import {
@@ -42,19 +43,18 @@ import {
 import { Response } from 'express';
 import { map, Observable } from 'rxjs';
 import { TsRestModule } from './ts-rest.module';
-import path = require('path');
+import * as path from 'node:path';
 import * as v from 'valibot';
 import { APP_FILTER } from '@nestjs/core';
 
-export type Equal<a, b> = (<T>() => T extends a ? 1 : 2) extends <
-  T,
->() => T extends b ? 1 : 2
-  ? true
-  : false;
+export type Equal<a, b> =
+  (<T>() => T extends a ? 1 : 2) extends <T>() => T extends b ? 1 : 2
+    ? true
+    : false;
 
 export type Expect<a extends true> = a;
 
-jest.setTimeout(10000);
+vi.setConfig({ testTimeout: 10000 });
 
 describe('ts-rest-nest-handler', () => {
   describe('multi-handler api', () => {
@@ -761,7 +761,7 @@ describe('ts-rest-nest-handler', () => {
         .send()
         .expect(302)
         .expect((res) => {
-          expect(res.header.location).toBe('/redirected');
+          expect(res.header['location']).toBe('/redirected');
         });
     });
 
@@ -858,71 +858,80 @@ describe('ts-rest-nest-handler', () => {
       });
     });
 
-    it('should route correctly for optional params', async () => {
-      const c = initContract();
+    it.each(['express', 'fastify'] as const)(
+      'should route correctly for optional params with %s',
+      async (adapter) => {
+        const c = initContract();
 
-      const contract = c.router({
-        getPosts: {
-          path: '/posts/:year?/:month?',
-          method: 'GET',
-          responses: {
-            200: z.object({
-              rangeSearched: z.string(),
-            }),
+        const contract = c.router({
+          getPosts: {
+            path: '/posts/:year?/:month?',
+            method: 'GET',
+            responses: {
+              200: z.object({
+                rangeSearched: z.string(),
+              }),
+            },
           },
-        },
-      });
+        });
 
-      @Controller()
-      class TestController {
-        @TsRestHandler(contract)
-        async handler() {
-          return tsRestHandler(contract, {
-            getPosts: async ({ params }) => ({
-              status: 200,
-              body: { rangeSearched: `${params.year}-${params.month}` },
-            }),
-          });
+        @Controller()
+        class TestController {
+          @TsRestHandler(contract)
+          async handler() {
+            return tsRestHandler(contract, {
+              getPosts: async ({ params }) => ({
+                status: 200,
+                body: { rangeSearched: `${params.year}-${params.month}` },
+              }),
+            });
+          }
         }
-      }
 
-      const moduleRef = await Test.createTestingModule({
-        controllers: [TestController],
-      }).compile();
+        const moduleRef = await Test.createTestingModule({
+          controllers: [TestController],
+        }).compile();
 
-      const app = moduleRef.createNestApplication();
-      await app.init();
+        const app =
+          adapter === 'fastify'
+            ? moduleRef.createNestApplication(new FastifyAdapter())
+            : moduleRef.createNestApplication();
+        await app.init();
+        if (adapter === 'fastify')
+          await app.getHttpAdapter().getInstance().ready();
 
-      await supertest(app.getHttpServer())
-        .get('/posts')
-        .send()
-        .expect(200)
-        .then((res) =>
-          expect(res.body).toStrictEqual({
-            rangeSearched: 'undefined-undefined',
-          }),
-        );
+        await supertest(app.getHttpServer())
+          .get('/posts')
+          .send()
+          .expect(200)
+          .then((res) =>
+            expect(res.body).toStrictEqual({
+              rangeSearched: 'undefined-undefined',
+            }),
+          );
 
-      await supertest(app.getHttpServer())
-        .get('/posts/yyyy')
-        .send()
-        .expect(200)
-        .then((res) =>
-          expect(res.body).toStrictEqual({
-            rangeSearched: 'yyyy-undefined',
-          }),
-        );
+        await supertest(app.getHttpServer())
+          .get('/posts/yyyy')
+          .send()
+          .expect(200)
+          .then((res) =>
+            expect(res.body).toStrictEqual({
+              rangeSearched: 'yyyy-undefined',
+            }),
+          );
 
-      await supertest(app.getHttpServer())
-        .get('/posts/yyyy/mm')
-        .send()
-        .expect(200)
-        .then((res) =>
-          expect(res.body).toStrictEqual({
-            rangeSearched: 'yyyy-mm',
-          }),
-        );
-    });
+        await supertest(app.getHttpServer())
+          .get('/posts/yyyy/mm')
+          .send()
+          .expect(200)
+          .then((res) =>
+            expect(res.body).toStrictEqual({
+              rangeSearched: 'yyyy-mm',
+            }),
+          );
+        await app.close();
+      },
+    );
   });
 
   describe('single-handler api', () => {
@@ -1526,7 +1535,7 @@ describe('ts-rest-nest-handler', () => {
         },
       });
 
-      const httpExceptionObserver = jest.fn();
+      const httpExceptionObserver = vi.fn();
 
       @Catch()
       class HttpExceptionFilter implements ExceptionFilter {
@@ -1738,73 +1747,82 @@ describe('ts-rest-nest-handler', () => {
         .send()
         .expect(302)
         .expect((res) => {
-          expect(res.header.location).toBe('/redirected');
+          expect(res.header['location']).toBe('/redirected');
         });
     });
 
-    it('should route correctly for optional params', async () => {
-      const c = initContract();
+    it.each(['express', 'fastify'] as const)(
+      'should route correctly for optional params with %s',
+      async (adapter) => {
+        const c = initContract();
 
-      const contract = c.router({
-        getPosts: {
-          path: '/posts/:year?/:month?',
-          method: 'GET',
-          responses: {
-            200: z.object({
-              rangeSearched: z.string(),
-            }),
+        const contract = c.router({
+          getPosts: {
+            path: '/posts/:year?/:month?',
+            method: 'GET',
+            responses: {
+              200: z.object({
+                rangeSearched: z.string(),
+              }),
+            },
           },
-        },
-      });
+        });
 
-      @Controller()
-      class TestController {
-        @TsRestHandler(contract.getPosts)
-        async handler() {
-          return tsRestHandler(contract.getPosts, async ({ params }) => ({
-            status: 200,
-            body: { rangeSearched: `${params.year}-${params.month}` },
-          }));
+        @Controller()
+        class TestController {
+          @TsRestHandler(contract.getPosts)
+          async handler() {
+            return tsRestHandler(contract.getPosts, async ({ params }) => ({
+              status: 200,
+              body: { rangeSearched: `${params.year}-${params.month}` },
+            }));
+          }
         }
-      }
 
-      const moduleRef = await Test.createTestingModule({
-        controllers: [TestController],
-      }).compile();
+        const moduleRef = await Test.createTestingModule({
+          controllers: [TestController],
+        }).compile();
 
-      const app = moduleRef.createNestApplication();
-      await app.init();
+        const app =
+          adapter === 'fastify'
+            ? moduleRef.createNestApplication(new FastifyAdapter())
+            : moduleRef.createNestApplication();
+        await app.init();
+        if (adapter === 'fastify')
+          await app.getHttpAdapter().getInstance().ready();
 
-      await supertest(app.getHttpServer())
-        .get('/posts')
-        .send()
-        .expect(200)
-        .then((res) =>
-          expect(res.body).toStrictEqual({
-            rangeSearched: 'undefined-undefined',
-          }),
-        );
+        await supertest(app.getHttpServer())
+          .get('/posts')
+          .send()
+          .expect(200)
+          .then((res) =>
+            expect(res.body).toStrictEqual({
+              rangeSearched: 'undefined-undefined',
+            }),
+          );
 
-      await supertest(app.getHttpServer())
-        .get('/posts/yyyy')
-        .send()
-        .expect(200)
-        .then((res) =>
-          expect(res.body).toStrictEqual({
-            rangeSearched: 'yyyy-undefined',
-          }),
-        );
+        await supertest(app.getHttpServer())
+          .get('/posts/yyyy')
+          .send()
+          .expect(200)
+          .then((res) =>
+            expect(res.body).toStrictEqual({
+              rangeSearched: 'yyyy-undefined',
+            }),
+          );
 
-      await supertest(app.getHttpServer())
-        .get('/posts/yyyy/mm')
-        .send()
-        .expect(200)
-        .then((res) =>
-          expect(res.body).toStrictEqual({
-            rangeSearched: 'yyyy-mm',
-          }),
-        );
-    });
+        await supertest(app.getHttpServer())
+          .get('/posts/yyyy/mm')
+          .send()
+          .expect(200)
+          .then((res) =>
+            expect(res.body).toStrictEqual({
+              rangeSearched: 'yyyy-mm',
+            }),
+          );
+        await app.close();
+      },
+    );
   });
 
   it('should be able to combine single-handler, multi-handler and vanilla nest controllers', async () => {
@@ -2435,7 +2453,7 @@ describe('ts-rest-nest-handler', () => {
           const res = ctx.getResponse<Response>();
 
           if (exception instanceof TsRestRequestValidationError) {
-            return res.status(400).send({
+            res.status(400).send({
               custom: 'error filter caught it',
               bodyErrors: exception.body?.issues?.length || 0,
               headerErrors: exception.headers?.issues?.length || 0,

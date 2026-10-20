@@ -1,5 +1,14 @@
 {
   "name": "@ts-rest/example-contracts",
   "version": "0.0.1",
-  "type": "commonjs"
+  "type": "module",
+  "private": true,
+  "dependencies": {
+    "@ts-rest/core": "workspace:*",
+    "zod": "catalog:"
+  },
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "types": "./src/index.ts"
 }

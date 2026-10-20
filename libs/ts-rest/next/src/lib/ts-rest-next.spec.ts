@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import {
   initContract,
   ResponseValidationError,
@@ -150,17 +151,17 @@ const nextEndpoint = createNextRoute(contract, {
   },
 });
 
-const jsonMock = jest.fn();
-const sendMock = jest.fn();
-const endMock = jest.fn();
+const jsonMock = vi.fn();
+const sendMock = vi.fn();
+const endMock = vi.fn();
 
 const mockRes = {
-  status: jest.fn(() => ({
+  status: vi.fn(() => ({
     end: endMock,
     json: jsonMock,
     send: sendMock,
   })),
-  setHeader: jest.fn(),
+  setHeader: vi.fn(),
 } as unknown as NextApiResponse;
 
 describe('strict mode', () => {
@@ -199,7 +200,7 @@ describe('strict mode', () => {
 });
 describe('createNextRouter', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
   it('should send back a 200', async () => {
     const resultingRouter = createNextRouter(contract, nextEndpoint);
@@ -365,7 +366,7 @@ describe('createNextRouter', () => {
     });
 
     it('fails with invalid field', async () => {
-      const errorHandler = jest.fn();
+      const errorHandler = vi.fn();
       const resultingRouter = createNextRouter(contract, nextEndpoint, {
         responseValidation: true,
         errorHandler,
@@ -383,7 +384,7 @@ describe('createNextRouter', () => {
 
   describe('request validation', () => {
     it('fails with invalid query type', async () => {
-      const errorHandler = jest.fn();
+      const errorHandler = vi.fn();
       const resultingRouter = createNextRouter(contract, nextEndpoint, {
         throwRequestValidation: true,
         errorHandler,
@@ -404,7 +405,7 @@ describe('createNextRouter', () => {
     });
 
     it('does not throw with invalid query type', async () => {
-      const errorHandler = jest.fn();
+      const errorHandler = vi.fn();
       const resultingRouter = createNextRouter(contract, nextEndpoint, {
         throwRequestValidation: false,
         errorHandler,
@@ -537,7 +538,7 @@ describe('createNextRouter', () => {
 
 describe('createSingleUrlNextRouter', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should send back a 200', async () => {
@@ -696,7 +697,7 @@ describe('createSingleUrlNextRouter', () => {
     });
 
     it('fails with invalid field', async () => {
-      const errorHandler = jest.fn();
+      const errorHandler = vi.fn();
       const resultingRouter = createSingleRouteHandler(
         contract.getZodQuery,
         nextEndpoint.getZodQuery,

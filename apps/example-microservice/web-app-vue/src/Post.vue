@@ -52,7 +52,7 @@ const deletePost = (id: string) => {
     { params: { id } },
     {
       onSuccess: () => emit('delete', id),
-    }
+    },
   );
 };
 </script>

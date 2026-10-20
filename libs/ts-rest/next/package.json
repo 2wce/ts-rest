@@ -8,6 +8,43 @@
   },
   "license": "MIT",
   "peerDependencies": {
-    "next": "^12.0.0 || ^13.0.0 || ^14.0.0"
+    "next": "^12.0.0 || ^13.0.0 || ^14.0.0 || ^15.0.0 || ^16.0.0",
+    "@ts-rest/core": "workspace:^"
+  },
+  "scripts": {
+    "build": "vp pack",
+    "typecheck": "tsc --noEmit -p tsconfig.assertions.json"
+  },
+  "devDependencies": {
+    "@ts-rest/core": "workspace:*",
+    "@ts-rest/build-config": "workspace:*"
+  },
+  "types": "./src/index.ts",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "dist",
+    "CHANGELOG.md"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "main": "./dist/index.cjs.js",
+    "module": "./dist/index.esm.mjs",
+    "types": "./dist/index.cjs.d.ts",
+    "exports": {
+      "./package.json": "./package.json",
+      ".": {
+        "import": {
+          "types": "./dist/index.esm.d.mts",
+          "default": "./dist/index.esm.mjs"
+        },
+        "require": {
+          "types": "./dist/index.cjs.d.ts",
+          "default": "./dist/index.cjs.js"
+        }
+      }
+    }
   }
 }

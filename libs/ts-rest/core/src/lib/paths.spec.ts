@@ -1,49 +1,42 @@
-import { expectType } from 'tsd';
-import { insertParamsIntoPath, ParamsFromUrl } from './paths';
+import { insertParamsIntoPath, type ParamsFromUrl } from './paths';
+import type { Equal, Expect } from './test-helpers';
 
-const type = <T>() => '' as unknown as T;
-
-const url = '/post/:id/comments/:commentId';
-expectType<{ id: string; commentId: string }>(
-  type<ParamsFromUrl<typeof url>>(),
-);
-
-const url2 = '/post/:id/comments';
-expectType<{ id: string }>(type<ParamsFromUrl<typeof url2>>());
-
-const url3 = '/post/:id';
-expectType<{ id: string }>(type<ParamsFromUrl<typeof url3>>());
-
-const urlNoParams = '/posts';
-expectType<{}>(type<ParamsFromUrl<typeof urlNoParams>>());
-
-const urlManyParams = '/post/:id/comments/:commentId/:commentId2';
-expectType<{ id: string; commentId: string; commentId2: string }>(
-  type<ParamsFromUrl<typeof urlManyParams>>(),
-);
-
-const urlOptional = '/post/:id?';
-expectType<{
-  id?: string;
-}>(type<ParamsFromUrl<typeof urlOptional>>());
-
-const urlManyOptional = '/post/:id?/comments/:commentId?';
-expectType<{
-  id?: string;
-  commentId?: string;
-}>(type<ParamsFromUrl<typeof urlManyOptional>>());
-
-const urlMixedOptional = '/post/:id/comments/:commentId?';
-expectType<{
-  id: string;
-  commentId?: string;
-}>(type<ParamsFromUrl<typeof urlMixedOptional>>());
-
-const urlMixedOptional2 = '/post/:id?/comments/:commentId';
-expectType<{
-  id?: string;
-  commentId: string;
-}>(type<ParamsFromUrl<typeof urlMixedOptional2>>());
+export type PathParameterAssertions = [
+  Expect<
+    Equal<
+      ParamsFromUrl<'/post/:id/comments/:commentId'>,
+      { id: string; commentId: string }
+    >
+  >,
+  Expect<Equal<ParamsFromUrl<'/post/:id/comments'>, { id: string }>>,
+  Expect<Equal<ParamsFromUrl<'/post/:id'>, { id: string }>>,
+  Expect<Equal<ParamsFromUrl<'/posts'>, {}>>,
+  Expect<
+    Equal<
+      ParamsFromUrl<'/post/:id/comments/:commentId/:commentId2'>,
+      { id: string; commentId: string; commentId2: string }
+    >
+  >,
+  Expect<Equal<ParamsFromUrl<'/post/:id?'>, { id?: string }>>,
+  Expect<
+    Equal<
+      ParamsFromUrl<'/post/:id?/comments/:commentId?'>,
+      { id?: string; commentId?: string }
+    >
+  >,
+  Expect<
+    Equal<
+      ParamsFromUrl<'/post/:id/comments/:commentId?'>,
+      { id: string; commentId?: string }
+    >
+  >,
+  Expect<
+    Equal<
+      ParamsFromUrl<'/post/:id?/comments/:commentId'>,
+      { id?: string; commentId: string }
+    >
+  >,
+];
 
 describe('insertParamsIntoPath', () => {
   it('should insert params into path', () => {

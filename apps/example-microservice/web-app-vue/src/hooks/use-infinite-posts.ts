@@ -23,11 +23,11 @@ export const useInfinitePosts = () => {
         },
         networkMode: 'offlineFirst',
         staleTime: 1000 * 5,
-      }
+      },
     );
 
   const posts = computed(
-    () => data.value?.pages?.flatMap((page) => page.body.posts) ?? []
+    () => data.value?.pages?.flatMap((page) => page.body.posts) ?? [],
   );
 
   return { posts, fetchNextPage, hasNextPage, refetch };

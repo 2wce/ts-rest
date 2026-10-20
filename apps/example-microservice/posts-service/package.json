@@ -1,0 +1,30 @@
+{
+  "name": "example-microservice-posts-service",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "build": "vp pack",
+    "dev": "vp pack --watch --on-success \"node dist/main.cjs\"",
+    "start": "node dist/main.cjs"
+  },
+  "devDependencies": {
+    "@ts-rest/example-contracts": "workspace:*",
+    "@types/cors": "catalog:",
+    "@types/express": "catalog:",
+    "@types/multer": "catalog:",
+    "@types/swagger-ui-express": "catalog:",
+    "vite-plus": "catalog:",
+    "@ts-rest/build-config": "workspace:*"
+  },
+  "dependencies": {
+    "@ts-rest/core": "workspace:*",
+    "@ts-rest/example-microservice-util-posts-api": "workspace:*",
+    "@ts-rest/example-microservice-util-users-api": "workspace:*",
+    "@ts-rest/express": "workspace:*",
+    "@ts-rest/open-api": "workspace:*",
+    "cors": "catalog:",
+    "express": "catalog:",
+    "multer": "catalog:",
+    "swagger-ui-express": "catalog:"
+  }
+}

@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import {
   QueryClient,
   QueryClientProvider,
@@ -132,7 +133,7 @@ export const router = c.router({
   },
 });
 
-const api = jest.fn();
+const api = vi.fn();
 
 const client = initQueryClient(router, {
   baseUrl: 'https://api.com',
@@ -339,6 +340,7 @@ describe('react-query', () => {
             id: '1',
           },
           extraHeaders: {
+            // @ts-expect-error exercise removal of an undefined header at runtime
             'content-type': undefined,
           },
         }),
@@ -1156,7 +1158,7 @@ describe('react-query', () => {
       },
     );
 
-    expect(result.current).resolves.toStrictEqual(ERROR_RESPONSE);
+    await expect(result.current).resolves.toStrictEqual(ERROR_RESPONSE);
 
     expect(api).toHaveBeenCalledWith({
       method: 'GET',

@@ -1,5 +1,14 @@
 {
-  "name": "@ts-rest/example-microservice/util-users-api",
+  "name": "@ts-rest/example-microservice-util-users-api",
   "version": "0.0.1",
-  "type": "commonjs"
+  "type": "commonjs",
+  "private": true,
+  "dependencies": {
+    "@ts-rest/core": "workspace:*",
+    "zod": "catalog:"
+  },
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "types": "./src/index.ts"
 }

@@ -96,16 +96,19 @@ describe('standard schema utils', () => {
 
       const result = validateIfSchema(data, schema);
 
-      expect(result).toStrictEqual({
-        error: new ZodError([
-          {
-            code: 'invalid_type',
-            expected: 'number',
-            received: 'string',
-            path: ['foo'],
-            message: 'Expected number, received string',
-          },
-        ]),
+      expect(result.error).toBeInstanceOf(ZodError);
+      expect(result).toMatchObject({
+        error: expect.objectContaining({
+          issues: [
+            {
+              code: 'invalid_type',
+              expected: 'number',
+              received: 'string',
+              path: ['foo'],
+              message: 'Expected number, received string',
+            },
+          ],
+        }),
         schemasUsed: [schema],
       });
     });
@@ -167,16 +170,19 @@ describe('standard schema utils', () => {
 
       const result = validateMultiSchemaObject(headers, headersSchema);
 
-      expect(result).toEqual({
-        error: new ZodError([
-          {
-            code: 'invalid_type',
-            expected: 'string',
-            received: 'undefined',
-            path: ['x-bar'],
-            message: 'Required',
-          },
-        ]),
+      expect(result.error).toBeInstanceOf(ZodError);
+      expect(result).toMatchObject({
+        error: expect.objectContaining({
+          issues: [
+            {
+              code: 'invalid_type',
+              expected: 'string',
+              received: 'undefined',
+              path: ['x-bar'],
+              message: 'Required',
+            },
+          ],
+        }),
         schemasUsed: [headersSchema],
       });
     });

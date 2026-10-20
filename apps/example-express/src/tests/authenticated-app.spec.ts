@@ -1,4 +1,4 @@
-import * as supertest from 'supertest';
+import supertest from 'supertest';
 import app, {
   SAMPLE_OWNER_JWT,
   SAMPLE_GUEST_JWT,
