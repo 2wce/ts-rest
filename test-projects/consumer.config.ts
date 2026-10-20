@@ -8,6 +8,6 @@ export default {
     entry: { index: 'index.ts' },
     format: 'esm' as const,
     target: 'node26',
-    deps: { neverBundle: true },
+    deps: { neverBundle: true as const },
   },
 };
