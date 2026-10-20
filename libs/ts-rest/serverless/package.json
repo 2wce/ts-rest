@@ -28,7 +28,8 @@
     }
   },
   "scripts": {
-    "build": "vp pack"
+    "build": "vp pack",
+    "typecheck": "tsc --noEmit -p tsconfig.assertions.json"
   },
   "devDependencies": {
     "@ts-rest/core": "workspace:*",

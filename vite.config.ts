@@ -31,7 +31,7 @@ const projects = [
     environment: ['react-query', 'react-query-v5', 'vue-query'].includes(name)
       ? 'jsdom'
       : undefined,
-    setupFiles: [resolve('tools/vite/test-setup.ts')],
+    setupFiles: [resolve('tests/setup.ts')],
     testTimeout: name === 'fastify' ? 30000 : undefined,
   },
 }));
@@ -90,8 +90,7 @@ export default defineConfig({
       'check-packages': {
         command: [
           'pnpm pack:packages',
-          'node --test tools/vite/versioning.test.mjs',
-          'node tools/vite/package-check.mjs',
+          'vp test run --config tests/vite.config.ts',
         ],
         cache: false,
       },

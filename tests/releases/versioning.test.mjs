@@ -3,7 +3,7 @@ import { execFileSync } from 'node:child_process';
 import { cp, mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { test } from 'node:test';
+import { test } from 'vitest';
 import { fileURLToPath } from 'node:url';
 
 const root = fileURLToPath(new URL('../../', import.meta.url));
@@ -95,7 +95,7 @@ async function assertVersion(cwd, version, peer) {
   assert.equal(privatePkg.peerDependencies, undefined);
 }
 
-await test('patch and minor releases pack native caret peers without an unintended major bump', async () => {
+test('patch and minor releases pack native caret peers without an unintended major bump', async () => {
   const cwd = await workspace();
   try {
     await bump(cwd, 'patch');
@@ -109,7 +109,7 @@ await test('patch and minor releases pack native caret peers without an unintend
   }
 });
 
-await test('snapshot prereleases pack native caret peers using the calculated release version', async () => {
+test('snapshot prereleases pack native caret peers using the calculated release version', async () => {
   const cwd = await workspace();
   try {
     await bump(cwd, 'minor', '--snapshot', 'rc');

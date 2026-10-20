@@ -23,10 +23,11 @@ workspace development or documentation.
 - `pnpm test` / `pnpm test:watch`: library and example unit tests.
 - `pnpm check`: format, type-aware lint and native TypeScript checks, then
   unit tests and inference assertions.
-- `pnpm typecheck`: run seven isolated strict/non-strict inference projects
+- `pnpm typecheck`: run eight isolated strict/non-strict inference projects
   with the native TypeScript 7 compiler; these checks always run uncached.
 - `pnpm test:packages`: verify built ESM/CommonJS exports, declarations,
-  Nest injection metadata and React client boundaries. Run `pnpm build` first.
+  Nest injection metadata, React client boundaries and Changesets versioning.
+  This command builds and packs the libraries before running the dedicated Vitest suite.
 - `pnpm lint`: Oxlint with native type checking. Existing lint debt remains
   warnings; compiler errors fail the command.
 - `pnpm format` / `pnpm format:check`: Oxfmt.
@@ -69,7 +70,9 @@ separately when using Vue. See the
 `tsconfig.base.json` contains common compiler settings. Root presets specialize
 it for libraries, tests, declaration packing, Node examples and browser examples:
 `tsconfig.library.json`, `tsconfig.test.json`, `tsconfig.pack.json`,
-`tsconfig.node.json` and `tsconfig.web.json`.
+`tsconfig.node.json` and `tsconfig.web.json`. `tsconfig.assertions.json` supplies
+the inference-check settings; owning packages select their assertion files. The
+non-strict package maps core to its built declarations in its own config.
 
 The presets use TypeScript's `${configDir}` variable for standard source/test
 globs, so inherited patterns select files in the consuming package. Package
@@ -91,8 +94,10 @@ Package Vite configs declare entry points; React Query also declares its combine
 declaration config and v5 cache inputs. Pack overrides use Vite's `mergeConfig`.
 Root `vite.config.ts` owns workspace orchestration, and library Vitest projects
 inherit its settings with `extends: true`. The [build-config README](libs/build-config/README.md)
-describes the presets. Package consumer and versioning checks remain under
-`tools/vite`; there is no release staging workspace.
+describes the presets. Package consumer tests live under `tests/packaging` and
+versioning tests under `tests/releases`. `tests/vite.config.ts` runs these integration
+tests separately from unit tests; shared unit setup lives in `tests/setup.ts`.
+There is no release staging workspace.
 
 ## Workspace packages and dependencies
 

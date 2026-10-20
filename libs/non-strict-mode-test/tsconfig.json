@@ -1,8 +1,10 @@
 {
-  "extends": "../../tsconfig.test.json",
-  "include": ["src/**/*.ts", "src/**/*.tsx"],
+  "extends": "../../tsconfig.assertions.json",
   "compilerOptions": {
     "strict": false,
-    "strictNullChecks": false
+    "strictNullChecks": false,
+    "paths": {
+      "@ts-rest/core": ["../ts-rest/core/dist/index.cjs.d.ts"]
+    }
   }
 }

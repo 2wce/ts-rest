@@ -28,7 +28,7 @@
   },
   "scripts": {
     "build": "vp pack",
-    "typecheck": "tsc --noEmit -p ../../../tools/vite/tsconfig.assertions.json"
+    "typecheck": "tsc --noEmit -p tsconfig.assertions.json"
   },
   "types": "./src/index.ts",
   "exports": {

@@ -29,4 +29,5 @@ package declares `files` and pnpm `publishConfig` overrides in its source manife
 native pnpm packing includes compiled output, readme, changelog and license.
 
 Shared preset changes invalidate library build caches. Consumer and versioning
-checks remain in `tools/vite`; native tarball tasks live in root `vite.config.ts`.
+tests live under `tests/packaging` and `tests/releases`, using
+`tests/vite.config.ts`. Native tarball tasks live in root `vite.config.ts`.
