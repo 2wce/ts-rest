@@ -1,4 +1,4 @@
 e2e:
-	pnpm i
+	pnpm install --frozen-lockfile
 	pnpm test
 	pnpm build
