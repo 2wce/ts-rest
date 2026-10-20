@@ -13,6 +13,8 @@ on:
 
 jobs:
   build:
+    # Remove this guard when release automation is ready to resume.
+    if: ${{ false }}
     runs-on: ubuntu-latest
     permissions:
       actions: read

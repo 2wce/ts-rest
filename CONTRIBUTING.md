@@ -179,6 +179,17 @@ so artifact manifests never become additional workspace packages.
 Published libraries still build into `dist/libs/ts-rest`, the release staging
 layout used by Changesets and standalone compatibility fixtures.
 
+## Release automation
+
+Releases are paused while the fork groundwork lands. Pushes to `main` do not
+trigger the stable release workflow, and both stable and prerelease jobs are
+blocked, including manual runs. Build/test CI remains active. Changesets and
+release scripts stay in place for a future release.
+
+To resume releases, restore the `push` trigger for `main` in
+`.github/workflows/release.yml` and remove the `if: ${{ false }}` job guards from
+both release workflows.
+
 ## Host integration examples
 
 Azure and Cloudflare host smoke tests are explicit: `pnpm test:hosts`. Vite+

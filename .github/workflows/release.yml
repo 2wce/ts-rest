@@ -1,11 +1,12 @@
 name: Release
+# Releases are paused during the fork groundwork.
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
 
 jobs:
   build:
+    # Remove this guard when release automation is ready to resume.
+    if: ${{ false }}
     runs-on: ubuntu-latest
     permissions:
       actions: read
