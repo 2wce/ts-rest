@@ -99,6 +99,26 @@ in `dependencies`, tooling/tests/types in `devDependencies`, and local packages
 use `workspace:*`. Use `catalog:` for versions shared through
 `pnpm-workspace.yaml`. Published library dependencies and peer ranges keep their
 consumer-facing version specs. Shared test tooling stays at the root.
+The current workspace framework baselines are Next 16.4.2 and Nest 12.2.0
+(with Swagger 12.0.2). Nest tests use the matching platform adapters and their
+local Fastify 5.12.7 dependency. The standalone Fastify adapter retains its 4.x
+baseline. Nest 9/10/11 compatibility fixtures keep their separate installations.
+The docs' published SDK examples use local Nest 11 dependencies.
+
+Contracts keep `:param?` optional path syntax. The Nest adapter registers
+concrete path alternatives through Nest's built-in path arrays so the same
+contract works with older Express versions, Express 5 and Fastify. Native
+framework route priority still applies: Express follows registration order,
+while Fastify prioritizes static segments. Avoid ambiguous optional paths such
+as `/:region?/users/:id?`: `/users/users` binds `region` on Express and `id` on
+Fastify. This middle-optional path was previously unsupported on Fastify.
+
+OpenAPI generation and its root tests share `@anatine/zod-openapi` 1.14.2 and
+`openapi3-ts` 2.x. Moving to newer OpenAPI type majors requires a separate
+consumer compatibility review. Path inference tests use exact `Equal`/`Expect`
+assertions from the core test helpers. Runtime builds inline helpers; no direct
+`tslib` or SWC helpers dependency is needed.
+
 The root also declares esbuild 0.28.2 as a catalog toolchain peer so Vite+ and
 TanStack plugins resolve the same Vite runtime across root and docs. Without
 that shared peer, pnpm can create separate runtime copies whose development
@@ -106,8 +126,10 @@ environment classes are incompatible.
 
 The workspace compiler is TypeScript 7.0.2, with Node types 26.6.5. The
 `typescript-legacy` alias pins 5.2.2 solely to check published declarations with
-older consumers. Next 13 and the Vue example also select that same 5.2.2 version
-locally because their build tools use the classic JavaScript compiler API.
+older consumers. The Vue example also selects 5.2.2 locally for its classic
+compiler API. Next 16 and the Nest Swagger example select TypeScript 5.9.3
+through the `classic-tooling` catalog because their integrations still need the
+JavaScript compiler API. Library builds and workspace checks use TypeScript 7.
 The pnpm `packageExtensions` entry declares the Vue SFC compiler's missing
 TypeScript peer. Each app resolves its local compiler and React types
 automatically.

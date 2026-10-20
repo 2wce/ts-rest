@@ -124,6 +124,7 @@ export default defineConfig({
       '**/.next/**',
       '.superpowers/**',
       'pnpm-lock.yaml',
+      '**/next-env.d.ts',
     ],
   },
   lint: {

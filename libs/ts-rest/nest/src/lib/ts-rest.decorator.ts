@@ -1,3 +1,4 @@
+import { getNestRoutePaths } from './route-paths';
 import {
   applyDecorators,
   Delete,
@@ -57,15 +58,15 @@ export const TsRest: TsRestType = (
 const getMethodDecorator = (appRoute: AppRoute) => {
   switch (appRoute.method) {
     case 'DELETE':
-      return Delete(appRoute.path);
+      return Delete(getNestRoutePaths(appRoute.path));
     case 'GET':
-      return Get(appRoute.path);
+      return Get(getNestRoutePaths(appRoute.path));
     case 'POST':
-      return Post(appRoute.path);
+      return Post(getNestRoutePaths(appRoute.path));
     case 'PATCH':
-      return Patch(appRoute.path);
+      return Patch(getNestRoutePaths(appRoute.path));
     case 'PUT':
-      return Put(appRoute.path);
+      return Put(getNestRoutePaths(appRoute.path));
   }
 };
 

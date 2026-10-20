@@ -232,6 +232,7 @@ describe('standard schema', () => {
                     type: 'string',
                     format: 'uri',
                     minLength: 1,
+                    pattern: '\\.com$',
                   },
                 },
                 required: ['type', 'imageUrl'],
@@ -316,6 +317,7 @@ describe('standard schema', () => {
             required: true,
             schema: {
               enum: ['public', 'private'],
+              type: 'string',
             },
           },
         ],

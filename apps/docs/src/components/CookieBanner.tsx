@@ -55,7 +55,7 @@ export function CookieBanner() {
     <div className="fixed bottom-4 left-4 right-4 md:bottom-4 md:right-4 md:left-auto z-50 md:max-w-sm">
       <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 rounded-lg shadow-lg p-4 md:p-4">
         <div className="flex items-start gap-3">
-          <Cookie className="h-5 w-5 text-purple-600 dark:text-purple-400 mt-0.5 flex-shrink-0" />
+          <Cookie className="h-5 w-5 text-purple-600 dark:text-purple-400 mt-0.5 shrink-0" />
           <div className="flex-1">
             <p className="text-sm text-zinc-700 dark:text-zinc-300 mb-4 md:mb-5">
               We use tracking cookies (

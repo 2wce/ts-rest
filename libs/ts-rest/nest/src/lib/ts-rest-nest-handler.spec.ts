@@ -858,71 +858,80 @@ describe('ts-rest-nest-handler', () => {
       });
     });
 
-    it('should route correctly for optional params', async () => {
-      const c = initContract();
+    it.each(['express', 'fastify'] as const)(
+      'should route correctly for optional params with %s',
+      async (adapter) => {
+        const c = initContract();
 
-      const contract = c.router({
-        getPosts: {
-          path: '/posts/:year?/:month?',
-          method: 'GET',
-          responses: {
-            200: z.object({
-              rangeSearched: z.string(),
-            }),
+        const contract = c.router({
+          getPosts: {
+            path: '/posts/:year?/:month?',
+            method: 'GET',
+            responses: {
+              200: z.object({
+                rangeSearched: z.string(),
+              }),
+            },
           },
-        },
-      });
+        });
 
-      @Controller()
-      class TestController {
-        @TsRestHandler(contract)
-        async handler() {
-          return tsRestHandler(contract, {
-            getPosts: async ({ params }) => ({
-              status: 200,
-              body: { rangeSearched: `${params.year}-${params.month}` },
-            }),
-          });
+        @Controller()
+        class TestController {
+          @TsRestHandler(contract)
+          async handler() {
+            return tsRestHandler(contract, {
+              getPosts: async ({ params }) => ({
+                status: 200,
+                body: { rangeSearched: `${params.year}-${params.month}` },
+              }),
+            });
+          }
         }
-      }
 
-      const moduleRef = await Test.createTestingModule({
-        controllers: [TestController],
-      }).compile();
+        const moduleRef = await Test.createTestingModule({
+          controllers: [TestController],
+        }).compile();
 
-      const app = moduleRef.createNestApplication();
-      await app.init();
+        const app =
+          adapter === 'fastify'
+            ? moduleRef.createNestApplication(new FastifyAdapter())
+            : moduleRef.createNestApplication();
+        await app.init();
+        if (adapter === 'fastify')
+          await app.getHttpAdapter().getInstance().ready();
 
-      await supertest(app.getHttpServer())
-        .get('/posts')
-        .send()
-        .expect(200)
-        .then((res) =>
-          expect(res.body).toStrictEqual({
-            rangeSearched: 'undefined-undefined',
-          }),
-        );
+        await supertest(app.getHttpServer())
+          .get('/posts')
+          .send()
+          .expect(200)
+          .then((res) =>
+            expect(res.body).toStrictEqual({
+              rangeSearched: 'undefined-undefined',
+            }),
+          );
 
-      await supertest(app.getHttpServer())
-        .get('/posts/yyyy')
-        .send()
-        .expect(200)
-        .then((res) =>
-          expect(res.body).toStrictEqual({
-            rangeSearched: 'yyyy-undefined',
-          }),
-        );
+        await supertest(app.getHttpServer())
+          .get('/posts/yyyy')
+          .send()
+          .expect(200)
+          .then((res) =>
+            expect(res.body).toStrictEqual({
+              rangeSearched: 'yyyy-undefined',
+            }),
+          );
 
-      await supertest(app.getHttpServer())
-        .get('/posts/yyyy/mm')
-        .send()
-        .expect(200)
-        .then((res) =>
-          expect(res.body).toStrictEqual({
-            rangeSearched: 'yyyy-mm',
-          }),
-        );
-    });
+        await supertest(app.getHttpServer())
+          .get('/posts/yyyy/mm')
+          .send()
+          .expect(200)
+          .then((res) =>
+            expect(res.body).toStrictEqual({
+              rangeSearched: 'yyyy-mm',
+            }),
+          );
+        await app.close();
+      },
+    );
   });
 
   describe('single-handler api', () => {
@@ -1742,69 +1751,78 @@ describe('ts-rest-nest-handler', () => {
         });
     });
 
-    it('should route correctly for optional params', async () => {
-      const c = initContract();
+    it.each(['express', 'fastify'] as const)(
+      'should route correctly for optional params with %s',
+      async (adapter) => {
+        const c = initContract();
 
-      const contract = c.router({
-        getPosts: {
-          path: '/posts/:year?/:month?',
-          method: 'GET',
-          responses: {
-            200: z.object({
-              rangeSearched: z.string(),
-            }),
+        const contract = c.router({
+          getPosts: {
+            path: '/posts/:year?/:month?',
+            method: 'GET',
+            responses: {
+              200: z.object({
+                rangeSearched: z.string(),
+              }),
+            },
           },
-        },
-      });
+        });
 
-      @Controller()
-      class TestController {
-        @TsRestHandler(contract.getPosts)
-        async handler() {
-          return tsRestHandler(contract.getPosts, async ({ params }) => ({
-            status: 200,
-            body: { rangeSearched: `${params.year}-${params.month}` },
-          }));
+        @Controller()
+        class TestController {
+          @TsRestHandler(contract.getPosts)
+          async handler() {
+            return tsRestHandler(contract.getPosts, async ({ params }) => ({
+              status: 200,
+              body: { rangeSearched: `${params.year}-${params.month}` },
+            }));
+          }
         }
-      }
 
-      const moduleRef = await Test.createTestingModule({
-        controllers: [TestController],
-      }).compile();
+        const moduleRef = await Test.createTestingModule({
+          controllers: [TestController],
+        }).compile();
 
-      const app = moduleRef.createNestApplication();
-      await app.init();
+        const app =
+          adapter === 'fastify'
+            ? moduleRef.createNestApplication(new FastifyAdapter())
+            : moduleRef.createNestApplication();
+        await app.init();
+        if (adapter === 'fastify')
+          await app.getHttpAdapter().getInstance().ready();
 
-      await supertest(app.getHttpServer())
-        .get('/posts')
-        .send()
-        .expect(200)
-        .then((res) =>
-          expect(res.body).toStrictEqual({
-            rangeSearched: 'undefined-undefined',
-          }),
-        );
+        await supertest(app.getHttpServer())
+          .get('/posts')
+          .send()
+          .expect(200)
+          .then((res) =>
+            expect(res.body).toStrictEqual({
+              rangeSearched: 'undefined-undefined',
+            }),
+          );
 
-      await supertest(app.getHttpServer())
-        .get('/posts/yyyy')
-        .send()
-        .expect(200)
-        .then((res) =>
-          expect(res.body).toStrictEqual({
-            rangeSearched: 'yyyy-undefined',
-          }),
-        );
+        await supertest(app.getHttpServer())
+          .get('/posts/yyyy')
+          .send()
+          .expect(200)
+          .then((res) =>
+            expect(res.body).toStrictEqual({
+              rangeSearched: 'yyyy-undefined',
+            }),
+          );
 
-      await supertest(app.getHttpServer())
-        .get('/posts/yyyy/mm')
-        .send()
-        .expect(200)
-        .then((res) =>
-          expect(res.body).toStrictEqual({
-            rangeSearched: 'yyyy-mm',
-          }),
-        );
-    });
+        await supertest(app.getHttpServer())
+          .get('/posts/yyyy/mm')
+          .send()
+          .expect(200)
+          .then((res) =>
+            expect(res.body).toStrictEqual({
+              rangeSearched: 'yyyy-mm',
+            }),
+          );
+        await app.close();
+      },
+    );
   });
 
   it('should be able to combine single-handler, multi-handler and vanilla nest controllers', async () => {

@@ -15,7 +15,8 @@
     "@types/supertest": "catalog:",
     "unplugin-swc": "catalog:",
     "vite-plus": "catalog:",
-    "vitest": "catalog:"
+    "vitest": "catalog:",
+    "typescript": "catalog:classic-tooling"
   },
   "dependencies": {
     "@nestjs/common": "catalog:",
