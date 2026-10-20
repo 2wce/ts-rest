@@ -1,13 +1,14 @@
 import { StandardSchemaV1 } from './standard-schema';
 import {
-  areAllSchemasLegacyZod,
   isStandardSchema,
   parseAsStandardSchema,
   validateAgainstStandardSchema,
   validateMultiSchemaObject,
   validateIfSchema,
 } from './standard-schema-utils';
-import { ZodError, z } from 'zod';
+import { z } from 'zod';
+import { z as legacyZod } from 'zod-legacy';
+import { toStandardSchema } from '../zod3';
 import * as v from 'valibot';
 import { StandardSchemaError } from './validation-error';
 import { initContract } from './dsl';
@@ -45,7 +46,7 @@ describe('standard schema utils', () => {
     it.each([
       {
         input: z.object({ foo: z.string() }),
-        expected: false, // zod <3.24.0 is not a standard schema
+        expected: true, // modern Zod 3 implements Standard Schema
         description: 'zod 3',
       },
       {
@@ -96,7 +97,7 @@ describe('standard schema utils', () => {
 
       const result = validateIfSchema(data, schema);
 
-      expect(result.error).toBeInstanceOf(ZodError);
+      expect(result.error).toBeInstanceOf(StandardSchemaError);
       expect(result).toMatchObject({
         error: expect.objectContaining({
           issues: [
@@ -114,30 +115,8 @@ describe('standard schema utils', () => {
     });
   });
 
-  describe('areAllSchemasLegacyZod', () => {
-    it('should return true if all schemas are legacy zod', () => {
-      const zodSchema = z.object({ foo: z.string() });
-
-      const zodSchemaStandard = parseAsStandardSchema(zodSchema)!;
-
-      expect(areAllSchemasLegacyZod([zodSchemaStandard])).toBe(true);
-    });
-
-    it('should return false if any schema is not a legacy zod', () => {
-      const zodSchema = z.object({ foo: z.string() });
-      const valibotSchema = v.object({ foo: v.string() });
-
-      const zodSchemaStandard = parseAsStandardSchema(zodSchema)!;
-      const valibotSchemaStandard = parseAsStandardSchema(valibotSchema)!;
-
-      expect(
-        areAllSchemasLegacyZod([zodSchemaStandard, valibotSchemaStandard]),
-      ).toBe(false);
-    });
-  });
-
   describe('validateMultiSchemaObject', () => {
-    it('should work for a legacy zod object', () => {
+    it('should work for a whole-object Standard Schema', () => {
       const headers = {
         'x-foo': 'bar',
         'x-bar': 'baz',
@@ -170,7 +149,7 @@ describe('standard schema utils', () => {
 
       const result = validateMultiSchemaObject(headers, headersSchema);
 
-      expect(result.error).toBeInstanceOf(ZodError);
+      expect(result.error).toBeInstanceOf(StandardSchemaError);
       expect(result).toMatchObject({
         error: expect.objectContaining({
           issues: [
@@ -266,15 +245,16 @@ describe('standard schema utils', () => {
       });
     });
 
-    it('should error if mixing zod legacy and valibot', () => {
-      expect(() =>
+    it('allows explicitly bridged legacy Zod and other Standard Schemas together', () => {
+      expect(
         validateMultiSchemaObject(
-          { 'x-foo': 'bar', 'x-bar': 1 },
-          { 'x-foo': v.string(), 'x-bar': z.string() },
-        ),
-      ).toThrow(
-        'Cannot mix zod legacy and standard schema libraries, please use zod >= 3.24.0 or any other standard schema library',
-      );
+          { 'x-foo': 'bar', 'x-bar': 'baz' },
+          {
+            'x-foo': v.string(),
+            'x-bar': toStandardSchema(legacyZod.string()),
+          },
+        ).value,
+      ).toEqual({ 'x-foo': 'bar', 'x-bar': 'baz' });
     });
 
     it('should gracefully deal with null, and with other helpers like c.type()', () => {

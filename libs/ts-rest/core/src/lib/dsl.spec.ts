@@ -11,6 +11,7 @@ import {
   InferHeadersInput,
 } from './dsl';
 import type { Equal, Expect } from './test-helpers';
+import type { StandardSchemaV1 } from './standard-schema';
 import { Prettify } from './type-utils';
 import * as v from 'valibot';
 
@@ -263,13 +264,7 @@ describe('contract', () => {
                   }
                 >;
               };
-              headers: z.ZodObject<
-                z.objectUtil.MergeShapes<
-                  { 'x-foo': z.ZodString },
-                  { 'x-bar': z.ZodString }
-                >,
-                'strip',
-                z.ZodTypeAny,
+              headers: StandardSchemaV1<
                 { 'x-foo': string; 'x-bar': string },
                 { 'x-foo': string; 'x-bar': string }
               >;
@@ -335,7 +330,7 @@ describe('contract', () => {
     >;
   });
 
-  it('should be typed correctly with overridden headers', () => {
+  it('requires both opaque header schema inputs and infers the merged output', () => {
     const contract = c.router(
       {
         posts: {
@@ -383,14 +378,8 @@ describe('contract', () => {
                   }
                 >;
               };
-              headers: z.ZodObject<
-                z.objectUtil.MergeShapes<
-                  { 'x-foo': z.ZodString },
-                  { 'x-foo': z.ZodOptional<z.ZodString> }
-                >,
-                'strip',
-                z.ZodTypeAny,
-                { 'x-foo'?: string },
+              headers: StandardSchemaV1<
+                { 'x-foo': string },
                 { 'x-foo'?: string }
               >;
             };
@@ -1062,41 +1051,19 @@ describe('contract', () => {
 });
 
 describe('header types', () => {
-  it('should handle two zod objects', () => {
-    const leftSchema = z.object({
-      left: z.string(),
-    });
-
-    const rightSchema = z.object({
-      right: z.string(),
-    });
-
-    type Resut = MergeHeadersWithLegacySupport<
+  it('merges the input and output of two Standard Schemas without exposing validator types', () => {
+    const leftSchema = z.object({ left: z.string() });
+    const rightSchema = z.object({ right: z.string() });
+    type Result = MergeHeadersWithLegacySupport<
       typeof leftSchema,
       typeof rightSchema
     >;
-    type TestResult = Expect<
+    type Assert = Expect<
       Equal<
-        Resut,
-        z.ZodObject<
-          z.objectUtil.MergeShapes<
-            {
-              left: z.ZodString;
-            },
-            {
-              right: z.ZodString;
-            }
-          >,
-          'strip',
-          z.ZodTypeAny,
-          {
-            left: string;
-            right: string;
-          },
-          {
-            left: string;
-            right: string;
-          }
+        Result,
+        StandardSchemaV1<
+          { left: string; right: string },
+          { left: string; right: string }
         >
       >
     >;

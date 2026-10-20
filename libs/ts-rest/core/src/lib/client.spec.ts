@@ -8,7 +8,8 @@ import {
 } from '..';
 import { ApiFetcherArgs, initClient, getCompleteUrl } from './client';
 import { Equal, Expect } from './test-helpers';
-import { z, ZodError } from 'zod';
+import { z } from 'zod';
+import { StandardSchemaError } from './validation-error';
 import * as v from 'valibot';
 
 const c = initContract();
@@ -33,9 +34,9 @@ const postsRouter = c.router({
   getPost: {
     method: 'GET',
     path: `/posts/:id`,
-    headers: z.object({
+    headers: {
       'x-api-key': z.string().optional(),
-    }),
+    },
     responses: {
       200: postSchema.nullable(),
     },
@@ -53,9 +54,9 @@ const postsRouter = c.router({
   getPosts: {
     method: 'GET',
     path: '/posts',
-    headers: z.object({
+    headers: {
       'x-pagination': z.coerce.number().optional(),
-    }),
+    },
     responses: {
       200: c.type<Post[]>(),
     },
@@ -125,9 +126,9 @@ const postsRouter = c.router({
     responses: {
       200: c.type<Post>(),
     },
-    headers: z.object({
+    headers: {
       'content-type': z.literal('application/merge-patch+json'),
-    }),
+    },
     body: z.object({}).passthrough(),
   },
   deletePost: {
@@ -178,11 +179,11 @@ export const router = c.router(
     },
   },
   {
-    baseHeaders: z.object({
+    baseHeaders: {
       'x-api-key': z.string(),
       'x-test': z.string().optional(),
       'base-header': z.string().optional(),
-    }),
+    },
   },
 );
 
@@ -1203,7 +1204,7 @@ describe('custom api', () => {
 
     await expect(
       client.posts.getPost({ params: { id: '1' } }),
-    ).rejects.toThrowError(ZodError);
+    ).rejects.toThrowError(StandardSchemaError);
   });
 });
 
@@ -1347,3 +1348,37 @@ describe('getCompleteUrl', () => {
     >
   >;
 }
+
+describe('validated client response contracts', () => {
+  beforeEach(() => {
+    fetchMock.mockReset();
+    fetchMock.mockGlobal();
+  });
+
+  it('accepts a JSON response with an explicit content type', async () => {
+    const contract = c.router({
+      response: {
+        method: 'GET',
+        path: '/other-json',
+        responses: {
+          200: c.otherResponse({
+            contentType: 'application/json',
+            body: z.object({ value: z.string() }),
+          }),
+        },
+      },
+    });
+    fetchMock.get('http://localhost/other-json', {
+      status: 200,
+      body: { value: 'hello' },
+    });
+    const client = initClient(contract, {
+      baseUrl: 'http://localhost',
+      validateResponse: true,
+    });
+    await expect(client.response()).resolves.toMatchObject({
+      status: 200,
+      body: { value: 'hello' },
+    });
+  });
+});

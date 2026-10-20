@@ -1,10 +1,7 @@
-import { ZodError, ZodIssue, ZodObject } from 'zod';
 import { StandardSchemaV1 } from './standard-schema';
 import { StandardSchemaError } from './validation-error';
-import { isZodType, zodMerge } from './zod-utils';
-import { ContractAnyType, ContractAnyTypeLegacy } from './dsl';
+import { ContractAnyType } from './dsl';
 
-const VENDOR_LEGACY_ZOD = 'zod-ts-rest-polyfill';
 const VENDOR_STANDARD_SCHEMA = 'ts-rest-combined';
 
 /**
@@ -29,56 +26,11 @@ export const isStandardSchema = (
   return standard.version === 1 && typeof standard.validate === 'function';
 };
 
-/**
- * Takes in an unknown object and returns either a standard schema or null, if it encounters
- * a legacy zod (<3.24.0) schema it'll return a polyfill for it.
- *
- * @param schema - unknown
- * @returns StandardSchemaV1<unknown, unknown> | null
- */
+/** Return a supplied Standard Schema without adapting or mutating it. */
 export const parseAsStandardSchema = (
   schema: unknown,
-): StandardSchemaV1<unknown, unknown> | null => {
-  const isStandard = isStandardSchema(schema);
-
-  if (isStandard) {
-    return schema;
-  }
-
-  /**
-   * Legacy support for zod pre 3.24.0
-   *
-   * @deprecated - remove in next major version when zod (standard schema) is required
-   */
-  if (isZodType(schema)) {
-    const standardSchema: StandardSchemaV1<unknown, unknown>['~standard'] = {
-      vendor: VENDOR_LEGACY_ZOD,
-      version: 1,
-      validate: (input) => {
-        const result = schema.safeParse(input);
-
-        if (result.success) {
-          return {
-            value: result.data,
-          };
-        }
-
-        return {
-          issues: result.error.issues,
-        };
-      },
-    };
-
-    // Assign to avoid mutating the original schema
-    Object.assign(schema, {
-      '~standard': standardSchema,
-    });
-
-    return schema as unknown as StandardSchemaV1<unknown, unknown>;
-  }
-
-  return null;
-};
+): StandardSchemaV1<unknown, unknown> | null =>
+  isStandardSchema(schema) ? schema : null;
 
 /**
  * Since 3.53.0 we've moved to headers using an object with schemas inside it, rather than a top level schema.
@@ -91,13 +43,10 @@ export const parseAsStandardSchema = (
  */
 export const validateMultiSchemaObject = (
   data: unknown,
-  schemaObject:
-    | Record<string, ContractAnyType>
-    | ContractAnyTypeLegacy
-    | undefined,
+  schemaObject: Record<string, ContractAnyType> | ContractAnyType | undefined,
 ): {
   value?: unknown;
-  error?: StandardSchemaError | ZodError;
+  error?: StandardSchemaError;
   schemasUsed: Array<StandardSchemaV1<unknown, unknown>>;
 } => {
   const schema = parseAsStandardSchema(schemaObject);
@@ -117,7 +66,6 @@ export const validateMultiSchemaObject = (
 
   const headersMap = new Map<string, unknown>(Object.entries(data ?? {}));
 
-  const vendorSet = new Set<string>();
   const subSchemas = new Map<string, StandardSchemaV1<unknown, unknown>>();
 
   for (const [key, schema] of Object.entries(schemaObject ?? {})) {
@@ -133,18 +81,11 @@ export const validateMultiSchemaObject = (
 
     if (parsedSchema !== null) {
       subSchemas.set(key, parsedSchema);
-      vendorSet.add(parsedSchema['~standard'].vendor);
     } else {
       throw new Error(
-        `Invalid schema provided for header ${key}, please use a valid schema`,
+        `Invalid schema provided for header ${key}; use a Standard Schema or a contract type marker`,
       );
     }
-  }
-
-  if (vendorSet.size > 1 && vendorSet.has(VENDOR_LEGACY_ZOD)) {
-    throw new Error(
-      'Cannot mix zod legacy and standard schema libraries, please use zod >= 3.24.0 or any other standard schema library',
-    );
   }
 
   if (subSchemas.size === 0) {
@@ -188,8 +129,7 @@ export const validateMultiSchemaObject = (
 /**
  * Combines two standard schemas into a single standard schema.
  *
- * The combined schema will run the validation of both schemas and return the result of the first schema that
- * succeeds.
+ * The combined schema validates both schemas and merges their successful object outputs.
  *
  * If either schema fails, the combined schema will return the issues from both schemas.
  *
@@ -201,40 +141,6 @@ export const combineStandardSchemas = (
   a: StandardSchemaV1<unknown, unknown>,
   b: StandardSchemaV1<unknown, unknown>,
 ): StandardSchemaV1<unknown, unknown> => {
-  const isAZodLegacy = a['~standard'].vendor === VENDOR_LEGACY_ZOD;
-  const isBZodLegacy = b['~standard'].vendor === VENDOR_LEGACY_ZOD;
-
-  const isJustOneZodLegacy = isAZodLegacy !== isBZodLegacy;
-
-  if (isJustOneZodLegacy) {
-    throw new Error(
-      'Cannot combine a zod < 3.24.0 schema with a standard schema, please use zod >= 3.24.0 or any other standard schema library',
-    );
-  }
-
-  /**
-   * To maintain existing behavior, we do a zod level merge of the two schemas.
-   */
-  if (isAZodLegacy && isBZodLegacy) {
-    const merged = zodMerge(a, b);
-
-    /**
-     * Cleanup any residual ~standard key that may have been left over from before the merge,
-     * allowing parseAsStandardSchema to re-pollyfill the schema.
-     */
-    if ('~standard' in merged) {
-      delete merged['~standard'];
-    }
-
-    const schema = parseAsStandardSchema(merged);
-
-    if (!schema) {
-      throw new Error('Failed to merge zod legacy schemas');
-    }
-
-    return schema;
-  }
-
   const standardSchema: StandardSchemaV1<unknown, unknown>['~standard'] = {
     vendor: VENDOR_STANDARD_SCHEMA,
     version: 1,
@@ -246,7 +152,6 @@ export const combineStandardSchemas = (
         throw new Error('Schema validation must be synchronous');
       }
 
-      // TODO: Agree on the behavior of this for standard schemas
       if (result.issues || result2.issues) {
         return {
           issues: [...(result.issues || []), ...(result2.issues || [])],
@@ -268,7 +173,7 @@ export const combineStandardSchemas = (
 };
 
 /**
- * Merges two header schemas together, these can either be legacy zod objects or objects containing standard schemas.
+ * Merges two whole-object Standard Schemas or two records of field schemas.
  */
 export const mergeHeaderSchemasForRoute = (
   baseSchema: unknown,
@@ -282,10 +187,17 @@ export const mergeHeaderSchemasForRoute = (
     return baseSchema;
   }
 
-  if (baseSchema instanceof ZodObject && routeSchema instanceof ZodObject) {
-    const merged = zodMerge(baseSchema, routeSchema);
+  if (typeof baseSchema === 'symbol') return routeSchema;
+  if (typeof routeSchema === 'symbol') return baseSchema;
 
-    return merged;
+  if (isStandardSchema(baseSchema) && isStandardSchema(routeSchema)) {
+    return combineStandardSchemas(baseSchema, routeSchema);
+  }
+
+  if (isStandardSchema(baseSchema) || isStandardSchema(routeSchema)) {
+    throw new Error(
+      'Cannot mix whole-object Standard Schemas with field records for headers',
+    );
   }
 
   const mergedObjects = {
@@ -312,12 +224,17 @@ export const validateIfSchema = (
   } = {},
 ): {
   value?: unknown;
-  error?: StandardSchemaError | ZodError;
+  error?: StandardSchemaError;
   schemasUsed: Array<StandardSchemaV1<unknown, unknown>>;
 } => {
   const schemaStandard = parseAsStandardSchema(schema);
 
   if (!schemaStandard) {
+    if (schema !== null && schema !== undefined && typeof schema !== 'symbol') {
+      throw new Error(
+        'Invalid schema supplied; use a Standard Schema or a contract type marker',
+      );
+    }
     return { value: data, schemasUsed: [] };
   }
 
@@ -339,7 +256,7 @@ export const validateAgainstStandardSchema = (
   }: {
     passThroughExtraKeys?: boolean;
   } = {},
-): { value?: unknown; error?: StandardSchemaError | ZodError } => {
+): { value?: unknown; error?: StandardSchemaError } => {
   const result = schema['~standard'].validate(data);
 
   if (result instanceof Promise) {
@@ -347,17 +264,6 @@ export const validateAgainstStandardSchema = (
   }
 
   if (result.issues) {
-    /**
-     * If the schema is a zod polyfill, we need to return a ZodError.
-     *
-     * @deprecated - remove in next major version when zod (standard schema) is required
-     */
-    if (schema['~standard'].vendor === VENDOR_LEGACY_ZOD) {
-      return {
-        error: new ZodError(result.issues as ZodIssue[]),
-      };
-    }
-
     return {
       error: new StandardSchemaError(result.issues),
     };
@@ -372,15 +278,4 @@ export const validateAgainstStandardSchema = (
   return {
     value: result.value,
   };
-};
-
-/**
- * Use this to decide whether to return the old-style ZodError or the new-style StandardSchemaError
- */
-export const areAllSchemasLegacyZod = (
-  schemas: (StandardSchemaV1<unknown, unknown> | null | undefined)[],
-): boolean => {
-  return schemas
-    .filter(Boolean)
-    .every((schema) => schema?.['~standard'].vendor === VENDOR_LEGACY_ZOD);
 };
