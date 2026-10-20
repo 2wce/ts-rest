@@ -1,7 +1,14 @@
 import assert from 'node:assert/strict';
 import { test } from 'vitest';
 import { execFileSync } from 'node:child_process';
-import { mkdtemp, readFile, rm, writeFile, access } from 'node:fs/promises';
+import {
+  mkdtemp,
+  readFile,
+  rm,
+  writeFile,
+  access,
+  readdir,
+} from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -15,30 +22,49 @@ async function checkDefaultGraph(path, seen = new Set()) {
   if (seen.has(path)) return;
   seen.add(path);
   const code = await readFile(path, 'utf8');
-  assert.doesNotMatch(
-    code,
-    /(?:from\s*|require\(\s*|import\(\s*)["']zod(?:\/[^"']*)?["']/,
+  const moduleEdges = [
+    ...code.matchAll(
+      /\b(?:from\s*|import\s*(?:\(\s*)?|require\s*\(\s*)["']([^"']+)["']/g,
+    ),
+  ].map((match) => match[1]);
+  assert.ok(
+    moduleEdges.every(
+      (specifier) => specifier !== 'zod' && !specifier.startsWith('zod/'),
+    ),
+    `${path}: default graph must not load Zod`,
   );
   const map = JSON.parse(await readFile(`${path}.map`, 'utf8'));
   assert.ok(
     map.sources.every((source) => !/(?:^|\/)zod(?:@[^/]+)?\//.test(source)),
     `${path}: default graph must not bundle Zod`,
   );
-  const localImports = [
-    ...code.matchAll(
-      /(?:from\s*|require\(\s*|import\(\s*)["'](\.\/[^"']+\.(?:mjs|js))["']/g,
-    ),
-  ];
-  for (const [, relative] of localImports) {
+  for (const relative of moduleEdges.filter(
+    (specifier) => specifier.startsWith('.') && /\.[cm]?js$/.test(specifier),
+  )) {
     await checkDefaultGraph(resolve(dirname(path), relative), seen);
   }
 }
 
-test('default core ESM and CommonJS graphs do not load or bundle Zod', async () => {
-  for (const extension of ['esm.mjs', 'cjs.js']) {
-    await checkDefaultGraph(
-      resolve(root, `libs/ts-rest/core/dist/index.${extension}`),
+test('packed default core ESM and CommonJS graphs do not load or bundle Zod', async () => {
+  const unpacked = await mkdtemp(join(tmpdir(), 'ts-rest-graph-'));
+  try {
+    execFileSync('tar', [
+      '-xzf',
+      join(archives, 'ts-rest-core.tgz'),
+      '-C',
+      unpacked,
+    ]);
+    const packageRoot = join(unpacked, 'package');
+    const pkg = JSON.parse(
+      await readFile(join(packageRoot, 'package.json'), 'utf8'),
     );
+    for (const format of ['import', 'require']) {
+      await checkDefaultGraph(
+        resolve(packageRoot, pkg.exports['.'][format].default),
+      );
+    }
+  } finally {
+    await rm(unpacked, { recursive: true, force: true });
   }
 });
 
@@ -89,6 +115,11 @@ for (const [profile, definition] of Object.entries(sources)) {
         await assert.rejects(access(join(consumer, 'node_modules/zod')), {
           code: 'ENOENT',
         });
+        const installed = await readdir(join(consumer, 'node_modules/.pnpm'));
+        assert.ok(
+          installed.every((name) => !name.startsWith('zod@')),
+          'no-Zod consumer must not install Zod transitively',
+        );
       }
       const source = `import { initContract, StandardSchemaV1, SchemaInputOrType, SchemaOutputOrType, ServerInferRequest, ClientInferRequest, ClientInferResponseBody } from '@ts-rest/core';
 import { createExpressEndpoints, initServer } from '@ts-rest/express';
@@ -131,12 +162,13 @@ for (const name of ['@ts-rest/core', '@ts-rest/express']) {
   const esm = await import(name); const cjs = require(name);
   assert.deepEqual(Object.keys(esm).filter((key) => key !== 'default').sort(), Object.keys(cjs).sort());
 }
-const { validateIfSchema, StandardSchemaError } = await import('@ts-rest/core');
 ${definition.replace('schema: StandardSchemaV1<string, number>', 'schema')}
-assert.equal(validateIfSchema('42', schema).value, 42);
-const failure = validateIfSchema({}, schema).error;
-assert.ok(failure instanceof StandardSchemaError);
-assert.ok(failure.issues.length > 0);
+for (const { validateIfSchema, StandardSchemaError } of [await import('@ts-rest/core'), require('@ts-rest/core')]) {
+  assert.equal(validateIfSchema('42', schema).value, 42);
+  const failure = validateIfSchema({}, schema).error;
+  assert.ok(failure instanceof StandardSchemaError);
+  assert.ok(failure.issues.length > 0);
+}
 `;
       const file = join(consumer, 'consumer.mjs');
       await writeFile(file, runtime);
