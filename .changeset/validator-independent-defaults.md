@@ -19,8 +19,8 @@ compatibility entry points.
 Default validation failures use StandardSchemaError with the serialized name
 ValidationError, including explicitly bridged old schemas. Request error locations
 and validator-provided issue fields are retained. Whole-object header schemas now
-validate both inputs before merging successful outputs; use explicit legacy
-zodMerge before bridging when replacement semantics are required.
+validate both inputs before merging successful outputs; merge typed Zod
+objects before bridging when replacement semantics are required.
 
 See the unreleased Standard Schema migration guide for moved imports and intentional
 major-version changes. This Changeset records the future coordinated release;

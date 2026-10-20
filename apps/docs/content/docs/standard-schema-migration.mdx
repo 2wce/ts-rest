@@ -82,10 +82,23 @@ This differs from Zod's `.merge()`, which can replace a field's validation rule.
 
 If an old contract relies on Zod object overrides, merge before bridging:
 
-```typescript
-import { toStandardSchema, zodMerge } from '@ts-rest/core/zod3';
+```typescript twoslash
+import { initContract } from '@ts-rest/core';
+import { toStandardSchema } from '@ts-rest/core/zod3';
+import { z } from 'zod';
 
-const headers = toStandardSchema(zodMerge(baseHeaders, routeHeaders));
+const baseHeaders = z.object({ role: z.literal('user') });
+const routeHeaders = z.object({ role: z.literal('admin') });
+const headers = toStandardSchema(baseHeaders.merge(routeHeaders));
+const c = initContract();
+const contract = c.router({
+  read: {
+    method: 'GET',
+    path: '/headers',
+    headers,
+    responses: { 200: c.type<{ ok: boolean }>() },
+  },
+});
 ```
 
 Supply that combined schema once, or convert headers to field records. Mixing
