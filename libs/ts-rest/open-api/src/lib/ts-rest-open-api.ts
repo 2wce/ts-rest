@@ -179,6 +179,7 @@ const traversedPathsToOpenApi = (
         response &&
         typeof response === 'object' &&
         'description' in response &&
+        typeof response.description === 'string' &&
         response.description
           ? response.description
           : statusCode;
