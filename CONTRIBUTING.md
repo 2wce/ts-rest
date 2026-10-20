@@ -13,9 +13,8 @@ Use `pnpm exec` for one-off tools and `pnpm --filter <package> <script>` for
 individual packages.
 
 The docs app is part of the same pnpm workspace; root docs scripts select its
-Vite+ tasks. Bun remains in consumer compatibility fixtures that explicitly
-test Bun installs, builds and runtime behavior. It is not needed for normal
-workspace development or documentation.
+Vite+ tasks. Compatibility fixtures also use Node, pnpm and Vitest; their
+independent dependency installations preserve consumer compatibility coverage.
 
 ## Commands
 
@@ -37,7 +36,6 @@ workspace development or documentation.
 - `pnpm --filter example-nest build` / `pnpm --filter example-next build`:
   build one database example.
 - `pnpm example-microservice:serve`: run microservice development tasks.
-- `make e2e`: isolated Nest, Express and validator compatibility fixtures.
 
 Vite+ caches build scripts through `vp run`. Inference checks use `--no-cache`: a
 negative probe showed native compiler file reads were not fully captured on this
@@ -151,9 +149,9 @@ adapter itself builds and checks with TypeScript 7. The Vue example's `.ts`
 files are checked by the native workspace checker; this does not add `.vue`
 template type checking.
 
-Standalone `test-projects` keep their own compiler versions and run through
-`make e2e`; they are excluded from the root native lint checker. The non-strict
-fixture retains its own compiler settings. New type-aware lint rules start as
+Standalone `test-projects` keep their own compiler versions and run in the
+CI compatibility matrix; they are excluded from the root native lint checker.
+The non-strict fixture retains its own compiler settings. New type-aware lint rules start as
 warnings; the unbound-method rule is disabled in specs because assertions on
 mock methods do not invoke those methods. There is no blanket compiler-error
 suppression.
@@ -191,14 +189,41 @@ so artifact manifests never become additional workspace packages.
 
 Public libraries build into `libs/ts-rest/<package>/dist`. `pnpm pack:packages`
 builds them and runs native recursive pnpm packing for the ten public packages,
-excluding the private React Query v5 package. `make e2e` packs first, then installs
-the tarballs in temporary copies of each compatibility fixture. External versions
-stay locked; build tarball checksums are refreshed only in the temporary copy, so
-repeated builds do not dirty the fixture locks. Bun fixtures explicitly update
-only their local ts-rest archive dependencies to bypass stale tarball caches. Each
-installed ts-rest file is compared with its archive before tests run. To run one
-fixture, first run
-`pnpm pack:packages`, then `make -C test-projects/<fixture> e2e`.
+excluding the private React Query v5 package.
+
+## Consumer compatibility
+
+The full ten-scenario matrix runs only in CI. The build job verifies and uploads
+its native tarballs; each consumer job downloads them into a fresh checkout and
+installs only its fixture dependencies. It never installs root dependencies, so
+Node cannot fall back to the development workspace's packages. There is no
+fixture copying step or Make runner.
+
+External dependency versions stay locked. pnpm refreshes build archive checksums
+only in the disposable checkout. Every installed ts-rest file is compared with
+its archive before tests run. Every fixture uses Node, pnpm and Vitest. Nest
+consumers run their own Nest build; Express and validator consumers use Vite+
+packing and their own TypeScript 5 checker. Their shared consumer config contains
+only data, so tooling always resolves from each independent installation.
+The stable `Compatibility Fixtures` check fails if any matrix scenario fails or
+is skipped, and is required before merging to `main`.
+
+Locally, run `pnpm test`, `pnpm typecheck` and `pnpm test:packages`. The full matrix
+is not part of these commands. To debug one scenario, use an independent checkout
+without root `node_modules`, download the CI `compatibility-packages` artifact to
+its `dist/packages` directory, and follow that scenario's commands in
+`.github/workflows/build-test.yml`. For example, from the consumer checkout:
+
+```sh
+cd test-projects/nest-9
+pnpm install --no-frozen-lockfile
+pnpm test
+pnpm build
+```
+
+The same install, test and build commands apply to every scenario. Treat
+consumer checkouts as disposable; do not commit archive checksum updates from
+these runs.
 
 ## Release automation
 

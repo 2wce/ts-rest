@@ -108,7 +108,10 @@ published exports when packing.
 - `pnpm build`: build the ten public libraries.
 - `pnpm pack:packages`: build and create installable tarballs without publishing.
 - `pnpm test:packages`: verify packed exports, types and versioning.
-- `make e2e`: install those tarballs in the framework and validator fixtures.
+
+The full framework and validator compatibility matrix runs in CI using fresh
+consumer checkouts and the built tarballs. Local development does not need Make
+or the full compatibility matrix.
 
 Releases remain paused. See [CONTRIBUTING.md](CONTRIBUTING.md) for workspace,
 compatibility and release commands.
