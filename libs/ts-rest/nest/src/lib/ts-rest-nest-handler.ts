@@ -27,7 +27,6 @@ import {
   AppRouter,
   isAppRoute,
   isAppRouteOtherResponse,
-  parseAsStandardSchema,
   parseJsonQueryObject,
   ServerInferResponses,
   StandardSchemaError,
@@ -455,10 +454,7 @@ const validateResponse = (
     );
   }
 
-  const responseStandardSchema = parseAsStandardSchema(
-    appRoute.responses[response.status],
-  );
-  const responseValidation = validateIfSchema(body, responseStandardSchema);
+  const responseValidation = validateIfSchema(body, responseSchema);
 
   if (responseValidation.error) {
     const { error } = responseValidation;
