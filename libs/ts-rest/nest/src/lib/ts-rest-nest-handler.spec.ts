@@ -1,3 +1,5 @@
+import { toStandardSchema } from '@ts-rest/core/zod3';
+import { z as z4 } from 'zod4';
 import { vi } from 'vitest';
 import {
   ContractAnyType,
@@ -6,7 +8,6 @@ import {
   StandardSchemaV1,
 } from '@ts-rest/core';
 import {
-  RequestValidationErrorSchema,
   TsRestException,
   tsRestHandler,
   TsRestHandler,
@@ -55,6 +56,25 @@ export type Equal<a, b> =
 export type Expect<a extends true> = a;
 
 vi.setConfig({ testTimeout: 10000 });
+
+// Applications can describe validation responses with their chosen validator.
+const ValidationErrorSchema = z.object({
+  name: z.literal('ValidationError'),
+  issues: z.array(
+    z
+      .object({
+        message: z.string(),
+        path: z.array(z.union([z.string(), z.number()])).optional(),
+      })
+      .passthrough(),
+  ),
+});
+const RequestValidationErrorSchema = z.object({
+  paramsResult: ValidationErrorSchema.nullable(),
+  headersResult: ValidationErrorSchema.nullable(),
+  queryResult: ValidationErrorSchema.nullable(),
+  bodyResult: ValidationErrorSchema.nullable(),
+});
 
 describe('ts-rest-nest-handler', () => {
   describe('multi-handler api', () => {
@@ -186,7 +206,7 @@ describe('ts-rest-nest-handler', () => {
                 message: 'Expected string, received number',
               },
             ],
-            name: 'ZodError',
+            name: 'ValidationError',
           },
           headersResult: null,
           queryResult: null,
@@ -395,7 +415,7 @@ describe('ts-rest-nest-handler', () => {
                 received: 'undefined',
               },
             ],
-            name: 'ZodError',
+            name: 'ValidationError',
           },
           bodyResult: null,
           queryResult: null,
@@ -507,7 +527,7 @@ describe('ts-rest-nest-handler', () => {
                 received: 'undefined',
               },
             ],
-            name: 'ZodError',
+            name: 'ValidationError',
           },
           paramsResult: null,
         });
@@ -849,7 +869,7 @@ describe('ts-rest-nest-handler', () => {
                 message: 'Required',
               },
             ],
-            name: 'ZodError',
+            name: 'ValidationError',
           },
           headersResult: null,
           paramsResult: null,
@@ -1060,7 +1080,7 @@ describe('ts-rest-nest-handler', () => {
               message: 'Expected string, received number',
             },
           ],
-          name: 'ZodError',
+          name: 'ValidationError',
         },
         headersResult: null,
         queryResult: null,
@@ -1219,7 +1239,7 @@ describe('ts-rest-nest-handler', () => {
                 message: 'Required',
               },
             ],
-            name: 'ZodError',
+            name: 'ValidationError',
           },
           headersResult: null,
           paramsResult: null,
@@ -2075,7 +2095,7 @@ describe('ts-rest-nest-handler', () => {
               message: 'Expected number, received nan',
             },
           ],
-          name: 'ZodError',
+          name: 'ValidationError',
         },
         queryResult: null,
       },
@@ -2265,7 +2285,7 @@ describe('ts-rest-nest-handler', () => {
                 received: 'string',
               },
             ],
-            name: 'ZodError',
+            name: 'ValidationError',
           },
         });
       });
@@ -2313,7 +2333,7 @@ describe('ts-rest-nest-handler', () => {
                 received: 'string',
               },
             ],
-            name: 'ZodError',
+            name: 'ValidationError',
           },
         });
       });
@@ -2416,82 +2436,91 @@ describe('ts-rest-nest-handler', () => {
     });
   });
 
-  describe('valibot', () => {
-    it('should be able to intercept a TsRestRequestValidationError when using a standard schema validator', async () => {
-      const c = initContract();
-      const contract = c.router({
-        getIndex: {
-          method: 'POST',
-          path: '/',
-          body: v.object({
-            name: v.string(),
-          }),
-          responses: {
-            200: c.noBody(),
+  describe('Standard Schema validators', () => {
+    it.each([
+      ['Valibot', v.object({ name: v.string() })],
+      ['Zod 3', z.object({ name: z.string() })],
+      [
+        'explicit Zod 3 bridge',
+        toStandardSchema(z.object({ name: z.string() })),
+      ],
+      ['Zod 4', z4.object({ name: z4.string() })],
+    ] as const)(
+      'intercepts the modern request error for %s',
+      async (_, bodySchema) => {
+        const c = initContract();
+        const contract = c.router({
+          getIndex: {
+            method: 'POST',
+            path: '/',
+            body: bodySchema,
+            responses: {
+              200: c.noBody(),
+            },
           },
-        },
-      });
+        });
 
-      @Controller()
-      class TestController {
-        @TsRestHandler(contract)
-        async handler() {
-          return tsRestHandler(contract, {
-            getIndex: async ({ body }) => ({
-              status: 200,
-              body: undefined,
-            }),
-          });
-        }
-      }
-
-      @Catch()
-      class TestErrorFilter implements ExceptionFilter {
-        catch(exception: unknown, host: ArgumentsHost) {
-          const ctx = host.switchToHttp();
-          const req = ctx.getRequest<Request>();
-          const res = ctx.getResponse<Response>();
-
-          if (exception instanceof TsRestRequestValidationError) {
-            res.status(400).send({
-              custom: 'error filter caught it',
-              bodyErrors: exception.body?.issues?.length || 0,
-              headerErrors: exception.headers?.issues?.length || 0,
-              pathParameterErrors: exception.pathParams?.issues?.length || 0,
-              queryParameterErrors: exception.query?.issues?.length || 0,
+        @Controller()
+        class TestController {
+          @TsRestHandler(contract)
+          async handler() {
+            return tsRestHandler(contract, {
+              getIndex: async ({ body }) => ({
+                status: 200,
+                body: undefined,
+              }),
             });
           }
         }
-      }
 
-      const moduleRef = await Test.createTestingModule({
-        controllers: [TestController],
-        providers: [
-          {
-            provide: APP_FILTER,
-            useClass: TestErrorFilter,
-          },
-        ],
-      }).compile();
+        @Catch()
+        class TestErrorFilter implements ExceptionFilter {
+          catch(exception: unknown, host: ArgumentsHost) {
+            const ctx = host.switchToHttp();
+            const req = ctx.getRequest<Request>();
+            const res = ctx.getResponse<Response>();
 
-      const app = moduleRef.createNestApplication();
-      await app.init();
+            if (exception instanceof TsRestRequestValidationError) {
+              res.status(400).send({
+                custom: 'error filter caught it',
+                bodyErrors: exception.body?.issues?.length || 0,
+                headerErrors: exception.headers?.issues?.length || 0,
+                pathParameterErrors: exception.pathParams?.issues?.length || 0,
+                queryParameterErrors: exception.query?.issues?.length || 0,
+              });
+            }
+          }
+        }
 
-      const server = app.getHttpServer();
+        const moduleRef = await Test.createTestingModule({
+          controllers: [TestController],
+          providers: [
+            {
+              provide: APP_FILTER,
+              useClass: TestErrorFilter,
+            },
+          ],
+        }).compile();
 
-      const response = await supertest(server).post('/').send({
-        name: 123,
-      });
+        const app = moduleRef.createNestApplication();
+        await app.init();
 
-      expect(response.status).toEqual(400);
-      expect(response.body).toEqual({
-        custom: 'error filter caught it',
-        bodyErrors: 1,
-        headerErrors: 0,
-        pathParameterErrors: 0,
-        queryParameterErrors: 0,
-      });
-    });
+        const server = app.getHttpServer();
+
+        const response = await supertest(server).post('/').send({
+          name: 123,
+        });
+
+        expect(response.status).toEqual(400);
+        expect(response.body).toEqual({
+          custom: 'error filter caught it',
+          bodyErrors: 1,
+          headerErrors: 0,
+          pathParameterErrors: 0,
+          queryParameterErrors: 0,
+        });
+      },
+    );
 
     it('should allow unsetting base headers with null', async () => {
       const c = initContract();

@@ -2,7 +2,7 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 import {
   initContract,
-  ResponseValidationError,
+  TsRestResponseValidationError as ResponseValidationError,
   TsRestResponseError,
 } from '@ts-rest/core';
 import supertest from 'supertest';
@@ -10,14 +10,30 @@ import express from 'express';
 import { z } from 'zod';
 import { createExpressEndpoints, initServer } from './ts-rest-express';
 import multer from 'multer';
-import {
-  CombinedRequestValidationErrorSchema,
-  DefaultRequestValidationErrorSchema,
-  RequestValidationError,
-} from './request-validation-error';
+import { RequestValidationError } from './request-validation-error';
 import * as v from 'valibot';
 
 const upload = multer();
+
+// Applications can describe validation responses with their chosen validator.
+const ValidationErrorSchema = z.object({
+  name: z.literal('ValidationError'),
+  issues: z.array(
+    z
+      .object({
+        message: z.string(),
+        path: z.array(z.union([z.string(), z.number()])).optional(),
+      })
+      .passthrough(),
+  ),
+});
+const DefaultRequestValidationErrorSchema = ValidationErrorSchema;
+const CombinedRequestValidationErrorSchema = z.object({
+  pathParameterErrors: ValidationErrorSchema.nullable(),
+  headerErrors: ValidationErrorSchema.nullable(),
+  queryParameterErrors: ValidationErrorSchema.nullable(),
+  bodyErrors: ValidationErrorSchema.nullable(),
+});
 
 const c = initContract();
 const s = initServer();

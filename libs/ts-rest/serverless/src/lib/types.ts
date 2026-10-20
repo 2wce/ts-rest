@@ -10,7 +10,6 @@ import { TsRestHttpError } from './http-error';
 import { TsRestResponse } from './response';
 import { CorsOptions, RequestHandler } from 'itty-router';
 import { CompleteRouter, RouterBuilder } from './router-builder';
-import { type ZodError } from 'zod';
 
 export class TsRestRequestValidationError extends TsRestHttpError {
   constructor(
@@ -29,27 +28,7 @@ export class TsRestRequestValidationError extends TsRestHttpError {
   }
 }
 
-/**
- * @deprecated use TsRestRequestValidationError instead, this will be removed in v4
- */
-export class RequestValidationError extends TsRestHttpError {
-  constructor(
-    public pathParamsError: ZodError | null,
-    public headersError: ZodError | null,
-    public queryError: ZodError | null,
-    public bodyError: ZodError | null,
-  ) {
-    super(400, {
-      message: 'Request validation failed',
-      pathParameterErrors: pathParamsError,
-      headerErrors: headersError,
-      queryParameterErrors: queryError,
-      bodyErrors: bodyError,
-    });
-  }
-}
-
-export { RequestValidationErrorSchema } from '@ts-rest/core';
+export { TsRestRequestValidationError as RequestValidationError };
 
 export class ResponseValidationError extends TsRestHttpError {
   constructor(

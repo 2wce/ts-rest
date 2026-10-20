@@ -1,6 +1,6 @@
 import { vi } from 'vitest';
 import { initContract, TsRestResponseError } from '@ts-rest/core';
-import { initServer, RequestValidationErrorSchema } from './ts-rest-fastify';
+import { initServer } from './ts-rest-fastify';
 import { z } from 'zod';
 import fastify from 'fastify';
 import supertest from 'supertest';
@@ -11,6 +11,25 @@ declare module 'fastify' {
     errorMessage?: string;
   }
 }
+
+// Applications can describe validation responses with their chosen validator.
+const ValidationErrorSchema = z.object({
+  name: z.literal('ValidationError'),
+  issues: z.array(
+    z
+      .object({
+        message: z.string(),
+        path: z.array(z.union([z.string(), z.number()])).optional(),
+      })
+      .passthrough(),
+  ),
+});
+const RequestValidationErrorSchema = z.object({
+  pathParameterErrors: ValidationErrorSchema.nullable(),
+  headerErrors: ValidationErrorSchema.nullable(),
+  queryParameterErrors: ValidationErrorSchema.nullable(),
+  bodyErrors: ValidationErrorSchema.nullable(),
+});
 
 const c = initContract();
 
@@ -202,7 +221,7 @@ describe('ts-rest-fastify', () => {
             received: 'undefined',
           },
         ],
-        name: 'ZodError',
+        name: 'ValidationError',
       },
       headerErrors: null,
       pathParameterErrors: null,

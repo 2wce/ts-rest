@@ -13,14 +13,10 @@ import {
   ServerInferResponses,
   TsRestResponseError,
   validateResponse,
-  ZodErrorSchema,
-  parseAsStandardSchema,
-  areAllSchemasLegacyZod,
   StandardSchemaError,
   validateMultiSchemaObject,
 } from '@ts-rest/core';
 import { getPathParamsFromArray } from './path-utils';
-import { type ZodError } from 'zod';
 
 export class TsRestRequestValidationError extends Error {
   constructor(
@@ -33,22 +29,7 @@ export class TsRestRequestValidationError extends Error {
   }
 }
 
-/**
- * @deprecated use TsRestRequestValidationError instead, this will be removed in v4
- */
-export class RequestValidationError extends Error {
-  constructor(
-    public pathParams: ZodError | null,
-    public headers: ZodError | null,
-    public query: ZodError | null,
-    public body: ZodError | null,
-  ) {
-    super('[ts-rest] request validation failed');
-  }
-}
-
-export const RequestValidationErrorSchema: typeof ZodErrorSchema =
-  ZodErrorSchema;
+export { TsRestRequestValidationError as RequestValidationError };
 
 type AppRouteImplementation<T extends AppRoute> = (
   args: ServerInferRequest<T, NextApiRequest['headers']> & {
@@ -336,28 +317,12 @@ const handlerFactory = (
         bodyResult.error
       ) {
         if (throwRequestValidation) {
-          const useLegacyZod = areAllSchemasLegacyZod([
-            ...pathParamsResult.schemasUsed,
-            ...headersResult.schemasUsed,
-            ...queryResult.schemasUsed,
-            ...bodyResult.schemasUsed,
-          ]);
-
-          if (useLegacyZod) {
-            throw new RequestValidationError(
-              (pathParamsResult.error as ZodError) || null,
-              (headersResult.error as ZodError) || null,
-              (queryResult.error as ZodError) || null,
-              (bodyResult.error as ZodError) || null,
-            );
-          } else {
-            throw new TsRestRequestValidationError(
-              (pathParamsResult.error as StandardSchemaError) || null,
-              (headersResult.error as StandardSchemaError) || null,
-              (queryResult.error as StandardSchemaError) || null,
-              (bodyResult.error as StandardSchemaError) || null,
-            );
-          }
+          throw new TsRestRequestValidationError(
+            pathParamsResult.error || null,
+            headersResult.error || null,
+            queryResult.error || null,
+            bodyResult.error || null,
+          );
         }
 
         if (pathParamsResult.error) {

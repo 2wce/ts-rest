@@ -1,3 +1,4 @@
+import { TsRestRequestValidationError, RequestValidationError } from '../types';
 import { initContract, TsRestResponseError } from '@ts-rest/core';
 import { parse as parseMultipart, getBoundary } from 'parse-multipart-data';
 import { z } from 'zod';
@@ -8,7 +9,27 @@ import {
   fetchRequestHandler,
   tsr,
 } from './ts-rest-fetch';
-import { RequestValidationErrorSchema } from '../types';
+
+// Applications can describe validation responses with their chosen validator.
+const ValidationErrorSchema = z.object({
+  name: z.literal('ValidationError'),
+  issues: z.array(
+    z
+      .object({
+        message: z.string(),
+        path: z.array(z.union([z.string(), z.number()])).optional(),
+      })
+      .passthrough(),
+  ),
+});
+const RequestValidationErrorSchema = z
+  .object({
+    pathParameterErrors: ValidationErrorSchema.nullable(),
+    headerErrors: ValidationErrorSchema.nullable(),
+    queryParameterErrors: ValidationErrorSchema.nullable(),
+    bodyErrors: ValidationErrorSchema.nullable(),
+  })
+  .extend({ message: z.string() });
 
 const c = initContract();
 
@@ -340,7 +361,7 @@ describe('fetchRequestHandler', () => {
 
     const response = await testFetchRequestHandler(request);
     const expectedResponse = new Response(
-      '{"message":"Request validation failed","pathParameterErrors":null,"headerErrors":null,"queryParameterErrors":{"issues":[{"code":"invalid_type","expected":"string","received":"undefined","path":["foo"],"message":"Required"}],"name":"ZodError"},"bodyErrors":null}',
+      '{"message":"Request validation failed","pathParameterErrors":null,"headerErrors":null,"queryParameterErrors":{"name":"ValidationError","issues":[{"code":"invalid_type","expected":"string","received":"undefined","path":["foo"],"message":"Required"}]},"bodyErrors":null}',
       {
         status: 400,
         headers: {
@@ -359,6 +380,36 @@ describe('fetchRequestHandler', () => {
     expect(RequestValidationErrorSchema.safeParse(body)).toStrictEqual({
       data: expect.any(Object),
       success: true,
+    });
+  });
+
+  it('delivers a modern request error with the original Zod issue details to custom handlers', async () => {
+    let caught: unknown;
+    const handler = createFetchHandler(contract, router, {
+      errorHandler: (error) => {
+        caught = error;
+      },
+    });
+    const response = await handler(new Request('http://localhost/test'));
+    expect(response.status).toBe(400);
+    expect(caught).toBeInstanceOf(TsRestRequestValidationError);
+    expect(caught).toBeInstanceOf(RequestValidationError);
+    expect(caught).toMatchObject({
+      pathParamsError: null,
+      headersError: null,
+      bodyError: null,
+      queryError: {
+        name: 'ValidationError',
+        issues: [
+          {
+            code: 'invalid_type',
+            expected: 'string',
+            received: 'undefined',
+            path: ['foo'],
+            message: 'Required',
+          },
+        ],
+      },
     });
   });
 

@@ -1,5 +1,5 @@
 import { AppRouter } from '@ts-rest/core';
-import type { NextRequest, NextResponse } from 'next/server';
+import type { NextRequest, NextResponse } from 'next/server.js';
 import { createServerlessRouter } from '../router';
 import {
   createTsr,

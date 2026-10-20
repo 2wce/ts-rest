@@ -3,6 +3,7 @@ export * from './lib/request';
 export * from './lib/response';
 export {
   RequestValidationError,
+  TsRestRequestValidationError,
   ResponseValidationError,
   type AppRouteImplementation,
   type AppRouteImplementationOrOptions,

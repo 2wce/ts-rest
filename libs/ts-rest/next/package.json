@@ -9,7 +9,8 @@
   "license": "MIT",
   "peerDependencies": {
     "next": "^12.0.0 || ^13.0.0 || ^14.0.0 || ^15.0.0 || ^16.0.0",
-    "@ts-rest/core": "workspace:^"
+    "@ts-rest/core": "workspace:^",
+    "zod": "^3.22.3 || ^4.0.0"
   },
   "scripts": {
     "build": "vp pack",
@@ -17,12 +18,14 @@
   },
   "devDependencies": {
     "@ts-rest/core": "workspace:*",
-    "@ts-rest/build-config": "workspace:*"
+    "@ts-rest/build-config": "workspace:*",
+    "zod": "catalog:"
   },
   "types": "./src/index.ts",
   "exports": {
     "./package.json": "./package.json",
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./zod3": "./src/zod3.ts"
   },
   "files": [
     "dist",
@@ -44,7 +47,36 @@
           "types": "./dist/index.cjs.d.ts",
           "default": "./dist/index.cjs.js"
         }
+      },
+      "./zod3": {
+        "import": {
+          "types": "./dist/zod3.esm.d.mts",
+          "default": "./dist/zod3.esm.mjs"
+        },
+        "require": {
+          "types": "./dist/zod3.cjs.d.ts",
+          "default": "./dist/zod3.cjs.js"
+        }
       }
+    },
+    "typesVersions": {
+      "*": {
+        "zod3": [
+          "./dist/zod3.cjs.d.ts"
+        ]
+      }
+    }
+  },
+  "peerDependenciesMeta": {
+    "zod": {
+      "optional": true
+    }
+  },
+  "typesVersions": {
+    "*": {
+      "zod3": [
+        "./src/zod3.ts"
+      ]
     }
   }
 }
