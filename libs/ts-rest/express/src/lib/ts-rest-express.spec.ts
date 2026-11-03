@@ -8,6 +8,7 @@ import {
 import supertest from 'supertest';
 import express from 'express';
 import { z } from 'zod';
+import { z as zod4 } from 'zod4';
 import { createExpressEndpoints, initServer } from './ts-rest-express';
 import multer from 'multer';
 import { RequestValidationError } from './request-validation-error';
@@ -85,6 +86,69 @@ describe('strict mode', () => {
 });
 
 describe('ts-rest-express', () => {
+  it('validates mixed-case header declarations through a real HTTP request', async () => {
+    const contract = c.router(
+      {
+        get: {
+          method: 'GET',
+          path: '/header-inference',
+          headers: {
+            'Idempotency-Key': zod4.string(),
+            'x-count': zod4.string().transform(Number),
+            'X-Note': v.optional(v.string()),
+            Authorization: null,
+          },
+          responses: {
+            200: c.type<{ key: string; count: number; note?: string }>(),
+          },
+        },
+      },
+      {
+        baseHeaders: {
+          'X-Count': zod4.literal('base'),
+          authorization: zod4.string(),
+        },
+      },
+    );
+    const app = express();
+    const handler = vi.fn();
+    createExpressEndpoints(
+      contract,
+      s.router(contract, {
+        get: async ({ headers }) => {
+          handler(headers);
+          return {
+            status: 200,
+            body: {
+              key: headers['idempotency-key'],
+              count: headers['x-count'],
+              note: headers['x-note'],
+            },
+          };
+        },
+      }),
+      app,
+    );
+
+    const accepted = await supertest(app)
+      .get('/header-inference')
+      .set('Idempotency-Key', 'request-1')
+      .set('X-Count', '12');
+    expect(accepted.status).toBe(200);
+    expect(accepted.body).toEqual({ key: 'request-1', count: 12 });
+    expect(handler).toHaveBeenCalledOnce();
+
+    const missing = await supertest(app)
+      .get('/header-inference')
+      .set('X-Count', '12');
+    expect(missing.status).toBe(400);
+    expect(missing.body).toMatchObject({
+      name: 'ValidationError',
+      issues: [expect.objectContaining({ path: ['idempotency-key'] })],
+    });
+    expect(handler).toHaveBeenCalledOnce();
+  });
+
   it('should handle non-json response types from contract', async () => {
     const contract = c.router({
       postIndex: {

@@ -497,6 +497,48 @@ export const contract = c.router({
 
 Define headers in your contract with a string input type. You can use transforms or coercion to convert string values to different types if needed.
 
+Field-record header names are case-insensitive. A declaration such as
+`'Idempotency-Key': z.string()` requires an `idempotency-key` string in the
+client request and exposes that lowercase key to the server handler. Only header
+names are normalized; keys inside transformed header values are preserved.
+
+The client uses each schema's input type, and the server uses its output type.
+For example, `z.string().transform(Number)` accepts a string on the client and
+produces a number on the server. Optional inputs and outputs are inferred
+separately: a schema with a default can be optional for the client and required
+for the server.
+
+```typescript twoslash title="header-input-output.ts"
+import { initContract, ClientInferRequest, ServerInferRequest } from '@ts-rest/core';
+import { z } from 'zod';
+
+const c = initContract();
+const contract = c.router({
+  read: {
+    method: 'GET',
+    path: '/headers',
+    headers: {
+      'Idempotency-Key': z.string(),
+      'X-Count': z.string().transform(Number),
+      'X-Note': z.string().optional(),
+    },
+    responses: { 200: c.type<{ ok: boolean }>() },
+  },
+});
+
+const request: ClientInferRequest<typeof contract.read> = {
+  headers: { 'idempotency-key': 'request-1', 'x-count': '12' },
+};
+type HandlerHeaders = ServerInferRequest<typeof contract.read>['headers'];
+// { 'idempotency-key': string; 'x-count': number; 'x-note'?: string }
+```
+
+Whole-object Standard Schemas, including Zod 4 objects, are also supported.
+Define their input and output header keys in lowercase, matching the headers
+provided by HTTP adapters. ts-rest validates these opaque schemas directly;
+it does not inspect or rewrite their fields. Bridge older Zod 3 objects with
+`toStandardSchema` from `@ts-rest/core/zod3`.
+
 <Tabs items={['Zod', 'Valibot', 'Arktype', 'Plain Types']}>
   <Tab value="Zod">
 ```typescript  title="headers.ts"
@@ -590,6 +632,12 @@ export const contract = c.router({
 ### Base Headers
 
 You can define base headers for all routes in a contract, useful for things like authorization headers. This forces the client to always pass these headers unless also defined in the client's `baseHeaders`.
+
+For field records, route headers override base headers by their lowercase HTTP
+name: `authorization` overrides `Authorization`. Setting a route header to
+`null` removes that requirement, including through nested routers. Combining
+whole-object schemas validates both schemas instead; see the
+[Standard Schema migration guide](/standard-schema-migration#whole-object-headers).
 
 ```typescript twoslash title="base-headers.ts"
 import { initContract } from '@ts-rest/core';

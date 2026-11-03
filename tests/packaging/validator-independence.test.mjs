@@ -200,16 +200,33 @@ import * as aws from '@ts-rest/serverless/aws';
 import * as azure from '@ts-rest/serverless/azure';
 import * as serverlessNext from '@ts-rest/serverless/next';
 ${definition}
+const optionalHeader: StandardSchemaV1<string | undefined> = {
+  '~standard': { version: 1, vendor: 'consumer', validate: (value) =>
+    value === undefined || typeof value === 'string' ? { value } : { issues: [{ message: 'Expected optional string' }] } }
+};
 type Equal<A, B> = (<T>() => T extends A ? 1 : 2) extends (<T>() => T extends B ? 1 : 2) ? true : false;
 type Expect<T extends true> = T;
 type Input = Expect<Equal<SchemaInputOrType<typeof schema>, string>>;
 type Output = Expect<Equal<SchemaOutputOrType<typeof schema>, number>>;
-const contract = initContract().router({ convert: { method: 'POST', path: '/convert', body: schema, responses: { 200: schema } } });
+const contract = initContract().router({ convert: { method: 'POST', path: '/convert', body: schema, headers: { 'X-Count': schema, 'X-Note': optionalHeader }, responses: { 200: schema } } });
 type ServerBody = Expect<Equal<ServerInferRequest<typeof contract.convert>['body'], number>>;
 type ClientBody = Expect<Equal<ClientInferRequest<typeof contract.convert>['body'], string>>;
 type ResponseBody = Expect<Equal<ClientInferResponseBody<typeof contract.convert, 200>, number>>;
-const implementation = initServer().router(contract, { convert: async ({ body }) => {
+type ClientHeaders = Expect<Equal<ClientInferRequest<typeof contract.convert>['headers'], { 'x-count': string; 'x-note'?: string }>>;
+type ServerHeaders = Expect<Equal<ServerInferRequest<typeof contract.convert>['headers'], { 'x-count': number; 'x-note'?: string }>>;
+const c = initContract();
+const plain = c.router({ get: { method: 'GET', path: '/plain', headers: c.type<{ 'x-key': 'route' }>(), responses: { 200: null } } }, { baseHeaders: c.type<{ 'X-Key': string; 'X-Note'?: string }>() });
+type PlainInput = Expect<Equal<ClientInferRequest<typeof plain.get>['headers'], { 'x-key': 'route'; 'x-note'?: string }>>;
+type PlainOutput = Expect<Equal<ServerInferRequest<typeof plain.get>['headers'], { 'x-key': 'route'; 'x-note'?: string }>>;
+const valid: ClientInferRequest<typeof contract.convert> = { body: '12', headers: { 'x-count': '12' } };
+// @ts-expect-error required transformed header cannot be omitted
+const missing: ClientInferRequest<typeof contract.convert> = { body: '12', headers: {} };
+// @ts-expect-error client must supply the schema input type
+const wrong: ClientInferRequest<typeof contract.convert> = { body: '12', headers: { 'x-count': 12 } };
+void [valid, missing, wrong];
+const implementation = initServer().router(contract, { convert: async ({ body, headers }) => {
   type HandlerBody = Expect<Equal<typeof body, number>>;
+  type HandlerHeaders = Expect<Equal<typeof headers['x-count'], number>>;
   return { status: 200, body: body.toString() };
 } });
 void implementation;
@@ -281,11 +298,16 @@ for (const name of ['@ts-rest/core', '@ts-rest/express', '@ts-rest/fastify', '@t
   assert.deepEqual(Object.keys(esm).filter((key) => key !== 'default').sort(), Object.keys(cjs).sort());
 }
 ${definition.replace('schema: StandardSchemaV1<string, number>', 'schema')}
-for (const { validateIfSchema, StandardSchemaError } of [await import('@ts-rest/core'), require('@ts-rest/core')]) {
+for (const { validateIfSchema, validateMultiSchemaObject, initContract, StandardSchemaError } of [await import('@ts-rest/core'), require('@ts-rest/core')]) {
   assert.equal(validateIfSchema('42', schema).value, 42);
   const failure = validateIfSchema({}, schema).error;
   assert.ok(failure instanceof StandardSchemaError);
   assert.ok(failure.issues.length > 0);
+  const headers = initContract().router({ get: { method: 'GET', path: '/headers', headers: { 'X-Count': schema }, responses: { 200: null } } }).get.headers;
+  assert.equal(validateMultiSchemaObject({ 'X-COUNT': '42' }, headers).value['x-count'], 42);
+  const missing = validateMultiSchemaObject({}, headers).error;
+  assert.ok(missing instanceof StandardSchemaError);
+  assert.deepEqual(missing.issues[0].path, ['x-count']);
 }
 ${
   profile === 'zod-3-legacy'

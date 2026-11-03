@@ -80,6 +80,15 @@ two whole-object Standard Schemas validates both and merges successful outputs.
 Both input requirements must be satisfied; the route output takes precedence.
 This differs from Zod's `.merge()`, which can replace a field's validation rule.
 
+Field-record names are normalized to lowercase before merging and validation.
+Route overrides and `null` removals therefore apply regardless of casing, even
+in nested routers. Client header types describe schema inputs; server header
+types describe transformed outputs, with optionality inferred independently.
+
+Whole-object schemas remain supported, including stable Zod 4 and bridged old
+Zod 3 objects. Use lowercase header keys in their input and output shapes, since
+HTTP adapters provide lowercase names. Their fields are not inspected or rewritten.
+
 If an old contract relies on Zod object overrides, merge before bridging:
 
 ```typescript twoslash
@@ -102,8 +111,7 @@ const contract = c.router({
 ```
 
 Supply that combined schema once, or convert headers to field records. Mixing
-whole-object schemas with field records remains unsupported. Further header
-inference changes are tracked separately in issue #3.
+whole-object schemas with field records remains unsupported.
 
 ## OpenAPI
 
