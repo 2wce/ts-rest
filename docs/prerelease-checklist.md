@@ -47,14 +47,35 @@ npm org ls ts-restless --json --registry=https://registry.npmjs.org
 gh api repos/2wce/ts-rest/private-vulnerability-reporting
 ```
 
-Configure repository secrets without printing or committing their values:
+Configure npm trusted publishing for each of the ten public packages. The release job uses GitHub-hosted Ubuntu runners with `id-token: write`; pinned Node 26 provides npm 11.20.0 locally, and the job checks npm >=11.5.1. The repository's pnpm 12 publish path supports OIDC and provenance. Public registry metadata reads need no npm token.
 
-- `RELEASE_PR_TOKEN`: a dedicated GitHub credential with access to this repository and contents/pull-requests write permissions. It must trigger ordinary CI for the release PR. The default `GITHUB_TOKEN` does not trigger those PR workflows.
-- `NPM_TOKEN`: npm publishing access to `@ts-restless/*`, including the initial package creation, with the noninteractive publishing requirements satisfied. Local `npm login` does not configure this CI secret. Scope and rotate this credential according to npm's supported token policy.
+In each package's npm settings, add a GitHub Actions trusted publisher with these exact fields:
 
-The workflow checks that both secrets are present before external mutations, but secret presence does not prove their permissions. Verify the chosen publishing identity and provenance configuration for the destination. A future trusted-publishing setup can replace npm token authentication after the packages and npm trust relationships exist; it is not configured by this change.
+| Field                | Value                                                                                       |
+| -------------------- | ------------------------------------------------------------------------------------------- |
+| Organization or user | `2wce`                                                                                      |
+| Repository           | `ts-rest`                                                                                   |
+| Workflow filename    | `build-test.yml`                                                                            |
+| Environment name     | Leave empty; this job does not use a GitHub environment                                     |
+| Allowed actions      | Enable direct `npm publish`; current new trust configurations otherwise permit staging only |
 
-The job is default-off behind repository variable `PRERELEASE_ENABLED`. Keep it unset until the identity branch is reviewed, its full CI passes, and the credentials are configured. Then set `PRERELEASE_ENABLED=true` and the next successful main push will open/update the release PR. Publication follows its merge and successful CI automatically; there is no prerelease manual-dispatch workflow. Stable automation remains disabled.
+Names include all ten entries in the package migration table: core, express, fastify, nest, next, serverless, react-query, open-api, solid-query and vue-query. Keep private packages excluded. The public manifests already point to the actual fork repository, as npm requires. Package settings are case-sensitive; the workflow filename is the filename alone.
+
+The workflow has no `NPM_TOKEN` or `NODE_AUTH_TOKEN` publishing secret. GitHub issues a short-lived OIDC identity, and the package manager exchanges it for scoped registry access. GitHub trusted publishing automatically adds provenance for these public packages/public repository; explicit npm/pnpm provenance settings retain that requirement. Local `npm whoami` is not a check of OIDC permissions. Verify the actual publication's registry provenance before declaring the setup complete.
+
+A dedicated repository secret `RELEASE_PR_TOKEN` is still required for GitHub contents/pull-requests write access so generated release PRs trigger ordinary PR CI. It is a GitHub PR credential, independent of npm publishing. Prefer a project-owned GitHub App identity when configuring this credential. Never print or commit its value.
+
+### First-package registration
+
+The new package names need npm package records before their per-package trust settings can be configured. Organization ownership alone does not establish those relationships. This branch does not register packages or create bootstrap releases.
+
+[npm staged publishing](https://docs.npmjs.com/staged-publishing/) can register new names using authenticated maintainer access: staging an unregistered name creates a publicly available `0.0.0-stage` placeholder, while the submitted contents remain staged. That placeholder changes the public package history and requires an explicit registration decision. Another bootstrap approach is an initial provenance-bearing CI publication using a short-lived bootstrap credential, followed by OIDC-only publishing. Neither bootstrap path is performed or enabled by this workflow; agree the first-registration approach before taking external publication actions.
+
+Do not activate automation until each package has its trusted publisher configured. Current npm trust configurations must complete their first successful publish within two days or be recreated. Configure them near the ready-to-publish release, with direct publish permission, then enable the workflow. After successful OIDC publication, restrict token-based publishing in npm package settings as appropriate; do not claim that restriction is configured by this source change.
+
+The job is default-off behind repository variable `PRERELEASE_ENABLED`. Keep it unset until the identity branch is reviewed, its full CI passes, the GitHub release-PR credential is configured, and the npm package trust relationships are ready. Then set `PRERELEASE_ENABLED=true`; the next successful main push opens/updates the release PR. Its merge and successful CI publish automatically under the recorded prerelease tag. Stable automation remains disabled.
+
+Official requirements: [npm trusted publishing](https://docs.npmjs.com/trusted-publishers/) and [pnpm publish](https://pnpm.io/cli/publish). The actual registry publish is the authentication proof; successful local tests or the presence of `id-token: write` do not establish that trust is configured.
 
 After publication, verify every package/version and dist-tag. Update README/docs/security status from "not published yet" only after registry verification, including actual release notes. Reserve `latest` for a separately approved stable release.
 

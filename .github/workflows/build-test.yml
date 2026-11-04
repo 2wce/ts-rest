@@ -118,10 +118,8 @@ jobs:
       - name: Require CI release credentials
         env:
           RELEASE_PR_TOKEN: ${{ secrets.RELEASE_PR_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           test -n "$RELEASE_PR_TOKEN" || { echo 'Configure RELEASE_PR_TOKEN so release PRs trigger CI'; exit 1; }
-          test -n "$NPM_TOKEN" || { echo 'Configure npm organization publishing access in NPM_TOKEN'; exit 1; }
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
@@ -146,6 +144,15 @@ jobs:
           registry-url: https://registry.npmjs.org
       - run: pnpm install --frozen-lockfile
         if: steps.head.outputs.current == 'true'
+      - name: Verify the npm trusted-publishing runtime
+        if: steps.head.outputs.current == 'true'
+        run: |
+          node --input-type=module <<'JS'
+          import assert from 'node:assert/strict';
+          import { execFileSync } from 'node:child_process';
+          const [major, minor, patch] = execFileSync('npm', ['--version'], { encoding: 'utf8' }).trim().split('.').map(Number);
+          assert.ok(major > 11 || (major === 11 && (minor > 5 || (minor === 5 && patch >= 1))), 'npm trusted publishing requires npm >= 11.5.1');
+          JS
       - name: Create or update the prerelease PR, or publish its merged versions
         if: steps.head.outputs.current == 'true'
         # CLI 2.x requires the action's maintenance/v1 implementation.
@@ -157,6 +164,7 @@ jobs:
           publish: pnpm prerelease:publish
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_PR_TOKEN }}
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          # npm authenticates using this job's OIDC identity. The trust must be
+          # configured on every public package for 2wce/ts-rest/build-test.yml.
           NPM_CONFIG_PROVENANCE: true
+          PNPM_CONFIG_PROVENANCE: true

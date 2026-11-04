@@ -233,8 +233,9 @@ open/update the coordinated numbered prerelease PR. Merging it and passing CI
 publishes its versions under the tag in committed Changesets prerelease state.
 The dedicated release PR credential ensures those PRs trigger normal CI.
 
-The job defaults off until repository secrets `RELEASE_PR_TOKEN` and `NPM_TOKEN`
-are configured and the identity branch passes review/CI. Activation uses repository
+The job defaults off until the GitHub `RELEASE_PR_TOKEN` credential and each package's npm trusted publisher
+are configured and the identity branch passes review/CI. Publishing uses OIDC
+with provenance and no npm write-token secret. Activation uses repository
 variable `PRERELEASE_ENABLED=true`. See the [prerelease checklist](docs/prerelease-checklist.md)
 for credentials, artifacts, release notes and registry verification. Stable
 publishing remains paused in `.github/workflows/release.yml` and needs its own
