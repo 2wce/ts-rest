@@ -2,7 +2,7 @@
 
 ## Supported release lines
 
-ts-restless is preparing its first `4.0.0-alpha.*` prereleases and stable `4.0.0`. No ts-restless version has been published yet. Security reports affecting the development branch are welcome; each prerelease's notes will identify the current evaluation version and known limitations.
+ts-restless is preparing its first `4.0.0-alpha.*` prereleases and stable `4.0.0`. No library release is available yet. npm's public `0.0.0-stage` registration placeholders contain no library code and must not be installed. Security reports affecting the development branch are welcome; each prerelease's notes will identify the current evaluation version and known limitations.
 
 After publication, use the latest prerelease for evaluation. Stable release security support and dependency retirement follow the [support policy](docs/support-policy.md). Existing upstream `@ts-rest/*` releases belong to their original project; this policy applies to ts-restless's own releases.
 

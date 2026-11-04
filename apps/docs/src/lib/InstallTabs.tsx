@@ -12,8 +12,10 @@ export const InstallTabs = ({ packageName }: { packageName: string }) => {
   return (
     <>
       <p>
-        Public packages are not published yet. After the first alpha is available,
-        install from its explicit prerelease channel. See the{' '}
+        No library release is available yet. npm's 0.0.0-stage registration
+        placeholders contain no library code and must not be installed. After the
+        first alpha is available, install from its explicit prerelease channel.
+        See the{' '}
         <a href="/ts-restless-migration">prerelease and migration guide</a>.
       </p>
       <Tabs items={['pnpm', 'bun', 'npm']} groupId="install" persist>

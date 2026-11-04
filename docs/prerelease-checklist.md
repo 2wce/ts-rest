@@ -1,6 +1,6 @@
 # ts-restless prerelease release-PR checklist
 
-The initial stable target is `4.0.0`; interim releases start at `4.0.0-alpha.0`. The project-owned npm organization is `ts-restless`. On 2026-11-04, authenticated npm checks confirmed `2wce` as an organization owner, and GitHub private vulnerability reporting was enabled and verified on the current fork. No packages have been published.
+The initial stable target is `4.0.0`; interim library releases start at `4.0.0-alpha.0`. The project-owned npm organization is `ts-restless`. On 2026-11-04, authenticated npm checks confirmed `2wce` as an organization owner, and GitHub private vulnerability reporting was enabled and verified on the current fork. All ten public names are registered with npm's `0.0.0-stage` placeholders. No library release is available; the placeholders contain no library code and must not be installed.
 
 ## Automated flow
 
@@ -59,6 +59,8 @@ In each package's npm settings, add a GitHub Actions trusted publisher with thes
 | Environment name     | Leave empty; this job does not use a GitHub environment                                     |
 | Allowed actions      | Enable direct `npm publish`; current new trust configurations otherwise permit staging only |
 
+All ten connections were created on 2026-11-04 with direct and staged publishing allowed, and dist-tag management disabled. They are pending validation by the first successful OIDC publication. The earliest connection must be validated before **2026-11-06 15:35 UTC** or recreated. Existing package token-access settings have not been tightened; that remains a separate step after successful OIDC publication.
+
 Names include all ten entries in the package migration table: core, express, fastify, nest, next, serverless, react-query, open-api, solid-query and vue-query. Keep private packages excluded. The public manifests already point to the actual fork repository, as npm requires. Package settings are case-sensitive; the workflow filename is the filename alone.
 
 The workflow has no `NPM_TOKEN` or `NODE_AUTH_TOKEN` publishing secret. GitHub issues a short-lived OIDC identity, and the package manager exchanges it for scoped registry access. GitHub trusted publishing automatically adds provenance for these public packages/public repository; explicit npm/pnpm provenance settings retain that requirement. Local `npm whoami` is not a check of OIDC permissions. Verify the actual publication's registry provenance before declaring the setup complete.
@@ -67,9 +69,11 @@ A dedicated repository secret `RELEASE_PR_TOKEN` is still required for GitHub co
 
 ### First-package registration
 
-The new package names need npm package records before their per-package trust settings can be configured. Organization ownership alone does not establish those relationships. This branch does not register packages or create bootstrap releases.
+The new package names need npm package records before their per-package trust settings can be configured. Organization ownership alone does not establish those relationships. The user approved staged registration on 2026-11-04, and all ten records now exist. The workflow itself does not perform registration or bootstrap releases.
 
-[npm staged publishing](https://docs.npmjs.com/staged-publishing/) can register new names using authenticated maintainer access: staging an unregistered name creates a publicly available `0.0.0-stage` placeholder, while the submitted contents remain staged. That placeholder changes the public package history and requires an explicit registration decision. Another bootstrap approach is an initial provenance-bearing CI publication using a short-lived bootstrap credential, followed by OIDC-only publishing. Neither bootstrap path is performed or enabled by this workflow; agree the first-registration approach before taking external publication actions.
+[npm staged publishing](https://docs.npmjs.com/staged-publishing/) registered the names using authenticated maintainer access. Each submission used a registration-only `0.0.0-registration.0` payload, tagged `registration`, containing only a manifest and README. npm created the publicly available `0.0.0-stage` placeholders; the submitted contents remain staged and unapproved. **Never approve those registration-only payloads as a library release.** The first library alpha must come from the reviewed release PR through OIDC.
+
+Registry reads confirmed that the only public version of each package is `0.0.0-stage`, and npm assigned it to `latest`. An authenticated attempt to remove Core's placeholder `latest` tag returned HTTP 400; the registry still reports that tag. Treat it as registration state, not a stable release. Keep user installation instructions gated on a real alpha and use `@alpha` explicitly. Before publication, review or reject the registration-only stages with `npm stage list` / `npm stage reject`; rejection has not been completed. Do not delete the package records or approve the staged payloads.
 
 Do not activate automation until each package has its trusted publisher configured. Current npm trust configurations must complete their first successful publish within two days or be recreated. Configure them near the ready-to-publish release, with direct publish permission, then enable the workflow. After successful OIDC publication, restrict token-based publishing in npm package settings as appropriate; do not claim that restriction is configured by this source change.
 
@@ -77,7 +81,7 @@ The job is default-off behind repository variable `PRERELEASE_ENABLED`. Keep it 
 
 Official requirements: [npm trusted publishing](https://docs.npmjs.com/trusted-publishers/) and [pnpm publish](https://pnpm.io/cli/publish). The actual registry publish is the authentication proof; successful local tests or the presence of `id-token: write` do not establish that trust is configured.
 
-After publication, verify every package/version and dist-tag. Update README/docs/security status from "not published yet" only after registry verification, including actual release notes. Reserve `latest` for a separately approved stable release.
+After library publication, verify every package/version and dist-tag. Replace the placeholder warnings in README/docs/security only after registry verification, including actual release notes. Real prereleases use their explicit channel; a real library version must reach `latest` only through a separately approved stable release.
 
 ## Stable exit
 
