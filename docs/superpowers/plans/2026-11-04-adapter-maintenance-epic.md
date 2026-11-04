@@ -2,7 +2,7 @@
 
 **Recorded:** 2026-11-04. **Source baseline:** `534d761bf0629ac196ce9941ff95cf75abdb4719`.
 
-**Status:** Future-work backlog. Every slice is unstarted. The user requested documentation of the architecture proposal; this document does not approve implementation, dependency support removals, API removals or publication.
+**Status:** Incremental implementation. The user approved A01/A02 on 2026-11-04 and adopted the support-policy baseline. A01 documentation and A02 conformance coverage are delivered. A03–A19 remain unstarted. This approval does not authorize dependency support removals, API removals or publication.
 
 **Goal:** Reduce the work needed to maintain contract behavior and keep integrations compatible as native frameworks and query libraries change.
 
@@ -68,33 +68,33 @@ flowchart LR
 | Independent package versions      | Remove blanket fixed-group coupling; retain genuine bundled/private relationships                      | A17 approves package groups and core peer semantics after real versioning probes                  |
 | Compatibility retirement          | Retire one selected surface in an appropriate major after its replacement and migration evidence exist | A19 approves the specific surface, date and release impact                                        |
 
-The recommended support window is a proposal, not an adopted reduction of the existing compatibility promise. Set exact versions and dates in A01; do not infer them from this document.
+The [compatibility support and retirement policy](../../support-policy.md) is adopted: one active verified dependency major plus a previous-major migration window, at least six calendar months' notice and removal in a major release. The [A01 inventory](../../support-inventory.md) retains existing broader ranges as explicit exceptions and records their coverage gaps. No new version floor, retirement notice or removal date is approved. The [release-focused backlog](../../release-readiness-backlog.md) records the adoption fixes that can ship alongside this epic.
 
 ## Slice register
 
 Scope sizes are relative: **S** is a focused documentation/test/API change; **M** is one integration or bounded cross-package extraction. They are not delivery estimates. If a slice grows beyond that boundary, split it before implementation.
 
-| ID  | Independently deliverable outcome                                      | Prerequisites    | Size | Status    |
-| --- | ---------------------------------------------------------------------- | ---------------- | ---- | --------- |
-| A01 | Support inventory and approved maintenance policy                      | None             | S    | Unstarted |
-| A02 | Shared HTTP conformance scenarios running on Express and Fastify       | None             | M    | Unstarted |
-| A03 | Shared parsed-request evaluation used by Express                       | A02              | M    | Unstarted |
-| A04 | Shared response preparation used by Express                            | A02              | M    | Unstarted |
-| A05 | Fastify uses both shared operations                                    | A03, A04         | M    | Unstarted |
-| A06 | Next uses shared contract operations                                   | A03, A04         | M    | Unstarted |
-| A07 | Nest uses shared contract operations inside its lifecycle              | A03, A04         | M    | Unstarted |
-| A08 | Serverless uses shared contract operations                             | A03, A04         | M    | Unstarted |
-| A09 | Fetch public declarations no longer expose itty-router types           | A08              | M    | Unstarted |
-| A10 | A documented portable Fetch journey proven in a host                   | A09              | S    | Unstarted |
-| A11 | Common query execution policy used by existing React Query v5 wrappers | None             | M    | Unstarted |
-| A12 | Additive React native query and mutation composition                   | A11              | M    | Unstarted |
-| A13 | React native infinite-query composition                                | A12              | S    | Unstarted |
-| A14 | Vue adopts common execution and native composition                     | A11, A12         | M    | Unstarted |
-| A15 | Solid adopts common execution and native composition                   | A11, A12         | M    | Unstarted |
-| A16 | Policy-driven packed compatibility and rolling dependency checks       | A01, A02         | M    | Unstarted |
-| A17 | Independent adapter versioning proven in disposable release probes     | A01              | M    | Unstarted |
-| A18 | Native upgrade rehearsal and migration guide                           | A05–A10, A12–A17 | S    | Unstarted |
-| A19 | First approved legacy-surface retirement                               | A01, A18         | S    | Unstarted |
+| ID  | Independently deliverable outcome                                      | Prerequisites    | Size | Status           |
+| --- | ---------------------------------------------------------------------- | ---------------- | ---- | ---------------- |
+| A01 | Support inventory and approved maintenance policy                      | None             | S    | Complete (docs)  |
+| A02 | Shared HTTP conformance scenarios running on Express and Fastify       | None             | M    | Complete (tests) |
+| A03 | Shared parsed-request evaluation used by Express                       | A02              | M    | Unstarted        |
+| A04 | Shared response preparation used by Express                            | A02              | M    | Unstarted        |
+| A05 | Fastify uses both shared operations                                    | A03, A04         | M    | Unstarted        |
+| A06 | Next uses shared contract operations                                   | A03, A04         | M    | Unstarted        |
+| A07 | Nest uses shared contract operations inside its lifecycle              | A03, A04         | M    | Unstarted        |
+| A08 | Serverless uses shared contract operations                             | A03, A04         | M    | Unstarted        |
+| A09 | Fetch public declarations no longer expose itty-router types           | A08              | M    | Unstarted        |
+| A10 | A documented portable Fetch journey proven in a host                   | A09              | S    | Unstarted        |
+| A11 | Common query execution policy used by existing React Query v5 wrappers | None             | M    | Unstarted        |
+| A12 | Additive React native query and mutation composition                   | A11              | M    | Unstarted        |
+| A13 | React native infinite-query composition                                | A12              | S    | Unstarted        |
+| A14 | Vue adopts common execution and native composition                     | A11, A12         | M    | Unstarted        |
+| A15 | Solid adopts common execution and native composition                   | A11, A12         | M    | Unstarted        |
+| A16 | Policy-driven packed compatibility and rolling dependency checks       | A01, A02         | M    | Unstarted        |
+| A17 | Independent adapter versioning proven in disposable release probes     | A01              | M    | Unstarted        |
+| A18 | Native upgrade rehearsal and migration guide                           | A05–A10, A12–A17 | S    | Unstarted        |
+| A19 | First approved legacy-surface retirement                               | A01, A18         | S    | Unstarted        |
 
 Server migrations A06–A08 can proceed independently after the shared boundaries stabilize. Client work and release work need not wait for every server migration. A16 extends its scenario runner as each integration lands.
 
@@ -104,12 +104,12 @@ Server migrations A06–A08 can proceed independently after the shared boundarie
 
 **Outcome:** Maintainers can tell which dependency lines are supported, why, and what evidence is required before changing that promise.
 
-**Scope:** Add a support document under `docs/`; reconcile library manifests, workspace catalogs, `CONTRIBUTING.md`, CI fixtures and native declarations. Include framework majors, query-library lines, TypeScript resolution modes and runtime requirements. Distinguish workspace baselines from packed consumer evidence.
+**Scope:** Complete and adopt the [support policy](../../support-policy.md); reconcile library manifests, workspace catalogs, `CONTRIBUTING.md`, CI fixtures and native declarations. Include framework majors, query-library lines, TypeScript resolution modes and runtime requirements. Distinguish workspace baselines from packed consumer evidence.
 
-- [ ] Record current peer ranges and existing coverage without narrowing either.
-- [ ] Approve exact version floors, active/maintenance-only lines, retirement dates and the process for adding a line. Do not blanket-apply a current-major rule to the existing Vue/Solid v4 integrations.
-- [ ] Record which matrix fixtures prove each promised line and which gaps require new coverage.
-- [ ] Document how a compatibility bug is triaged and which package owns the fix.
+- [x] Record current peer ranges and existing coverage without narrowing either.
+- [x] Record exact existing floors, working lines, retained exceptions and the approved process for adding a line. No new floor or retirement date is approved; no retirement clock has started. Vue/Solid v4 remain active until verified replacements exist.
+- [x] Record which matrix fixtures prove each promised line and which gaps require new coverage.
+- [x] Document how a compatibility bug is triaged and which package owns the fix.
 
 **Verification:** Review every row against package manifests and `.github/workflows/build-test.yml`; document gaps honestly. This slice changes documentation only.
 
@@ -119,10 +119,10 @@ Server migrations A06–A08 can proceed independently after the shared boundarie
 
 **Scope:** Add test-only scenario definitions under `tests/conformance/`; wire them into the existing Express and Fastify spec files using their native HTTP test facilities. Reuse existing contract fixtures and assertion patterns.
 
-- [ ] Exercise parsed params/query/body, header casing, optional/defaulted/transformed values, passthrough keys, declared error responses, invalid requests, response-validation failure and no-body/non-JSON responses.
-- [ ] Separate common contract assertions from adapter-specific failure formatting and lifecycle expectations. Capture actual differences rather than changing behavior to make tests agree.
-- [ ] Prove native handlers receive validated values and native context; retain middleware/hook-order and stream tests in adapter suites.
-- [ ] Keep fixtures reusable without creating a production test dependency or a second test runner.
+- [x] Exercise parsed params/query/body, header casing, optional/defaulted/transformed values, passthrough keys, declared error responses, invalid requests, response-validation failure and no-body/non-JSON responses.
+- [x] Separate common contract assertions from adapter-specific failure formatting and lifecycle expectations. Capture actual differences rather than changing behavior to make tests agree.
+- [x] Prove native handlers receive validated values and native context; retain middleware/hook-order and stream tests in adapter suites.
+- [x] Keep fixtures reusable without creating a production test dependency or a second test runner.
 
 **Verification:** Express and Fastify source suites pass; intentionally changing a shared expected value makes both hosts' corresponding assertions fail. Existing native-specific regressions remain covered.
 
@@ -344,7 +344,7 @@ Server migrations A06–A08 can proceed independently after the shared boundarie
 
 **Scope:** Exactly one approved old framework line or wrapper API in one public package, its peer/exports declarations, fixture/docs changes and major Changeset.
 
-- [ ] Record the approved surface, migration window, replacement and version impact; retain an explicit inventory of remaining surfaces.
+- [ ] Record the approved surface, migration window, replacement and version impact under the [support policy](../../support-policy.md); retain an explicit inventory of remaining surfaces.
 - [ ] Remove that surface only after replacement/migration examples and current packed consumers pass.
 - [ ] Retire only its obsolete tests/fixtures; keep replacement behavior and strict declarations covered.
 - [ ] Deliver a separately reviewable removal with migration notes and a Changeset; keep publication disabled.
@@ -384,7 +384,7 @@ Run focused checks during implementation, then applicable package/build gates be
 
 ## Suggested delivery order and stopping points
 
-1. **Establish evidence:** A01 and A02. Stop with a documented policy proposal and shared tests if implementation is not yet approved.
+1. **Establish evidence:** A01 and A02. Their implementation and support-policy baseline are approved; finish with the inventory and verified shared tests before extracting production operations.
 2. **Prove the server boundary:** A03, A04, A05. Review whether policy sharing genuinely reduces code while preserving native behavior before propagating it.
 3. **Migrate remaining hosts:** A06, A07, A08, then A09/A10. Each host migration is its own PR.
 4. **Reduce client coupling:** A11, A12, A13; then independently A14 and A15. Ship additive APIs before retiring wrappers.
@@ -408,3 +408,26 @@ At every stopping point the existing integrations must still work. Do not block 
 ## Execution record
 
 For each completed slice append: slice ID, implementation plan, delivery commit/PR, resolved dependency versions, exact checks/results, approved behavior changes and remaining limitations. Update its register status only after its acceptance criteria pass. Keep unimplemented slices marked unstarted; documentation of this epic is not completion of its architecture work.
+
+### A01 — Support inventory and adopted policy (2026-11-04)
+
+Implementation plan: [support and conformance](2026-11-04-support-conformance.md). Delivery is commit `d7c903f5`, `docs: record launch fixes and adapter support baseline`; no new PR/publication is claimed. [Inventory](../../support-inventory.md) records exact manifest ranges, resolved workspace and isolated fixture versions, compiler/resolution settings, runtime boundaries, ownership and verification gaps. Sources were reviewed against all ten public manifests, the private v5 manifest, root/fixture lockfiles, CI configuration and package-test code. `pnpm exec vp fmt --check` on the policy, inventory, release backlog and epic passed for all four files; `git diff --check` passed. A source/link probe confirmed all 32 manifest peer-range occurrences and 36 local documentation targets.
+
+Approved behavior: support-policy baseline only. No peers/fixtures/public APIs changed, no retirement notice or clock started, no rolling/deployed-host coverage inferred. Configured compatibility evidence is inventoried rather than rerun for this documentation slice. A02 appends its own actual source-test evidence when delivered.
+
+### A02 — Shared HTTP conformance (2026-11-04)
+
+Implementation plan: [support and conformance](2026-11-04-support-conformance.md). Delivery: commit `cf9d1361`, `test: share Express and Fastify HTTP conformance`. [Shared fixture and scenarios](../../../tests/conformance/http.ts) run thirteen identical cases per host through real Express and Fastify HTTP listeners. Native suites own setup, context and error assertions. Tests cover parsed/transformed/defaulted/optional inputs, mixed-case headers, passthrough keys, each invalid location and combined failures before handler invocation, returned/thrown declared errors, invalid and transformed responses, no-body and text output. Validated handler values are checked alongside untouched native request values. Existing middleware, hook, stream and lifecycle regressions remain in their suites.
+
+Resolved baselines: Node `26.12.0`, pnpm `12.14.0`, Vitest `5.0.5`, Express `5.3.0` / Express types `5.0.6`, Fastify `4.28.0`, Supertest `7.3.1`, Zod4 `4.6.7`, TypeScript `7.0.2`. Shared helpers use the existing default core source entry from their test-only location and derive the narrow client type from installed Supertest; no dependency or compiler suppression was added.
+
+Verification on the corrected/restored tree:
+
+- `pnpm exec vp test run --project express --project fastify`: **71 tests / 7 files passed**.
+- Sensitivity: changing shared expected transformed ID from `42` to `43`, then running `pnpm exec vp test run --project express --project fastify conformance.spec.ts`, produced **4 expected assertion failures across both hosts**, with 22 other cases passing. Restored to `42`; all 71 focused tests passed again.
+- `pnpm test`: **666 passed / 2 existing todos**, 56 files passed and 2 skipped, exit 0.
+- `pnpm typecheck`: **9/9 tasks passed**, uncached.
+- `pnpm exec tsc --noEmit -p libs/ts-rest/fastify/tsconfig.spec.json`: passed, covering the host that lacks a dedicated inference task.
+- Targeted `pnpm exec vp lint`, `pnpm exec vp fmt --check` and `git diff --check`: passed.
+
+Existing Fastify deprecated `routeConfig` / `reply.context` warnings and intentional Nest negative-response logs remain in untouched suites. New conformance cases add no warning. This establishes source/native evidence for the installed Express5/Fastify4 baselines; the CI-only isolated matrix, packed consumers and deployed hosts were not rerun for this test-only change. No production extraction, peer change, release or publication is included. A03–A19 remain future slices.
