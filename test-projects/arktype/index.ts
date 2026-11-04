@@ -1,7 +1,7 @@
-import { createExpressEndpoints, initServer } from '@ts-rest/express';
+import { createExpressEndpoints, initServer } from '@ts-restless/express';
 import express from 'express';
 import * as bodyParser from 'body-parser';
-import { initContract } from '@ts-rest/core';
+import { initContract } from '@ts-restless/core';
 import { type } from 'arktype';
 
 const c = initContract();

@@ -9,7 +9,7 @@ description: Package names, release status and migration from ts-rest v3 to ts-r
 
 The first stable release will be **4.0.0**. Interim `4.0.0-alpha.*` releases can ship while stable-launch compatibility fixes continue, followed by beta and release candidates as needed. Prereleases use their explicit `alpha`, `beta` or `rc` npm tag; stable `4.0.0` will use `latest`.
 
-**New-scope packages are being prepared and are not published yet.** This checkout still uses `@ts-rest/*` package names. The compiled examples on this site describe this fork's development source, which differs from published upstream v3. The package rename will update executable examples and dependencies together.
+**New-scope packages are being prepared and are not published yet.** This checkout and its compiled examples now use `@ts-restless/*` package names. They describe this fork's development source, which differs from published upstream v3. Installation commands apply after the first public alpha is available.
 
 ## Package migration
 
@@ -31,7 +31,7 @@ Public packages will belong to the project-owned npm organization `ts-restless`,
 Replace the ts-rest dependencies your application uses as a matched set, including shared contract packages. Then update their imports. Public API names and supported subpaths such as `/zod3` and React Query `/v5` stay familiar:
 
 ```typescript
-// Intended imports after the new-scope packages become available.
+// These imports compile against the new-scope development packages.
 import { initClient, initContract } from '@ts-restless/core';
 import { toStandardSchema } from '@ts-restless/core/zod3';
 import { initTsrReactQuery } from '@ts-restless/react-query/v5';

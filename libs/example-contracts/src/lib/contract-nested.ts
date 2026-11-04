@@ -1,4 +1,4 @@
-import { initContract } from '@ts-rest/core';
+import { initContract } from '@ts-restless/core';
 import { apiBlog } from './contract-blog';
 
 const c = initContract();

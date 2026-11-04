@@ -1,8 +1,8 @@
 {
-  "name": "@ts-rest/vue-query",
+  "name": "@ts-restless/vue-query",
   "version": "3.52.1",
   "private": false,
-  "description": "vue-query client integration for @ts-rest",
+  "description": "ts-restless vue-query integration for contract-first, end-to-end typed REST.",
   "keywords": [
     "rpc",
     "rest",
@@ -16,20 +16,20 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/ts-rest/ts-rest.git",
+    "url": "https://github.com/2wce/ts-rest.git",
     "directory": "libs/ts-rest/vue-query"
   },
   "license": "MIT",
   "peerDependencies": {
     "@tanstack/vue-query": "^4.0.0",
-    "@ts-rest/core": "workspace:^"
+    "@ts-restless/core": "workspace:^"
   },
   "scripts": {
     "build": "vp pack"
   },
   "devDependencies": {
-    "@ts-rest/core": "workspace:*",
-    "@ts-rest/build-config": "workspace:*"
+    "@ts-restless/core": "workspace:*",
+    "@ts-restless/build-config": "workspace:*"
   },
   "types": "./src/index.ts",
   "exports": {
@@ -58,5 +58,9 @@
         }
       }
     }
-  }
+  },
+  "bugs": {
+    "url": "https://github.com/2wce/ts-rest/issues"
+  },
+  "homepage": "https://github.com/2wce/ts-rest#readme"
 }

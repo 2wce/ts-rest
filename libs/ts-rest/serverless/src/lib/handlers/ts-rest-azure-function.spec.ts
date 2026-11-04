@@ -1,5 +1,5 @@
 import { HttpRequest, HttpResponse, InvocationContext } from '@azure/functions';
-import { TsRestResponseError, initContract } from '@ts-rest/core';
+import { TsRestResponseError, initContract } from '@ts-restless/core';
 import { parse as parseMultipart, getBoundary } from 'parse-multipart-data';
 import { vi } from 'vitest';
 import { z } from 'zod';

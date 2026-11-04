@@ -1,4 +1,4 @@
-import { AppRouter, ClientArgs } from '@ts-rest/core';
+import { AppRouter, ClientArgs } from '@ts-restless/core';
 import { QueryClient } from '@tanstack/react-query';
 import * as React from 'react';
 import { useTsrQueryClient } from './internal/use-tsr-query-client';

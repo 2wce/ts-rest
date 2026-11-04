@@ -1,12 +1,12 @@
 ---
 title: 'AWS Lambda'
-description: How to use ts-rest with AWS Lambda
+description: How to use ts-restless with AWS Lambda
 ---
 
 The AWS Lambda handler can handle API Gateway v1 or v2 events.
 
 ```typescript
-import { createLambdaHandler } from '@ts-rest/serverless/aws';
+import { createLambdaHandler } from '@ts-restless/serverless/aws';
 import { contract } from './contract';
 import { router } from './router';
 
@@ -23,7 +23,7 @@ In addition to the regular context properties, the context object for AWS Lambda
 - `lambdaContext: Context`: The Lambda context. The type is imported from the `aws-lambda` package.
 
 ```typescript
-import { createLambdaHandler } from '@ts-rest/serverless/aws';
+import { createLambdaHandler } from '@ts-restless/serverless/aws';
 import { contract } from './contract';
 
 export const handler = createLambdaHandler(

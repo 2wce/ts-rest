@@ -13,7 +13,7 @@ import {
   isAppRouteResponse,
   TsRestResponseError,
   validateResponse,
-} from '@ts-rest/core';
+} from '@ts-restless/core';
 import { Reflector } from '@nestjs/core';
 import { TsRestAppRouteMetadataKey } from './constants';
 import type { Response } from 'express';

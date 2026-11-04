@@ -1,5 +1,5 @@
-import { AppRoute, isStandardSchema } from '@ts-rest/core';
-import { isZodObject } from '@ts-rest/core/zod3';
+import { AppRoute, isStandardSchema } from '@ts-restless/core';
+import { isZodObject } from '@ts-restless/core/zod3';
 import {
   AsyncAndSyncHelper,
   GetAsyncFunction,

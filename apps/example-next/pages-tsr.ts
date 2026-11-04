@@ -1,5 +1,5 @@
-import { initTsrReactQuery } from '@ts-rest/react-query/v5';
-import { apiBlog } from '@ts-rest/example-contracts';
+import { initTsrReactQuery } from '@ts-restless/react-query/v5';
+import { apiBlog } from '@ts-restless/example-contracts';
 
 export const tsr = initTsrReactQuery(apiBlog, {
   baseUrl: 'http://localhost:4200/api',

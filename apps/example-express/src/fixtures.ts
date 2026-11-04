@@ -1,4 +1,4 @@
-import { Post } from '@ts-rest/example-contracts';
+import { Post } from '@ts-restless/example-contracts';
 
 export const mockPostFixtureFactory = (partial: Partial<Post>): Post => ({
   id: 'mock-id',

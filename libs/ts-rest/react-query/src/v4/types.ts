@@ -13,7 +13,7 @@ import {
   ErrorHttpStatusCode,
   PartialClientInferRequest,
   SuccessfulHttpStatusCode,
-} from '@ts-rest/core';
+} from '@ts-restless/core';
 import { TsRestReactQueryClient } from './react-query';
 
 export interface ReactQueryClientArgs extends ClientArgs {

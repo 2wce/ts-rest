@@ -1,9 +1,9 @@
 {
-  "name": "@ts-rest/open-api",
+  "name": "@ts-restless/open-api",
   "version": "3.52.1",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ts-rest/ts-rest.git",
+    "url": "https://github.com/2wce/ts-rest.git",
     "directory": "libs/ts-rest/open-api"
   },
   "license": "MIT",
@@ -13,14 +13,14 @@
   },
   "peerDependencies": {
     "zod": "^3.22.3",
-    "@ts-rest/core": "workspace:^"
+    "@ts-restless/core": "workspace:^"
   },
   "scripts": {
     "build": "vp pack"
   },
   "devDependencies": {
-    "@ts-rest/core": "workspace:*",
-    "@ts-rest/build-config": "workspace:*"
+    "@ts-restless/core": "workspace:*",
+    "@ts-restless/build-config": "workspace:*"
   },
   "types": "./src/index.ts",
   "exports": {
@@ -49,5 +49,10 @@
         }
       }
     }
-  }
+  },
+  "bugs": {
+    "url": "https://github.com/2wce/ts-rest/issues"
+  },
+  "homepage": "https://github.com/2wce/ts-rest#readme",
+  "description": "ts-restless open-api integration for contract-first, end-to-end typed REST."
 }

@@ -1,12 +1,12 @@
 import { Controller, UploadedFile, UseInterceptors } from '@nestjs/common';
-import { usersApi } from '@ts-rest/example-microservice-util-users-api';
+import { usersApi } from '@ts-restless/example-microservice-util-users-api';
 import {
   TsRestRequest,
   nestControllerContract,
   NestControllerInterface,
   NestRequestShapes,
   TsRest,
-} from '@ts-rest/nest';
+} from '@ts-restless/nest';
 import { AppService } from './app.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import 'multer';

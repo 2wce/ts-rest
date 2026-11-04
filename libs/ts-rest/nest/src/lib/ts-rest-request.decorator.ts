@@ -15,7 +15,7 @@ import {
   ServerInferRequest,
   validationErrorResponse,
   validateMultiSchemaObject,
-} from '@ts-rest/core';
+} from '@ts-restless/core';
 import type { Request } from 'express';
 import type { FastifyRequest } from 'fastify';
 import { TsRestAppRouteMetadataKey } from './constants';

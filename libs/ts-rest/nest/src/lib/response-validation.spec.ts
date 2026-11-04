@@ -4,7 +4,7 @@ import {
   type AppRoute,
   initContract,
   StandardSchemaError,
-} from '@ts-rest/core';
+} from '@ts-restless/core';
 import { lastValueFrom, of } from 'rxjs';
 import { z } from 'zod';
 import { z as legacyZod } from 'zod-legacy';

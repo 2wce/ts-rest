@@ -9,7 +9,11 @@ import {
   UseSuspenseQueryOptions as TanStackUseSuspenseQueryOptions,
   SkipToken,
 } from '@tanstack/react-query';
-import { AppRoute, ClientArgs, IfAllPropertiesOptional } from '@ts-rest/core';
+import {
+  AppRoute,
+  ClientArgs,
+  IfAllPropertiesOptional,
+} from '@ts-restless/core';
 import { QueriesOptions, QueriesResults } from '../internal/queries-options';
 import {
   SuspenseQueriesOptions,

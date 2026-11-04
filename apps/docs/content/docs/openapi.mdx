@@ -1,20 +1,20 @@
 ---
 title: 'OpenAPI'
-description: How to use ts-rest with OpenAPI
+description: How to use ts-restless with OpenAPI
 ---
 
 ## Installation
 
-`@ts-rest/open-api` is a library that allows you to generate OpenAPI documents from your ts-rest contracts, it's a great way to expose your API
+`@ts-restless/open-api` is a library that allows you to generate OpenAPI documents from your ts-restless contracts, it's a great way to expose your API
 to non-ts-rest clients - for example a public API or a client library.
 
-<InstallTabs packageName="@ts-rest/open-api" />
+<InstallTabs packageName="@ts-restless/open-api" />
 
 ## Generating an OpenAPI Document
 
 ```typescript
 import { contract } from './contract';
-import { generateOpenApi, SchemaTransformerAsync } from '@ts-rest/open-api';
+import { generateOpenApi, SchemaTransformerAsync } from '@ts-restless/open-api';
 
 const openApiDocument = generateOpenApi(
   contract,
@@ -35,7 +35,7 @@ That's it! Once you've picked your transformer, you can serve this document howe
 
 ## Schema Transformers
 
-ts-rest supports multiple schema validation libraries through schema transformers. These transformers convert your schema definitions into OpenAPI-compatible JSON schemas.
+ts-restless supports multiple schema validation libraries through schema transformers. These transformers convert your schema definitions into OpenAPI-compatible JSON schemas.
 
 There are two flavors of transformers:
 
@@ -43,7 +43,7 @@ There are two flavors of transformers:
 - **Async transformers** (`SchemaTransformerAsync`) - for libraries that require asynchronous transformation
 
 <Callout type="warning">
-  For backwards compatibility, ts-rest currently defaults to a built-in Zod 3
+  For backwards compatibility, ts-restless currently defaults to a built-in Zod 3
   transformer (`ZOD_3_SCHEMA_TRANSFORMER`). However, **this built-in support
   will be removed in v4**, and you should start providing your own transformer.
 </Callout>
@@ -72,7 +72,7 @@ For Zod 3, you can extend your schemas with additional OpenAPI information using
 First, extend Zod with `extendZodWithOpenApi(z)` when defining the schemas for your contract:
 
 ```ts
-import { initContract } from '@ts-rest/core';
+import { initContract } from '@ts-restless/core';
 import { z } from 'zod';
 import { extendZodWithOpenApi } from '@anatine/zod-openapi';
 
@@ -128,7 +128,7 @@ You can see an example of its usage in the code snippet above.
 
 ```typescript
 import { z } from 'zod';
-import type { SchemaTransformerAsync } from '@ts-rest/open-api';
+import type { SchemaTransformerAsync } from '@ts-restless/open-api';
 import { convert } from '@openapi-contrib/json-schema-to-openapi-schema';
 
 export const ZOD_4_ASYNC: SchemaTransformerAsync = async ({ schema }) => {
@@ -147,8 +147,8 @@ export const ZOD_4_ASYNC: SchemaTransformerAsync = async ({ schema }) => {
 #### Transformer Implementation
 
 ```typescript
-import { isStandardSchema } from '@ts-rest/core';
-import type { SchemaTransformerAsync } from '@ts-rest/open-api';
+import { isStandardSchema } from '@ts-restless/core';
+import type { SchemaTransformerAsync } from '@ts-restless/open-api';
 import { toJsonSchema } from '@valibot/to-json-schema';
 import { convert } from '@openapi-contrib/json-schema-to-openapi-schema';
 
@@ -170,7 +170,7 @@ You can create transformers for any schema validation library by implementing ei
 import type {
   SchemaTransformerSync,
   SchemaTransformerAsync,
-} from '@ts-rest/open-api';
+} from '@ts-restless/open-api';
 
 // Sync transformer example
 const MY_SYNC_TRANSFORMER: SchemaTransformerSync = ({ schema }) => {
@@ -205,7 +205,7 @@ The transformer receives a `schema` parameter and should:
 
 ## Extending Operations with Additional OpenAPI Fields
 
-We do not provide first-party support to set all possible OpenAPI fields on the operations such as the `security` field. In addition, you may have some specific needs to modify the fields already set by `ts-rest` such as the `tags` field.
+We do not provide first-party support to set all possible OpenAPI fields on the operations such as the `security` field. In addition, you may have some specific needs to modify the fields already set by `ts-restless` such as the `tags` field.
 
 Therefore, we have provided an `operationMapper` option to allow you to modify the OpenAPI fields of the operations. This is a callback function, that will receive the operation object, the contract endpoint, and the operation ID, and must return a valid OpenAPI operation object.
 A common way to provide data to this function is to utilize the `metadata` field of the contract endpoint. However, feel free to come up with a different solution to doing this if you would not like to include this data in your contracts.
@@ -329,4 +329,4 @@ const openApiSchema = generateOpenApi(
 );
 ```
 
-You'll want to do this to let your non ts-rest clients know that they should send the query params as JSON.
+You'll want to do this to let your non ts-restless clients know that they should send the query params as JSON.

@@ -8,20 +8,20 @@
     "start": "node dist/main.cjs"
   },
   "devDependencies": {
-    "@ts-rest/example-contracts": "workspace:*",
+    "@ts-restless/example-contracts": "workspace:*",
     "@types/cors": "catalog:",
     "@types/express": "catalog:",
     "@types/multer": "catalog:",
     "@types/swagger-ui-express": "catalog:",
     "vite-plus": "catalog:",
-    "@ts-rest/build-config": "workspace:*"
+    "@ts-restless/build-config": "workspace:*"
   },
   "dependencies": {
-    "@ts-rest/core": "workspace:*",
-    "@ts-rest/example-microservice-util-posts-api": "workspace:*",
-    "@ts-rest/example-microservice-util-users-api": "workspace:*",
-    "@ts-rest/express": "workspace:*",
-    "@ts-rest/open-api": "workspace:*",
+    "@ts-restless/core": "workspace:*",
+    "@ts-restless/example-microservice-util-posts-api": "workspace:*",
+    "@ts-restless/example-microservice-util-users-api": "workspace:*",
+    "@ts-restless/express": "workspace:*",
+    "@ts-restless/open-api": "workspace:*",
     "cors": "catalog:",
     "express": "catalog:",
     "multer": "catalog:",

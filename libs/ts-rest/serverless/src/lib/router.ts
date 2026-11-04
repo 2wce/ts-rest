@@ -11,7 +11,7 @@ import {
   TsRestResponseError,
   validateIfSchema,
   validateMultiSchemaObject,
-} from '@ts-rest/core';
+} from '@ts-restless/core';
 import { Router, withParams, cors } from 'itty-router';
 import { TsRestRequest } from './request';
 import { TsRestResponse } from './response';

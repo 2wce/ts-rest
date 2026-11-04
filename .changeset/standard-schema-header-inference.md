@@ -1,5 +1,5 @@
 ---
-'@ts-rest/core': patch
+'@ts-restless/core': patch
 ---
 
 Correct field-record header input/output inference across Standard Schema validators.

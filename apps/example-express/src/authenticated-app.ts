@@ -1,10 +1,10 @@
 import express from 'express';
-import { apiBlog } from '@ts-rest/example-contracts';
+import { apiBlog } from '@ts-restless/example-contracts';
 import {
   createExpressEndpoints,
   initServer,
   TsRestRequest,
-} from '@ts-rest/express';
+} from '@ts-restless/express';
 import bodyParser from 'body-parser';
 import { mockOwnedResource, mockPostFixtureFactory } from './fixtures';
 import { Strategy, ExtractJwt, VerifiedCallback } from 'passport-jwt';

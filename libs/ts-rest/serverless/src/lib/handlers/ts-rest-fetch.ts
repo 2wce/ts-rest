@@ -1,4 +1,4 @@
-import { AppRouter } from '@ts-rest/core';
+import { AppRouter } from '@ts-restless/core';
 import { createServerlessRouter } from '../router';
 import {
   createTsr,

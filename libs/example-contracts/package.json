@@ -1,10 +1,10 @@
 {
-  "name": "@ts-rest/example-contracts",
+  "name": "@ts-restless/example-contracts",
   "version": "0.0.1",
   "type": "module",
   "private": true,
   "dependencies": {
-    "@ts-rest/core": "workspace:*",
+    "@ts-restless/core": "workspace:*",
     "zod": "catalog:"
   },
   "exports": {

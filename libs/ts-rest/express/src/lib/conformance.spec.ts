@@ -1,4 +1,4 @@
-import { TsRestResponseValidationError } from '@ts-rest/core';
+import { TsRestResponseValidationError } from '@ts-restless/core';
 import express, { ErrorRequestHandler } from 'express';
 import supertest from 'supertest';
 import {

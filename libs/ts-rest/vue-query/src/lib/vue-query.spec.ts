@@ -1,5 +1,5 @@
 import { vi } from 'vitest';
-import { ApiFetcher, initContract } from '@ts-rest/core';
+import { ApiFetcher, initContract } from '@ts-restless/core';
 import { z } from 'zod';
 import { initQueryClient } from './vue-query';
 import { VueQueryPlugin } from '@tanstack/vue-query';

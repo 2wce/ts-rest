@@ -11,7 +11,7 @@ import {
   validateResponse,
   parseAsStandardSchema,
   validateMultiSchemaObject,
-} from '@ts-rest/core';
+} from '@ts-restless/core';
 import {
   IRouter,
   NextFunction,

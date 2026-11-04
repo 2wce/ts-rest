@@ -3,7 +3,7 @@ import type {
   QueriesPlaceholderDataFunction,
 } from '@tanstack/query-core';
 import { DefinedUseQueryResult, UseQueryResult } from '@tanstack/react-query';
-import { AppRoute, ClientArgs } from '@ts-rest/core';
+import { AppRoute, ClientArgs } from '@ts-restless/core';
 import { UseQueryOptions } from '../types/hooks-options';
 import { DataResponse, ErrorResponse } from '../types/common';
 

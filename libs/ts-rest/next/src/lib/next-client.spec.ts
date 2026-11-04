@@ -3,7 +3,7 @@ import {
   FetchOptions,
   initContract,
   OverrideableClientArgs,
-} from '@ts-rest/core';
+} from '@ts-restless/core';
 import { z } from 'zod';
 import { initNextClient } from './next-client';
 import type { Equal, Expect } from './test-helpers';

@@ -8,21 +8,21 @@
     "start": "node dist/main.cjs"
   },
   "devDependencies": {
-    "@ts-rest/core": "workspace:*",
-    "@ts-rest/example-contracts": "workspace:*",
-    "@ts-rest/express": "workspace:*",
-    "@ts-rest/example-microservice-util-posts-api": "workspace:*",
+    "@ts-restless/core": "workspace:*",
+    "@ts-restless/example-contracts": "workspace:*",
+    "@ts-restless/express": "workspace:*",
+    "@ts-restless/example-microservice-util-posts-api": "workspace:*",
     "@types/multer": "catalog:",
     "unplugin-swc": "catalog:",
     "vite-plus": "catalog:",
-    "@ts-rest/build-config": "workspace:*"
+    "@ts-restless/build-config": "workspace:*"
   },
   "dependencies": {
     "@nestjs/common": "catalog:",
     "@nestjs/core": "catalog:",
     "@nestjs/platform-express": "catalog:",
-    "@ts-rest/example-microservice-util-users-api": "workspace:*",
-    "@ts-rest/nest": "workspace:*",
+    "@ts-restless/example-microservice-util-users-api": "workspace:*",
+    "@ts-restless/nest": "workspace:*",
     "multer": "catalog:"
   }
 }

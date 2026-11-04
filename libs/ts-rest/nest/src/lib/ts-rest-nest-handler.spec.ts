@@ -1,4 +1,4 @@
-import { toStandardSchema } from '@ts-rest/core/zod3';
+import { toStandardSchema } from '@ts-restless/core/zod3';
 import { z as z4 } from 'zod4';
 import { vi } from 'vitest';
 import {
@@ -6,7 +6,7 @@ import {
   initContract,
   SchemaInputOrType,
   StandardSchemaV1,
-} from '@ts-rest/core';
+} from '@ts-restless/core';
 import {
   TsRestException,
   tsRestHandler,

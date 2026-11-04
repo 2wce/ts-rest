@@ -1,9 +1,9 @@
 {
-  "name": "@ts-rest/non-strict-mode-test",
+  "name": "@ts-restless/non-strict-mode-test",
   "version": "0.0.1",
   "type": "commonjs",
   "devDependencies": {
-    "@ts-rest/core": "workspace:*",
+    "@ts-restless/core": "workspace:*",
     "zod": "catalog:"
   },
   "scripts": {

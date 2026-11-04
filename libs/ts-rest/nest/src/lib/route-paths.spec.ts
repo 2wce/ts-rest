@@ -1,7 +1,7 @@
 import { Controller, Req } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { FastifyAdapter } from '@nestjs/platform-fastify';
-import { initContract } from '@ts-rest/core';
+import { initContract } from '@ts-restless/core';
 import supertest from 'supertest';
 import { z } from 'zod';
 import { TsRest } from './ts-rest.decorator';

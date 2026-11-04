@@ -14,7 +14,7 @@
     "@cloudflare/workers-types": "catalog:"
   },
   "dependencies": {
-    "@ts-rest/example-contracts": "workspace:*",
-    "@ts-rest/serverless": "workspace:*"
+    "@ts-restless/example-contracts": "workspace:*",
+    "@ts-restless/serverless": "workspace:*"
   }
 }

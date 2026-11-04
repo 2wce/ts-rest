@@ -1,14 +1,14 @@
 ---
-'@ts-rest/core': major
-'@ts-rest/express': major
-'@ts-rest/fastify': major
-'@ts-rest/nest': major
-'@ts-rest/next': major
-'@ts-rest/serverless': major
-'@ts-rest/open-api': major
-'@ts-rest/react-query': major
-'@ts-rest/solid-query': major
-'@ts-rest/vue-query': major
+'@ts-restless/core': major
+'@ts-restless/express': major
+'@ts-restless/fastify': major
+'@ts-restless/nest': major
+'@ts-restless/next': major
+'@ts-restless/serverless': major
+'@ts-restless/open-api': major
+'@ts-restless/react-query': major
+'@ts-restless/solid-query': major
+'@ts-restless/vue-query': major
 ---
 
 Make default core and adapter entry points validator independent through Standard

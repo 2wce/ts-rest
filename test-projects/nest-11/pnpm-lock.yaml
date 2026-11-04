@@ -179,12 +179,12 @@ importers:
       '@nestjs/platform-express':
         specifier: ^11.0.0
         version: 11.0.9(@nestjs/common@11.0.9(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@11.0.9)(supports-color@8.1.1)
-      '@ts-rest/core':
-        specifier: file:../../dist/packages/ts-rest-core.tgz
-        version: file:../../dist/packages/ts-rest-core.tgz(@types/node@22.13.1)
-      '@ts-rest/nest':
-        specifier: file:../../dist/packages/ts-rest-nest.tgz
-        version: file:../../dist/packages/ts-rest-nest.tgz(@nestjs/common@11.0.9(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@11.0.9)(@ts-rest/core@file:../../dist/packages/ts-rest-core.tgz(@types/node@22.13.1))(rxjs@7.8.1)
+      '@ts-restless/core':
+        specifier: file:../../dist/packages/ts-restless-core.tgz
+        version: file:../../dist/packages/ts-restless-core.tgz(@types/node@22.13.1)
+      '@ts-restless/nest':
+        specifier: file:../../dist/packages/ts-restless-nest.tgz
+        version: file:../../dist/packages/ts-restless-nest.tgz(@nestjs/common@11.0.9(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@11.0.9)(@ts-restless/core@file:../../dist/packages/ts-restless-core.tgz(@types/node@22.13.1))(rxjs@7.8.1)
       reflect-metadata:
         specifier: ^0.2.2
         version: 0.2.2
@@ -1071,8 +1071,8 @@ packages:
   '@tokenizer/token@0.3.0':
     resolution: {integrity: sha512-OvjF+z51L3ov0OyAU0duzsYuvO01PH7x4t6DJx+guahgTnBHkhJdG7soQeTSFLWN3efnHyibZ4Z8l2EuWwJN3A==}
 
-  '@ts-rest/core@file:../../dist/packages/ts-rest-core.tgz':
-    resolution: {integrity: sha512-chQGn85XyzrLES0gwVLdrz0ZAblOOs/l7YfWqfCDbBvcdTYtE1/rMlBnDJaStw0eS5FdXBNaodmy2aeKetnr/A==, tarball: file:../../dist/packages/ts-rest-core.tgz}
+  '@ts-restless/core@file:../../dist/packages/ts-restless-core.tgz':
+    resolution: {integrity: sha512-chQGn85XyzrLES0gwVLdrz0ZAblOOs/l7YfWqfCDbBvcdTYtE1/rMlBnDJaStw0eS5FdXBNaodmy2aeKetnr/A==, tarball: file:../../dist/packages/ts-restless-core.tgz}
     version: 3.52.1
     peerDependencies:
       '@types/node': ^18.18.7 || >=20.8.4
@@ -1083,13 +1083,13 @@ packages:
       zod:
         optional: true
 
-  '@ts-rest/nest@file:../../dist/packages/ts-rest-nest.tgz':
-    resolution: {integrity: sha512-APjNEItLxFuWlJRwOxBrXGr58M3c+OMkxfE+c9dHwwalKkxVQOZFrlh/RkrRmvXzE41umr/JjMTZTrIhQn9/Zg==, tarball: file:../../dist/packages/ts-rest-nest.tgz}
+  '@ts-restless/nest@file:../../dist/packages/ts-restless-nest.tgz':
+    resolution: {integrity: sha512-APjNEItLxFuWlJRwOxBrXGr58M3c+OMkxfE+c9dHwwalKkxVQOZFrlh/RkrRmvXzE41umr/JjMTZTrIhQn9/Zg==, tarball: file:../../dist/packages/ts-restless-nest.tgz}
     version: 3.52.1
     peerDependencies:
       '@nestjs/common': ^9.0.0 || ^10.0.0 || ^11.0.0 || ^12.0.0
       '@nestjs/core': ^9.0.0 || ^10.0.0 || ^11.0.0 || ^12.0.0
-      '@ts-rest/core': ^3.52.1
+      '@ts-restless/core': ^3.52.1
       rxjs: ^7.1.0
       zod: ^3.22.3 || ^4.0.0
     peerDependenciesMeta:
@@ -4052,15 +4052,15 @@ snapshots:
 
   '@tokenizer/token@0.3.0': {}
 
-  '@ts-rest/core@file:../../dist/packages/ts-rest-core.tgz(@types/node@22.13.1)':
+  '@ts-restless/core@file:../../dist/packages/ts-restless-core.tgz(@types/node@22.13.1)':
     optionalDependencies:
       '@types/node': 22.13.1
 
-  '@ts-rest/nest@file:../../dist/packages/ts-rest-nest.tgz(@nestjs/common@11.0.9(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@11.0.9)(@ts-rest/core@file:../../dist/packages/ts-rest-core.tgz(@types/node@22.13.1))(rxjs@7.8.1)':
+  '@ts-restless/nest@file:../../dist/packages/ts-restless-nest.tgz(@nestjs/common@11.0.9(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@11.0.9)(@ts-restless/core@file:../../dist/packages/ts-restless-core.tgz(@types/node@22.13.1))(rxjs@7.8.1)':
     dependencies:
       '@nestjs/common': 11.0.9(reflect-metadata@0.2.2)(rxjs@7.8.1)
       '@nestjs/core': 11.0.9(@nestjs/common@11.0.9(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/platform-express@11.0.9)(reflect-metadata@0.2.2)(rxjs@7.8.1)
-      '@ts-rest/core': file:../../dist/packages/ts-rest-core.tgz(@types/node@22.13.1)
+      '@ts-restless/core': file:../../dist/packages/ts-restless-core.tgz(@types/node@22.13.1)
       rxjs: 7.8.1
 
   '@tsconfig/node10@1.0.11': {}

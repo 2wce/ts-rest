@@ -1,13 +1,13 @@
 ---
 title: 'Azure Functions'
-description: How to use ts-rest with Azure Functions
+description: How to use ts-restless with Azure Functions
 ---
 
 The Azure Function handler can handle the Azure Functions V4 programming model.
 
 ```typescript
 import { app } from '@azure/functions';
-import { createAzureFunctionHandler } from '@ts-rest/serverless/azure';
+import { createAzureFunctionHandler } from '@ts-restless/serverless/azure';
 import { contract } from './contract';
 import { router } from './router';
 
@@ -49,7 +49,7 @@ In addition to the regular context properties, the context object for Azure Func
 - `azureContext: InvocationContext`: The Azure Function Invocation Context passed with each invocation of a function
 
 ```typescript
-import { createAzureFunctionHandler } from '@ts-rest/serverless/azure';
+import { createAzureFunctionHandler } from '@ts-restless/serverless/azure';
 import { contract } from './contract';
 
 export const handler = createAzureFunctionHandler(

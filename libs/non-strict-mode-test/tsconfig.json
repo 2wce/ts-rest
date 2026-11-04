@@ -4,7 +4,7 @@
     "strict": false,
     "strictNullChecks": false,
     "paths": {
-      "@ts-rest/core": ["../ts-rest/core/dist/index.cjs.d.ts"]
+      "@ts-restless/core": ["../ts-rest/core/dist/index.cjs.d.ts"]
     }
   }
 }

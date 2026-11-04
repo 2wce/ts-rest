@@ -1,16 +1,16 @@
 ---
 title: 'Fetch'
-description: The simple fetch client provides a lightweight, type-safe way to make HTTP requests using your ts-rest contract.
+description: The simple fetch client provides a lightweight, type-safe way to make HTTP requests using your ts-restless contract.
 ---
 
-The simple fetch client is ts-rest's default HTTP client implementation, built on top of the standard [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API). It provides automatic type inference, request/response handling, and seamless integration with your contract definitions.
+The simple fetch client is ts-restless's default HTTP client implementation, built on top of the standard [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API). It provides automatic type inference, request/response handling, and seamless integration with your contract definitions.
 
 ## Basic Usage
 
-Import `initClient` from `@ts-rest/core` and pass your contract to get a fully typed client:
+Import `initClient` from `@ts-restless/core` and pass your contract to get a fully typed client:
 
 ```typescript twoslash title="client.ts"
-import { initContract } from '@ts-rest/core';
+import { initContract } from '@ts-restless/core';
 import { z } from 'zod';
 
 const c = initContract();
@@ -58,7 +58,7 @@ const console = {
 };
 
 // ---cut---
-import { initClient } from '@ts-rest/core';
+import { initClient } from '@ts-restless/core';
 
 const client = initClient(contract, {
   baseUrl: 'https://api.example.com',
@@ -85,8 +85,8 @@ if (result.status === 200) {
 Configure your client with base settings that apply to all requests:
 
 ```typescript twoslash title="client-config.ts"
-import { initClient } from '@ts-rest/core';
-import { initContract } from '@ts-rest/core';
+import { initClient } from '@ts-restless/core';
+import { initContract } from '@ts-restless/core';
 import { z } from 'zod';
 
 const c = initContract();
@@ -120,7 +120,7 @@ const client = initClient(contract, {
 You can provide headers as functions for dynamic values:
 
 ```typescript title="dynamic-headers.ts"
-import { initClient } from '@ts-rest/core';
+import { initClient } from '@ts-restless/core';
 import { getAccessToken } from './auth';
 import { contract } from './contract';
 
@@ -139,8 +139,8 @@ const client = initClient(contract, {
 Any endpoint using the `GET` method is treated as a query request:
 
 ```typescript twoslash title="queries.ts"
-import { initClient } from '@ts-rest/core';
-import { initContract } from '@ts-rest/core';
+import { initClient } from '@ts-restless/core';
+import { initContract } from '@ts-restless/core';
 import { z } from 'zod';
 
 const c = initContract();
@@ -202,8 +202,8 @@ const allPokemon = await client.searchPokemon();
 Any endpoint using `POST`, `PUT`, `PATCH`, or `DELETE` methods are treated as mutation requests:
 
 ```typescript twoslash title="mutations.ts"
-import { initClient } from '@ts-rest/core';
-import { initContract } from '@ts-rest/core';
+import { initClient } from '@ts-restless/core';
+import { initContract } from '@ts-restless/core';
 import { z } from 'zod';
 
 const c = initContract();
@@ -289,8 +289,8 @@ Each request accepts an object with the following optional properties:
 - `cache` - Shorthand for `fetchOptions.cache`
 
 ```typescript twoslash title="request-params.ts"
-import { initClient } from '@ts-rest/core';
-import { initContract } from '@ts-rest/core';
+import { initClient } from '@ts-restless/core';
+import { initContract } from '@ts-restless/core';
 import { z } from 'zod';
 
 const c = initContract();
@@ -349,8 +349,8 @@ const result = await client.updatePokemon({
 The fetch client returns a discriminated union based on the status code, allowing for precise type checking:
 
 ```typescript twoslash title="response-types.ts"
-import { initClient } from '@ts-rest/core';
-import { initContract } from '@ts-rest/core';
+import { initClient } from '@ts-restless/core';
+import { initContract } from '@ts-restless/core';
 import { z } from 'zod';
 
 const c = initContract();
@@ -410,8 +410,8 @@ if (result.status === 200) {
 By default, all requests use `application/json` content type:
 
 ```typescript twoslash title="json-content.ts"
-import { initClient } from '@ts-rest/core';
-import { initContract } from '@ts-rest/core';
+import { initClient } from '@ts-restless/core';
+import { initContract } from '@ts-restless/core';
 import { z } from 'zod';
 
 const c = initContract();
@@ -452,8 +452,8 @@ const result = await client.createPokemon({
 For file uploads, use the `multipart/form-data` content type:
 
 ```typescript twoslash title="form-data.ts"
-import { initClient } from '@ts-rest/core';
-import { initContract } from '@ts-rest/core';
+import { initClient } from '@ts-restless/core';
+import { initContract } from '@ts-restless/core';
 import { z } from 'zod';
 
 const c = initContract();
@@ -530,8 +530,8 @@ const formResult = await client.uploadImage({
 For traditional form submissions:
 
 ```typescript twoslash title="url-encoded.ts"
-import { initClient } from '@ts-rest/core';
-import { initContract } from '@ts-rest/core';
+import { initClient } from '@ts-restless/core';
+import { initContract } from '@ts-restless/core';
 import { z } from 'zod';
 
 const c = initContract();
@@ -581,8 +581,8 @@ const stringResult = await client.submitForm({
 Enable JSON encoding for complex query parameters:
 
 ```typescript twoslash title="json-query.ts"
-import { initClient } from '@ts-rest/core';
-import { initContract } from '@ts-rest/core';
+import { initClient } from '@ts-restless/core';
+import { initContract } from '@ts-restless/core';
 import { z } from 'zod';
 
 const c = initContract();
@@ -645,8 +645,8 @@ const results = await client.searchPokemon({
 Enable automatic response validation against your contract schemas:
 
 ```typescript twoslash title="response-validation.ts"
-import { initClient } from '@ts-rest/core';
-import { initContract } from '@ts-rest/core';
+import { initClient } from '@ts-restless/core';
+import { initContract } from '@ts-restless/core';
 import { z } from 'zod';
 
 const c = initContract();
@@ -691,7 +691,7 @@ if (result.status === 200) {
 Enforce that only status codes defined in your contract are allowed:
 
 ```typescript title="strict-status.ts"
-import { initClient } from '@ts-rest/core';
+import { initClient } from '@ts-restless/core';
 import { contract } from './contract'; // Contract with strictStatusCodes: true
 
 const client = initClient(contract, {
@@ -711,7 +711,7 @@ const result = await client.getPokemon({
 Configure credential handling for cross-origin requests:
 
 ```typescript title="credentials.ts"
-import { initClient } from '@ts-rest/core';
+import { initClient } from '@ts-restless/core';
 import { contract } from './contract';
 
 const client = initClient(contract, {
@@ -725,8 +725,8 @@ const client = initClient(contract, {
 Pass additional fetch options for fine-grained control:
 
 ```typescript twoslash title="fetch-options.ts"
-import { initClient } from '@ts-rest/core';
-import { initContract } from '@ts-rest/core';
+import { initClient } from '@ts-restless/core';
+import { initContract } from '@ts-restless/core';
 import { z } from 'zod';
 
 const c = initContract();
@@ -770,7 +770,7 @@ abortController.abort();
 The fetch client works seamlessly with Next.js features:
 
 ```typescript title="nextjs.ts"
-import { initClient } from '@ts-rest/core';
+import { initClient } from '@ts-restless/core';
 import { contract } from './contract';
 
 const client = initClient(contract, {
@@ -801,7 +801,7 @@ const console = {
 };
 
 // ---cut---
-import { initClient, tsRestFetchApi, ApiFetcherArgs } from '@ts-rest/core';
+import { initClient, tsRestFetchApi, ApiFetcherArgs } from '@ts-restless/core';
 import { contract } from './contract';
 
 const client = initClient(contract, {
@@ -824,8 +824,8 @@ const client = initClient(contract, {
 Extend the API with custom arguments that are fully typed:
 
 ```typescript twoslash title="custom-api-args.ts"
-import { initClient, tsRestFetchApi, ApiFetcherArgs } from '@ts-rest/core';
-import { initContract } from '@ts-rest/core';
+import { initClient, tsRestFetchApi, ApiFetcherArgs } from '@ts-restless/core';
+import { initContract } from '@ts-restless/core';
 import { z } from 'zod';
 
 const c = initContract();
@@ -923,7 +923,7 @@ You can completely replace the fetch implementation with libraries like Axios:
 
 ```typescript title="axios-client.ts"
 import axios, { AxiosError, isAxiosError } from 'axios';
-import { initClient, ApiFetcherArgs } from '@ts-rest/core';
+import { initClient, ApiFetcherArgs } from '@ts-restless/core';
 import { contract } from './contract';
 
 const client = initClient(contract, {

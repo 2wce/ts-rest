@@ -10,7 +10,7 @@ import {
   ClientInferRequest,
   PartialClientInferRequest,
   SchemaOutputOrType,
-} from '@ts-rest/core';
+} from '@ts-restless/core';
 import { DataResponse, ErrorResponse, queryFn } from './common';
 
 // Used pn X.useMutation

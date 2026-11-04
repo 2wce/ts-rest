@@ -1,6 +1,6 @@
-import { initServer } from '@ts-rest/express';
+import { initServer } from '@ts-restless/express';
 import { mockPostFixtureFactory } from './fixtures';
-import { apiBlog } from '@ts-rest/example-contracts';
+import { apiBlog } from '@ts-restless/example-contracts';
 
 const s = initServer();
 export const getPost = s.route(apiBlog.getPost, async ({ params: { id } }) => {

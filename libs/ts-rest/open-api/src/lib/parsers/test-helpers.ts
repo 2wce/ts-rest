@@ -1,6 +1,6 @@
 import { SchemaTransformerAsync, SchemaTransformerSync } from '../types';
-import { AppRoute, isStandardSchema } from '@ts-rest/core';
-import { isZodType } from '@ts-rest/core/zod3';
+import { AppRoute, isStandardSchema } from '@ts-restless/core';
+import { isZodType } from '@ts-restless/core/zod3';
 import { generateSchema } from '@anatine/zod-openapi';
 import { toJsonSchema } from '@valibot/to-json-schema';
 import { convert } from '@openapi-contrib/json-schema-to-openapi-schema';

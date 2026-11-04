@@ -1,4 +1,4 @@
-import { TsRestResponseValidationError } from '@ts-rest/core';
+import { TsRestResponseValidationError } from '@ts-restless/core';
 import fastify from 'fastify';
 import supertest from 'supertest';
 import {

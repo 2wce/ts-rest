@@ -1,5 +1,5 @@
 {
-  "name": "ts-rest",
+  "name": "ts-restless",
   "version": "0.2.0",
   "license": "MIT",
   "scripts": {
@@ -12,27 +12,30 @@
     "test:watch": "vp run watch-tests",
     "test:packages": "vp run check-packages",
     "test:hosts": "vp run host-tests",
-    "typecheck": "vp run --no-cache --filter \"./libs/ts-rest/*\" --filter @ts-rest/non-strict-mode-test --filter @ts-rest/build-config typecheck",
+    "typecheck": "vp run --no-cache --filter \"./libs/ts-rest/*\" --filter @ts-restless/non-strict-mode-test --filter @ts-restless/build-config typecheck",
     "lint": "vp run lint-workspace",
     "format": "vp fmt",
     "format:check": "vp fmt --check",
     "check": "vp run check-workspace",
     "nest": "vp run example-nest#dev",
-    "docs:build": "vp run @ts-rest/docs#build",
-    "docs:start": "vp run @ts-rest/docs#start",
+    "docs:build": "vp run @ts-restless/docs#build",
+    "docs:start": "vp run @ts-restless/docs#start",
     "example-microservice:serve": "vp run --parallel --filter \"example-microservice-*\" dev",
     "ts-rest:build-watch": "vp run --parallel --filter \"./libs/ts-rest/*\" pack -- --watch",
     "build-test-all": "vp run build && vp run check && vp run test:packages && vp run build:examples",
-    "examples:generate": "vp run @ts-rest/example-database#generate",
-    "docs:dev": "vp run @ts-rest/docs#dev",
-    "pack:packages": "vp run pack-artifacts"
+    "examples:generate": "vp run @ts-restless/example-database#generate",
+    "docs:dev": "vp run @ts-restless/docs#dev",
+    "pack:packages": "vp run pack-artifacts",
+    "prerelease:version": "node scripts/prerelease.mjs version && pnpm install --no-frozen-lockfile",
+    "prerelease:verify": "node scripts/prerelease.mjs verify",
+    "prerelease:publish": "node scripts/prerelease.mjs publish"
   },
   "engines": {
     "pnpm": "12.14.0",
     "node": "26.12.0"
   },
   "packageManager": "pnpm@12.14.0",
-  "repository": "https://github.com/ts-rest/ts-rest",
+  "repository": "https://github.com/2wce/ts-rest",
   "private": true,
   "devDependencies": {
     "@anatine/zod-openapi": "catalog:",
@@ -89,7 +92,7 @@
     "zod": "catalog:",
     "zod4": "catalog:",
     "esbuild": "catalog:",
-    "@ts-rest/build-config": "workspace:*"
+    "@ts-restless/build-config": "workspace:*"
   },
   "volta": {
     "node": "26.12.0"

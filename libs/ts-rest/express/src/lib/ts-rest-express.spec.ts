@@ -4,7 +4,7 @@ import {
   initContract,
   TsRestResponseValidationError as ResponseValidationError,
   TsRestResponseError,
-} from '@ts-rest/core';
+} from '@ts-restless/core';
 import supertest from 'supertest';
 import express from 'express';
 import { z } from 'zod';

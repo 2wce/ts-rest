@@ -1,15 +1,15 @@
 ---
-'@ts-rest/core': minor
-'@ts-rest/express': minor
-'@ts-rest/fastify': minor
-'@ts-rest/nest': minor
-'@ts-rest/next': minor
-'@ts-rest/open-api': minor
-'@ts-rest/react-query': minor
-'@ts-rest/react-query-v5': minor
-'@ts-rest/serverless': minor
-'@ts-rest/solid-query': minor
-'@ts-rest/vue-query': minor
+'@ts-restless/core': minor
+'@ts-restless/express': minor
+'@ts-restless/fastify': minor
+'@ts-restless/nest': minor
+'@ts-restless/next': minor
+'@ts-restless/open-api': minor
+'@ts-restless/react-query': minor
+'@ts-restless/react-query-v5': minor
+'@ts-restless/serverless': minor
+'@ts-restless/solid-query': minor
+'@ts-restless/vue-query': minor
 ---
 
 Support the "Standard Schema" validation interface to enable support for Zod4, Valibot, Arktype etc.

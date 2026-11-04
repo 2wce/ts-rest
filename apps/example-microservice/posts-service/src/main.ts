@@ -7,10 +7,10 @@ import express from 'express';
 import cors from 'cors';
 import multer from 'multer';
 import * as swaggerUi from 'swagger-ui-express';
-import { postsApi } from '@ts-rest/example-microservice-util-posts-api';
-import { createExpressEndpoints, initServer } from '@ts-rest/express';
+import { postsApi } from '@ts-restless/example-microservice-util-posts-api';
+import { createExpressEndpoints, initServer } from '@ts-restless/express';
 import { userAdapter } from './app/userAdapter';
-import { generateOpenApi } from '@ts-rest/open-api';
+import { generateOpenApi } from '@ts-restless/open-api';
 
 const upload = multer();
 const s = initServer();

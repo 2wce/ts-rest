@@ -33,7 +33,7 @@ jobs:
           retention-days: 7
       - run: pnpm build:examples
       - run: pnpm test:hosts
-      - run: pnpm --filter @ts-rest/docs test
+      - run: pnpm --filter @ts-restless/docs test
 
   compatibility:
     name: Compatibility (${{ matrix.fixture }})
@@ -74,9 +74,9 @@ jobs:
       - name: Verify isolated, current consumer packages
         run: |
           test ! -e "$GITHUB_WORKSPACE/node_modules"
-          for library in node_modules/@ts-rest/*; do
+          for library in node_modules/@ts-restless/*; do
             name=${library##*/}
-            archive="../../dist/packages/ts-rest-$name.tgz"
+            archive="../../dist/packages/ts-restless-$name.tgz"
             test -f "$archive"
             tar -tzf "$archive" | while IFS= read -r file; do
               tar -xOf "$archive" "$file" | cmp - "$library/${file#package/}"
@@ -98,3 +98,65 @@ jobs:
         env:
           COMPATIBILITY_RESULT: ${{ needs.compatibility.result }}
         run: test "$COMPATIBILITY_RESULT" = success
+
+  prerelease:
+    name: Prerelease PR or Publish
+    # Default off until release credentials and identity-branch CI are verified.
+    if: >-
+      github.event_name == 'push' && github.ref == 'refs/heads/main' &&
+      vars.PRERELEASE_ENABLED == 'true'
+    needs: [main, e2e]
+    runs-on: ubuntu-latest
+    concurrency:
+      group: ts-restless-prerelease-main
+      cancel-in-progress: false
+    permissions:
+      contents: write
+      pull-requests: write
+      id-token: write
+    steps:
+      - name: Require CI release credentials
+        env:
+          RELEASE_PR_TOKEN: ${{ secrets.RELEASE_PR_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          test -n "$RELEASE_PR_TOKEN" || { echo 'Configure RELEASE_PR_TOKEN so release PRs trigger CI'; exit 1; }
+          test -n "$NPM_TOKEN" || { echo 'Configure npm organization publishing access in NPM_TOKEN'; exit 1; }
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.RELEASE_PR_TOKEN }}
+      - name: Require the verified commit to remain the main branch head
+        id: head
+        run: |
+          current=$(git ls-remote origin refs/heads/main | cut -f1)
+          test -n "$current"
+          if [ "$current" = "$GITHUB_SHA" ]; then
+            echo 'current=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'A newer main commit will handle the prerelease after its CI passes'
+          fi
+      - uses: pnpm/action-setup@v4
+        if: steps.head.outputs.current == 'true'
+      - uses: actions/setup-node@v4
+        if: steps.head.outputs.current == 'true'
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+          registry-url: https://registry.npmjs.org
+      - run: pnpm install --frozen-lockfile
+        if: steps.head.outputs.current == 'true'
+      - name: Create or update the prerelease PR, or publish its merged versions
+        if: steps.head.outputs.current == 'true'
+        # CLI 2.x requires the action's maintenance/v1 implementation.
+        uses: changesets/action@ae5c373a18fe02dac7d40bcbc0184758c90d94d2
+        with:
+          title: 'release: ts-restless prerelease'
+          commit: 'release: version ts-restless prerelease'
+          version: pnpm prerelease:version
+          publish: pnpm prerelease:publish
+        env:
+          GITHUB_TOKEN: ${{ secrets.RELEASE_PR_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_CONFIG_PROVENANCE: true

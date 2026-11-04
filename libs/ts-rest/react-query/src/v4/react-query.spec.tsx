@@ -5,7 +5,7 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 import { waitFor, renderHook } from '@testing-library/react';
-import { ApiFetcher, initContract } from '@ts-rest/core';
+import { ApiFetcher, initContract } from '@ts-restless/core';
 import { initQueryClient, useTsRestQueryClient } from './react-query';
 import * as React from 'react';
 import { act } from 'react-dom/test-utils';

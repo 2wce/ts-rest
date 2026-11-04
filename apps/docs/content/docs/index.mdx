@@ -5,7 +5,7 @@ description: Contract-first, end-to-end typed REST for TypeScript. A maintained 
 
 **ts-restless** is a maintained fork of ts-rest. Define a shared REST contract and use it on your clients and servers.
 
-This documentation previews **4.0.0**. New `@ts-restless/*` packages and interim alpha releases are being prepared; they are not published yet. Examples currently use this fork's development-checkout `@ts-rest/*` imports. See the [package migration and prerelease guide](/ts-restless-migration) before installing or upgrading from upstream v3.
+This documentation previews **4.0.0**. New `@ts-restless/*` packages and interim alpha releases are being prepared; they are not published yet. Examples compile against this fork's new-scope development packages. See the [package migration and prerelease guide](/ts-restless-migration) before installing or upgrading from upstream v3.
 
 - 🛟 Contract-First API
 - 🌈 It's just HTTP/REST
@@ -21,7 +21,7 @@ We support any Typescript validation library that supports [Standard Schema](htt
 <Tabs items={['Zod', 'Valibot', 'Arktype', 'None']}>
   <Tab value="Zod">
 ```typescript title="contract.ts"
-    import { initContract } from '@ts-rest/core';
+    import { initContract } from '@ts-restless/core';
     import { z } from 'zod'; // [!code highlight]
 
     const c = initContract();
@@ -42,7 +42,7 @@ We support any Typescript validation library that supports [Standard Schema](htt
   </Tab>
   <Tab value="Valibot">
     ```typescript title="contract.ts"
-    import { initContract } from '@ts-rest/core';
+    import { initContract } from '@ts-restless/core';
     import * as v from 'valibot'; // [!code highlight]
 
     const c = initContract();
@@ -63,7 +63,7 @@ We support any Typescript validation library that supports [Standard Schema](htt
   </Tab>
   <Tab value="Arktype">
     ```typescript title="contract.ts"
-    import { initContract } from '@ts-rest/core';
+    import { initContract } from '@ts-restless/core';
     import { type } from 'arktype'; // [!code highlight]
 
     const c = initContract();
@@ -84,7 +84,7 @@ We support any Typescript validation library that supports [Standard Schema](htt
   </Tab>
    <Tab value="None">
     ```typescript title="contract.ts"
-    import { initContract } from '@ts-rest/core';
+    import { initContract } from '@ts-restless/core';
 
     const c = initContract();
 
@@ -107,7 +107,7 @@ We support any Typescript validation library that supports [Standard Schema](htt
 We support Nest, Next.js, Express, Fastify and more - Our server implementation allows you to guarentee your backend stays in sync with your API contract.
 
 ```typescript twoslash title="server.ts"
-import { initContract } from '@ts-rest/core';
+import { initContract } from '@ts-restless/core';
 const c = initContract();
 
 export const contract = c.router({
@@ -127,7 +127,7 @@ const pokemonService = {
 };
 
 // ---cut---
-import { initServer } from '@ts-rest/express';
+import { initServer } from '@ts-restless/express';
 
 const s = initServer();
 
@@ -146,10 +146,10 @@ const router = s.router(contract, {
 
 ### Use the API on the client
 
-Our `@ts-rest/core` package provides a super light-weight fetch based client - We remain close to HTTP fundamentals, so we always return a status code, and body.
+Our `@ts-restless/core` package provides a super light-weight fetch based client - We remain close to HTTP fundamentals, so we always return a status code, and body.
 
 ```typescript twoslash title="client.ts"
-import { initContract } from '@ts-rest/core';
+import { initContract } from '@ts-restless/core';
 const c = initContract();
 
 export const contract = c.router({
@@ -163,7 +163,7 @@ export const contract = c.router({
 });
 
 // ---cut---
-import { initClient } from '@ts-rest/core';
+import { initClient } from '@ts-restless/core';
 
 const client = initClient(contract, {
   baseUrl: 'http://localhost:3000',

@@ -1,4 +1,4 @@
-import { initContract } from '@ts-rest/core';
+import { initContract } from '@ts-restless/core';
 import { z } from 'zod';
 
 export interface PostTs {

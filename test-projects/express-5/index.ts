@@ -1,9 +1,9 @@
-import { createExpressEndpoints, initServer } from '@ts-rest/express';
+import { createExpressEndpoints, initServer } from '@ts-restless/express';
 import express from 'express';
 import * as bodyParser from 'body-parser';
-import { initContract } from '@ts-rest/core';
+import { initContract } from '@ts-restless/core';
 import { z } from 'zod';
-import { toStandardSchema } from '@ts-rest/core/zod3';
+import { toStandardSchema } from '@ts-restless/core/zod3';
 
 const c = initContract();
 

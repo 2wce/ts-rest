@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
-import { Post } from '@ts-rest/example-contracts';
+import { Post } from '@ts-restless/example-contracts';
 import { tsr } from '../../../pages-tsr';
 
 interface Form {

@@ -13,9 +13,9 @@
   },
   "dependencies": {
     "@tanstack/solid-query": "catalog:",
-    "@ts-rest/core": "workspace:*",
-    "@ts-rest/example-microservice-util-posts-api": "workspace:*",
-    "@ts-rest/solid-query": "workspace:*",
+    "@ts-restless/core": "workspace:*",
+    "@ts-restless/example-microservice-util-posts-api": "workspace:*",
+    "@ts-restless/solid-query": "workspace:*",
     "solid-js": "catalog:"
   }
 }

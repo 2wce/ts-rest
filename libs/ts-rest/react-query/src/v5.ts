@@ -1,1 +1,1 @@
-export * from '@ts-rest/react-query-v5';
+export * from '@ts-restless/react-query-v5';

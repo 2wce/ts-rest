@@ -1,4 +1,4 @@
-import { initContract } from '@ts-rest/core';
+import { initContract } from '@ts-restless/core';
 import { NextRequest } from 'next/server';
 import { z } from 'zod';
 import { createNextHandler } from './ts-rest-next';

@@ -1,15 +1,15 @@
 {
-  "name": "@ts-rest/express",
+  "name": "@ts-restless/express",
   "version": "3.52.1",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ts-rest/ts-rest.git",
+    "url": "https://github.com/2wce/ts-rest.git",
     "directory": "libs/ts-rest/express"
   },
   "license": "MIT",
   "peerDependencies": {
     "express": "^4.0.0 || ^5.0.0",
-    "@ts-rest/core": "workspace:^",
+    "@ts-restless/core": "workspace:^",
     "zod": "^3.22.3 || ^4.0.0"
   },
   "scripts": {
@@ -17,8 +17,8 @@
     "typecheck": "tsc --noEmit -p tsconfig.assertions.json"
   },
   "devDependencies": {
-    "@ts-rest/core": "workspace:*",
-    "@ts-rest/build-config": "workspace:*",
+    "@ts-restless/core": "workspace:*",
+    "@ts-restless/build-config": "workspace:*",
     "zod": "catalog:"
   },
   "types": "./src/index.ts",
@@ -78,5 +78,10 @@
         "./src/zod3.ts"
       ]
     }
-  }
+  },
+  "bugs": {
+    "url": "https://github.com/2wce/ts-rest/issues"
+  },
+  "homepage": "https://github.com/2wce/ts-rest#readme",
+  "description": "ts-restless express integration for contract-first, end-to-end typed REST."
 }

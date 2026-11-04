@@ -1,12 +1,12 @@
 import { Controller } from '@nestjs/common';
-import { apiBlog } from '@ts-rest/example-contracts';
+import { apiBlog } from '@ts-restless/example-contracts';
 import {
   TsRestRequest,
   TsRest,
   nestControllerContract,
   NestControllerInterface,
   NestRequestShapes,
-} from '@ts-rest/nest';
+} from '@ts-restless/nest';
 import { z } from 'zod';
 import { PostService } from './post.service';
 

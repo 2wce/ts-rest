@@ -5,7 +5,7 @@ description: Prepare for ts-restless v4's validator-independent major version.
 
 This guide describes **ts-restless 4.0.0**, the breaking successor to ts-rest v3. Interim alpha releases will be available as package identity and artifact checks are completed. New-scope packages are not published yet, and release workflows remain disabled during preparation.
 
-Examples currently use this fork's development-checkout `@ts-rest/*` imports. See the [package migration and prerelease guide](/ts-restless-migration) for the intended `@ts-restless/*` imports and release status. Existing published upstream v3 packages keep their current behavior.
+Examples compile against this fork's development-checkout `@ts-restless/*` packages. See the [package migration and prerelease guide](/ts-restless-migration) for dependency replacement and release status. Existing published upstream v3 packages keep their current behavior.
 
 ## Modern validators
 
@@ -23,8 +23,8 @@ synchronous; asynchronous schema validation is still unsupported.
 Wrap a schema that does not provide `~standard` explicitly:
 
 ```typescript twoslash
-import { initContract } from '@ts-rest/core';
-import { toStandardSchema } from '@ts-rest/core/zod3';
+import { initContract } from '@ts-restless/core';
+import { toStandardSchema } from '@ts-restless/core/zod3';
 import { z } from 'zod';
 
 const c = initContract();
@@ -66,7 +66,7 @@ failed request location. Nest also exposes its existing
 
 Import Zod guards, `zodMerge`, `zodErrorResponse`, `ZodErrorSchema`,
 `ZodInferOrType`, `ZodInputOrType` and the historical request-error schemas from
-`@ts-rest/core/zod3`. Prefer `SchemaInputOrType` and `SchemaOutputOrType` from the
+`@ts-restless/core/zod3`. Prefer `SchemaInputOrType` and `SchemaOutputOrType` from the
 default core entry for new code.
 
 Adapter-specific historical error classes and schemas move to the adapter's
@@ -93,8 +93,8 @@ HTTP adapters provide lowercase names. Their fields are not inspected or rewritt
 If an old contract relies on Zod object overrides, merge before bridging:
 
 ```typescript twoslash
-import { initContract } from '@ts-rest/core';
-import { toStandardSchema } from '@ts-rest/core/zod3';
+import { initContract } from '@ts-restless/core';
+import { toStandardSchema } from '@ts-restless/core/zod3';
 import { z } from 'zod';
 
 const baseHeaders = z.object({ role: z.literal('user') });

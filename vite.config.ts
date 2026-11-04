@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite-plus';
 import swc from 'unplugin-swc';
 import { resolve } from 'node:path';
-import { decoratorOptions } from '@ts-rest/build-config';
+import { decoratorOptions } from '@ts-restless/build-config';
 
 const projects = [
   'core',
@@ -84,7 +84,7 @@ export default defineConfig({
     tasks: {
       'pack-artifacts': {
         command:
-          'pnpm build && pnpm --filter "./libs/ts-rest/*" --filter "!@ts-rest/react-query-v5" -r pack --out dist/packages/%s.tgz --silent',
+          'pnpm build && pnpm --filter "./libs/ts-rest/*" --filter "!@ts-restless/react-query-v5" -r pack --out dist/packages/%s.tgz --silent',
         cache: false,
       },
       'check-packages': {
@@ -96,7 +96,7 @@ export default defineConfig({
       },
       'unit-tests': {
         command: 'vp test run',
-        dependsOn: ['@ts-rest/example-database#generate'],
+        dependsOn: ['@ts-restless/example-database#generate'],
         cache: false,
       },
       'host-tests': {
@@ -106,17 +106,17 @@ export default defineConfig({
       },
       'watch-tests': {
         command: 'vp test',
-        dependsOn: ['@ts-rest/example-database#generate'],
+        dependsOn: ['@ts-restless/example-database#generate'],
         cache: false,
       },
       'lint-workspace': {
         command: 'vp lint',
-        dependsOn: ['@ts-rest/example-database#generate'],
+        dependsOn: ['@ts-restless/example-database#generate'],
         cache: false,
       },
       'check-workspace': {
         command: ['vp check', 'vp test run', 'vp run typecheck'],
-        dependsOn: ['@ts-rest/example-database#generate'],
+        dependsOn: ['@ts-restless/example-database#generate'],
         cache: false,
       },
     },

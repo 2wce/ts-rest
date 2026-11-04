@@ -56,7 +56,7 @@ function libraryPack(
     tsconfig: 'tsconfig.lib.json',
     sourcemap: true,
     unbundle: name === 'react-query',
-    deps: { neverBundle: [/^@ts-rest\//], dts: { neverBundle: true } },
+    deps: { neverBundle: [/^@ts-restless\//], dts: { neverBundle: true } },
     outExtensions: ({ format }: { format: string }) => ({
       js: format === 'es' ? '.esm.mjs' : '.cjs.js',
       dts: format === 'es' ? '.esm.d.mts' : '.cjs.d.ts',
@@ -76,7 +76,7 @@ export function nodePack(entry = 'src/main.ts'): PackUserConfig {
     target: 'node26',
     dts: false,
     tsconfig: 'tsconfig.json',
-    deps: { neverBundle: true, alwaysBundle: [/^@ts-rest\//] },
+    deps: { neverBundle: true, alwaysBundle: [/^@ts-restless\//] },
   };
 }
 

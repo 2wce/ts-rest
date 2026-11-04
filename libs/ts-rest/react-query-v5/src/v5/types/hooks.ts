@@ -1,4 +1,4 @@
-import { AppRoute, AppRouteFunction, ClientArgs } from '@ts-rest/core';
+import { AppRoute, AppRouteFunction, ClientArgs } from '@ts-restless/core';
 import {
   FetchInfiniteQueryOptions,
   FetchQueryOptions,

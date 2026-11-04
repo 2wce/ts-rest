@@ -13,7 +13,7 @@ import {
   validateResponse,
   StandardSchemaError,
   validateMultiSchemaObject,
-} from '@ts-rest/core';
+} from '@ts-restless/core';
 import * as fastify from 'fastify';
 
 export class RequestValidationError extends Error {

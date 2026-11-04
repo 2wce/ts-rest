@@ -2,7 +2,7 @@
  * @vitest-environment node
  */
 
-import { initContract } from '@ts-rest/core';
+import { initContract } from '@ts-restless/core';
 import type {
   APIGatewayProxyEvent,
   APIGatewayProxyEventV2,

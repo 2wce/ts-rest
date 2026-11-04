@@ -1,11 +1,13 @@
-# ts-rest-next
+# @ts-restless/next
 
-This library was generated with [Nx](https://nx.dev).
+Part of **ts-restless**, a maintained fork of [ts-rest](https://github.com/ts-rest/ts-rest) for contract-first, end-to-end typed REST in TypeScript.
 
-## Building
+The first stable release is planned as `4.0.0`, with interim `4.0.0-alpha.*` prereleases. New-scope packages are being prepared and are not published yet.
 
-Run `nx build ts-rest-next` to build the library.
+Read the [package migration and prerelease guide](https://github.com/2wce/ts-rest/blob/main/apps/docs/content/docs/ts-restless-migration.mdx) and [Standard Schema migration](https://github.com/2wce/ts-rest/blob/main/apps/docs/content/docs/standard-schema-migration.mdx). Preserve existing public API names while replacing dependencies and imports with `@ts-restless/*`.
 
-## Running unit tests
+Report bugs and prerelease feedback in [the fork's issue tracker](https://github.com/2wce/ts-rest/issues). Upstream contributor credits and MIT licence notices are preserved.
 
-Run `pnpm test` from the workspace root to execute the unit tests with Vite+.
+## Workspace development
+
+From the repository root, run `pnpm --filter @ts-restless/next build` to build this library and `pnpm test` for the source test suite. Use the repository's pinned Node and pnpm versions.

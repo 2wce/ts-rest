@@ -2,8 +2,8 @@ import type {
   Request as WorkerRequest,
   ExecutionContext,
 } from '@cloudflare/workers-types/2023-03-01';
-import { fetchRequestHandler, tsr } from '@ts-rest/serverless/fetch';
-import { apiBlog, Post } from '@ts-rest/example-contracts';
+import { fetchRequestHandler, tsr } from '@ts-restless/serverless/fetch';
+import { apiBlog, Post } from '@ts-restless/example-contracts';
 
 const mockPostFixtureFactory = (partial: Partial<Post>): Post => ({
   id: 'mock-id',

@@ -82,11 +82,11 @@ for (const name of [
   'serverless',
 ]) {
   test(`packed default ${name} ESM and CommonJS graphs do not load or bundle Zod`, async () => {
-    const unpacked = await mkdtemp(join(tmpdir(), 'ts-rest-graph-'));
+    const unpacked = await mkdtemp(join(tmpdir(), 'ts-restless-graph-'));
     try {
       execFileSync('tar', [
         '-xzf',
-        join(archives, `ts-rest-${name}.tgz`),
+        join(archives, `ts-restless-${name}.tgz`),
         '-C',
         unpacked,
       ]);
@@ -116,21 +116,21 @@ const sources = {
   'zod-4': `import { z } from 'zod';
   const schema = z.string().transform(Number);`,
   'zod-3-legacy': `import { z } from 'zod';
-  import { toStandardSchema } from '@ts-rest/core/zod3';
+  import { toStandardSchema } from '@ts-restless/core/zod3';
   const schema = toStandardSchema(z.string().transform(Number));`,
 };
 
 for (const [profile, definition] of Object.entries(sources)) {
   test(`packed core and adapters support ${profile} with strict ESM/CommonJS declarations`, async () => {
-    const consumer = await mkdtemp(join(tmpdir(), `ts-rest-${profile}-`));
+    const consumer = await mkdtemp(join(tmpdir(), `ts-restless-${profile}-`));
     try {
       const dependencies = {
-        '@ts-rest/core': `file:${join(archives, 'ts-rest-core.tgz')}`,
-        '@ts-rest/express': `file:${join(archives, 'ts-rest-express.tgz')}`,
+        '@ts-restless/core': `file:${join(archives, 'ts-restless-core.tgz')}`,
+        '@ts-restless/express': `file:${join(archives, 'ts-restless-express.tgz')}`,
       };
       for (const name of ['fastify', 'nest', 'next', 'serverless']) {
-        dependencies[`@ts-rest/${name}`] =
-          `file:${join(archives, `ts-rest-${name}.tgz`)}`;
+        dependencies[`@ts-restless/${name}`] =
+          `file:${join(archives, `ts-restless-${name}.tgz`)}`;
       }
       for (const name of [
         'express',
@@ -189,16 +189,16 @@ for (const [profile, definition] of Object.entries(sources)) {
           'no-Zod consumer must not install Zod transitively',
         );
       }
-      const source = `import { initContract, StandardSchemaV1, SchemaInputOrType, SchemaOutputOrType, ServerInferRequest, ClientInferRequest, ClientInferResponseBody } from '@ts-rest/core';
-import { createExpressEndpoints, initServer } from '@ts-rest/express';
-import * as fastify from '@ts-rest/fastify';
-import * as nest from '@ts-rest/nest';
-import * as next from '@ts-rest/next';
-import * as serverless from '@ts-rest/serverless';
-import * as fetch from '@ts-rest/serverless/fetch';
-import * as aws from '@ts-rest/serverless/aws';
-import * as azure from '@ts-rest/serverless/azure';
-import * as serverlessNext from '@ts-rest/serverless/next';
+      const source = `import { initContract, StandardSchemaV1, SchemaInputOrType, SchemaOutputOrType, ServerInferRequest, ClientInferRequest, ClientInferResponseBody } from '@ts-restless/core';
+import { createExpressEndpoints, initServer } from '@ts-restless/express';
+import * as fastify from '@ts-restless/fastify';
+import * as nest from '@ts-restless/nest';
+import * as next from '@ts-restless/next';
+import * as serverless from '@ts-restless/serverless';
+import * as fetch from '@ts-restless/serverless/fetch';
+import * as aws from '@ts-restless/serverless/aws';
+import * as azure from '@ts-restless/serverless/azure';
+import * as serverlessNext from '@ts-restless/serverless/next';
 ${definition}
 const optionalHeader: StandardSchemaV1<string | undefined> = {
   '~standard': { version: 1, vendor: 'consumer', validate: (value) =>
@@ -260,8 +260,8 @@ void [createExpressEndpoints, initServer, fastify, nest, next, serverless, fetch
         const file = join(consumer, 'legacy.ts');
         await writeFile(
           file,
-          `import { toStandardSchema, ZodInputOrType, ZodInferOrType } from '@ts-rest/core/zod3';
-import { SchemaInputOrType, SchemaOutputOrType } from '@ts-rest/core';
+          `import { toStandardSchema, ZodInputOrType, ZodInferOrType } from '@ts-restless/core/zod3';
+import { SchemaInputOrType, SchemaOutputOrType } from '@ts-restless/core';
 import { z } from 'zod';
 type Equal<A, B> = (<T>() => T extends A ? 1 : 2) extends (<T>() => T extends B ? 1 : 2) ? true : false;
 type Expect<T extends true> = T;
@@ -293,12 +293,12 @@ type LegacyOutput = Expect<Equal<ZodInferOrType<typeof original>, number>>;
       const runtime = `import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
 const require = createRequire(import.meta.url);
-for (const name of ['@ts-rest/core', '@ts-rest/express', '@ts-rest/fastify', '@ts-rest/nest', '@ts-rest/next', '@ts-rest/serverless', '@ts-rest/serverless/fetch', '@ts-rest/serverless/aws', '@ts-rest/serverless/azure', '@ts-rest/serverless/next']) {
+for (const name of ['@ts-restless/core', '@ts-restless/express', '@ts-restless/fastify', '@ts-restless/nest', '@ts-restless/next', '@ts-restless/serverless', '@ts-restless/serverless/fetch', '@ts-restless/serverless/aws', '@ts-restless/serverless/azure', '@ts-restless/serverless/next']) {
   const esm = await import(name); const cjs = require(name);
   assert.deepEqual(Object.keys(esm).filter((key) => key !== 'default').sort(), Object.keys(cjs).sort());
 }
 ${definition.replace('schema: StandardSchemaV1<string, number>', 'schema')}
-for (const { validateIfSchema, validateMultiSchemaObject, initContract, StandardSchemaError } of [await import('@ts-rest/core'), require('@ts-rest/core')]) {
+for (const { validateIfSchema, validateMultiSchemaObject, initContract, StandardSchemaError } of [await import('@ts-restless/core'), require('@ts-restless/core')]) {
   assert.equal(validateIfSchema('42', schema).value, 42);
   const failure = validateIfSchema({}, schema).error;
   assert.ok(failure instanceof StandardSchemaError);
@@ -314,7 +314,7 @@ ${
     ? `
 const original = z.object({ value: z.string() });
 const legacyFailure = original.safeParse({ value: 1 }).error;
-for (const compat of [await import('@ts-rest/core/zod3'), require('@ts-rest/core/zod3')]) {
+for (const compat of [await import('@ts-restless/core/zod3'), require('@ts-restless/core/zod3')]) {
   const adapted = compat.toStandardSchema(original);
   assert.notEqual(adapted, original);
   assert.equal('~standard' in original, false);

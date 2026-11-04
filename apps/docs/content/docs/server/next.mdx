@@ -1,25 +1,25 @@
 ---
 title: 'Next.js'
-description: How to use ts-rest with Next.js
+description: How to use ts-restless with Next.js
 ---
 
 ## Installation
 
-<InstallTabs packageName="@ts-rest/next" />
+<InstallTabs packageName="@ts-restless/next" />
 
 ## Usage
 
-For maximum type safety, by default `@ts-rest/next` uses a single endpoint for all routes.
+For maximum type safety, by default `@ts-restless/next` uses a single endpoint for all routes.
 
 <Callout type="info" title="Multiple Endpoints">
   It is possible to split out to multiple endpoints by having multiple
-  [...ts-rest].tsx files in different folders, so long as the routers you use
+  [...ts-restless].tsx files in different folders, so long as the routers you use
   all begin with the same path e.g. all `/posts` endpoints in a posts folder.
 </Callout>
 
 ```typescript
 // pages/api/[...ts-rest].tsx
-import { createNextRoute, createNextRouter } from '@ts-rest/next';
+import { createNextRoute, createNextRouter } from '@ts-restless/next';
 
 // `contract` is the AppRouter returned by `c.router`
 const postsRouter = createNextRoute(contract.posts, {
@@ -47,7 +47,7 @@ It's also possible to create a handler for a single contract route.
 
 ```typescript
 // pages/api/posts/index.tsx
-import { createSingleRouteHandler } from '@ts-rest/next';
+import { createSingleRouteHandler } from '@ts-restless/next';
 
 export default createSingleRouteHandler(api.posts.createPost, async (args) => {
   const newPost = await posts.createPost(args.body);
@@ -85,7 +85,7 @@ You can create a global error handler to handle any thrown errors by using the `
 This includes response validation errors.
 
 ```typescript
-import { TsRestResponseValidationError } from '@ts-rest/core';
+import { TsRestResponseValidationError } from '@ts-restless/core';
 
 export default createNextRouter(contract, router, {
   responseValidation: true,

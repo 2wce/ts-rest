@@ -1,4 +1,4 @@
-import { initClient } from '@ts-rest/core';
+import { initClient } from '@ts-restless/core';
 import { testContract } from '../../contracts/test-contract';
 import { DataComponent } from './data-component';
 

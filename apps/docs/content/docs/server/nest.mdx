@@ -1,27 +1,27 @@
 ---
 title: 'NestJS'
-description: How to use ts-rest with NestJS
+description: How to use ts-restless with NestJS
 ---
 
-NestJS integration with ts-rest provides type-safe API endpoints while maintaining the familiar NestJS decorator-based architecture. We offer two approaches to fit different development styles and migration strategies.
+NestJS integration with ts-restless provides type-safe API endpoints while maintaining the familiar NestJS decorator-based architecture. We offer two approaches to fit different development styles and migration strategies.
 
 ## Installation
 
-<InstallTabs packageName="@ts-rest/nest" />
+<InstallTabs packageName="@ts-restless/nest" />
 
 ## Approaches
 
-NestJS has always been a tricky framework to integrate with ts-rest due to how Nest handles routing and controllers. Rather than requiring you to abandon Nest's decorator approach, we provide two flexible patterns that work alongside your existing Nest architecture.
+NestJS has always been a tricky framework to integrate with ts-restless due to how Nest handles routing and controllers. Rather than requiring you to abandon Nest's decorator approach, we provide two flexible patterns that work alongside your existing Nest architecture.
 
 ### Single Handler Approach - Easy Migration and Flexibility
 
-The single handler approach provides a 1:1 migration strategy for existing controllers. You can replace individual Nest routes with ts-rest routes without affecting other routes in the same controller. This is perfect for gradual adoption or when you want different endpoints across multiple controllers.
+The single handler approach provides a 1:1 migration strategy for existing controllers. You can replace individual Nest routes with ts-restless routes without affecting other routes in the same controller. This is perfect for gradual adoption or when you want different endpoints across multiple controllers.
 
 ```typescript twoslash title="single-handler.ts"
 // @noErrors
 import { Controller } from '@nestjs/common';
-import { TsRestHandler, tsRestHandler } from '@ts-rest/nest';
-import { initContract } from '@ts-rest/core';
+import { TsRestHandler, tsRestHandler } from '@ts-restless/nest';
+import { initContract } from '@ts-restless/core';
 import { z } from 'zod';
 
 const c = initContract();
@@ -101,11 +101,11 @@ export class PostController {
 ```
 
 <Callout type="note">
-  The method names don't matter in ts-rest controllers, just like regular Nest
+  The method names don't matter in ts-restless controllers, just like regular Nest
   endpoints. Name them whatever makes sense for your codebase.
 </Callout>
 
-**Why do we return `tsRestHandler`?** This function simply returns its second argument, but provides full TypeScript intellisense and type safety for the implementation. This keeps the API consistent with other ts-rest server implementations like `@ts-rest/express` and `@ts-rest/fastify`.
+**Why do we return `tsRestHandler`?** This function simply returns its second argument, but provides full TypeScript intellisense and type safety for the implementation. This keeps the API consistent with other ts-restless server implementations like `@ts-restless/express` and `@ts-restless/fastify`.
 
 #### Benefits
 
@@ -121,8 +121,8 @@ The multi handler approach is ideal for those who prefer functional programming 
 ```typescript twoslash title="multi-handler.ts"
 // @noErrors
 import { Controller } from '@nestjs/common';
-import { TsRestHandler, tsRestHandler } from '@ts-rest/nest';
-import { initContract } from '@ts-rest/core';
+import { TsRestHandler, tsRestHandler } from '@ts-restless/nest';
+import { initContract } from '@ts-restless/core';
 import { z } from 'zod';
 
 const c = initContract();
@@ -205,7 +205,7 @@ Pass the entire contract (or a subset) to both `@TsRestHandler` and `tsRestHandl
 
 - **Compile-time safety**: TypeScript errors if you miss implementing any route
 - **Less boilerplate**: Single decorator and handler for multiple routes
-- **Consistency**: Easier to move code between `@ts-rest/express`, `@ts-rest/fastify`, and `@ts-rest/next`
+- **Consistency**: Easier to move code between `@ts-restless/express`, `@ts-restless/fastify`, and `@ts-restless/next`
 - **Functional approach**: Great for those who prefer this programming style
 
 ## Using Nest Decorators
@@ -215,8 +215,8 @@ You can still use all existing Nest decorators alongside `@TsRestHandler`. This 
 ```typescript twoslash title="nest-decorators.ts"
 // @noErrors
 import { Controller, Req, Headers, UseGuards } from '@nestjs/common';
-import { TsRestHandler, tsRestHandler } from '@ts-rest/nest';
-import { initContract } from '@ts-rest/core';
+import { TsRestHandler, tsRestHandler } from '@ts-restless/nest';
+import { initContract } from '@ts-restless/core';
 import { z } from 'zod';
 
 const c = initContract();
@@ -273,13 +273,13 @@ This isn't limited to parameter decorators - you can use guards, interceptors, p
 
 ## Type-Safe Error Handling
 
-While we recommend returning errors as responses to maintain full type safety in your contract, sometimes throwing exceptions is cleaner. `TsRestException` lets you throw type-safe exceptions that ts-rest will catch and convert to properly typed responses.
+While we recommend returning errors as responses to maintain full type safety in your contract, sometimes throwing exceptions is cleaner. `TsRestException` lets you throw type-safe exceptions that ts-restless will catch and convert to properly typed responses.
 
 ```typescript twoslash title="error-handling.ts"
 // @noErrors
 import { Controller } from '@nestjs/common';
-import { TsRestHandler, tsRestHandler, TsRestException } from '@ts-rest/nest';
-import { initContract } from '@ts-rest/core';
+import { TsRestHandler, tsRestHandler, TsRestException } from '@ts-restless/nest';
+import { initContract } from '@ts-restless/core';
 import { z } from 'zod';
 
 const c = initContract();
@@ -357,13 +357,13 @@ export class UserController {
 
 ## Configuration
 
-Configure ts-rest options using the `@TsRest` decorator on controllers or the `@TsRestHandler` decorator on methods. Controller options apply to all routes and override global options. Method options override controller options for that specific route.
+Configure ts-restless options using the `@TsRest` decorator on controllers or the `@TsRestHandler` decorator on methods. Controller options apply to all routes and override global options. Method options override controller options for that specific route.
 
 ```typescript twoslash title="configuration.ts"
 // @noErrors
 import { Controller } from '@nestjs/common';
-import { TsRest, TsRestHandler, tsRestHandler } from '@ts-rest/nest';
-import { initContract } from '@ts-rest/core';
+import { TsRest, TsRestHandler, tsRestHandler } from '@ts-restless/nest';
+import { initContract } from '@ts-restless/core';
 import { z } from 'zod';
 
 const c = initContract();
@@ -433,8 +433,8 @@ export class SearchController {
 ## Important Considerations
 
 <Callout type="warning" title="Path Prefixes">
-  **Known Limitation:** Nest's global prefixes, versioning, and controller prefixes are currently ignored by ts-rest. See [GitHub issue #70](https://github.com/ts-rest/ts-rest/issues/70) for details.
+  **Known Limitation:** Nest's global prefixes, versioning, and controller prefixes are currently ignored by ts-restless. See [GitHub issue #70](https://github.com/ts-rest/ts-rest/issues/70) for details.
 
-**Workaround:** Use ts-rest's [path prefix feature](/docs/contract/overview#path-prefix) in your contract definition to achieve similar functionality.
+**Workaround:** Use ts-restless's [path prefix feature](/docs/contract/overview#path-prefix) in your contract definition to achieve similar functionality.
 
 </Callout>

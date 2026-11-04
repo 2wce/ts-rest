@@ -15,7 +15,7 @@ import {
   validateResponse,
   StandardSchemaError,
   validateMultiSchemaObject,
-} from '@ts-rest/core';
+} from '@ts-restless/core';
 import { getPathParamsFromArray } from './path-utils';
 
 export class TsRestRequestValidationError extends Error {
