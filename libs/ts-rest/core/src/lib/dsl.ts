@@ -162,11 +162,22 @@ export type MergeHeadersWithLegacySupport<
               ? MergeObjectBasedHeaders<A, B>
               : unknown
             : Prettify<
-                Merge<
-                  A extends ContractPlainType<infer APlain> ? APlain : A,
-                  B extends ContractPlainType<infer BPlain> ? BPlain : B
-                >
-              >;
+                  Merge<
+                    LowercaseKeys<
+                      A extends ContractPlainType<infer APlain> ? APlain : A
+                    >,
+                    LowercaseKeys<
+                      B extends ContractPlainType<infer BPlain> ? BPlain : B
+                    >
+                  >
+                > extends infer TMerged
+              ? [A, B] extends [
+                  ContractPlainType<unknown>,
+                  ContractPlainType<unknown>,
+                ]
+                ? ContractPlainType<TMerged>
+                : TMerged
+              : never;
 
 /**
  * Headers are typed as a Record<string, ContractAnyType>
@@ -176,17 +187,16 @@ export type MergeHeadersWithLegacySupport<
 type MergeObjectBasedHeaders<
   T extends Record<string, ContractAnyType>,
   U extends Record<string, ContractAnyType>,
+  TNormalized = LowercaseKeys<T>,
+  UNormalized = LowercaseKeys<U>,
 > = {
-  [K in keyof T | keyof U]: K extends keyof U
-    ? U[K]
-    : K extends keyof T
-      ? T[K]
+  // Keep null removals in the contract so an outer router cannot reintroduce them.
+  [K in keyof TNormalized | keyof UNormalized]: K extends keyof UNormalized
+    ? UNormalized[K]
+    : K extends keyof TNormalized
+      ? TNormalized[K]
       : never;
-} extends infer M
-  ? {
-      [K in keyof M as M[K] extends null ? never : K]: M[K];
-    }
-  : never;
+};
 
 type IsEmptyObject<T> = keyof T extends never
   ? {} extends T
@@ -202,23 +212,27 @@ export type InferHeadersInput<
   THeaders = T['headers'],
 > = unknown extends THeaders
   ? undefined
-  : // if empty object
-    IsEmptyObject<THeaders> extends true
-    ? {}
-    : // if a whole-object Standard Schema
-      THeaders extends StandardSchemaV1
-      ? LowercaseKeys<StandardSchemaV1.InferInput<THeaders>>
-      : // if modern object-based headers
-        THeaders extends Record<string, ContractAnyType>
-        ? LowercaseKeys<
-            UnknownOrUndefinedObjectValuesToOptionalKeys<{
-              [K in keyof THeaders]: THeaders[K] extends ContractAnyType
-                ? SchemaInputOrType<THeaders[K]>
-                : never;
-            }>
-          >
-        : // else
-          undefined;
+  : THeaders extends ContractPlainType<infer TPlain>
+    ? LowercaseKeys<TPlain>
+    : // if empty object
+      IsEmptyObject<THeaders> extends true
+      ? {}
+      : // if a whole-object Standard Schema
+        THeaders extends StandardSchemaV1
+        ? LowercaseKeys<StandardSchemaV1.InferInput<THeaders>>
+        : // if modern object-based headers
+          THeaders extends Record<string, ContractAnyType>
+          ? LowercaseKeys<
+              UnknownOrUndefinedObjectValuesToOptionalKeys<{
+                [
+                  K in keyof THeaders as THeaders[K] extends null ? never : K
+                ]: THeaders[K] extends ContractAnyType
+                  ? SchemaInputOrType<THeaders[K]>
+                  : never;
+              }>
+            >
+          : // else
+            undefined;
 
 /**
  * { foo: string | undefined } => { foo?: string | undefined }
@@ -252,20 +266,26 @@ export type InferHeadersOutput<
   THeaders = T['headers'],
 > = unknown extends THeaders
   ? '1'
-  : // if empty object
-    IsEmptyObject<THeaders> extends true
-    ? {}
-    : // if a whole-object Standard Schema
-      THeaders extends StandardSchemaV1
-      ? LowercaseKeys<StandardSchemaV1.InferOutput<THeaders>>
-      : // if modern object-based headers
-        THeaders extends Record<string, ContractAnyType>
-        ? {
-            [K in keyof THeaders]: THeaders[K] extends ContractAnyType
-              ? LowercaseKeys<SchemaOutputOrType<THeaders[K]>>
-              : never;
-          }
-        : '3';
+  : THeaders extends ContractPlainType<infer TPlain>
+    ? LowercaseKeys<TPlain>
+    : // if empty object
+      IsEmptyObject<THeaders> extends true
+      ? {}
+      : // if a whole-object Standard Schema
+        THeaders extends StandardSchemaV1
+        ? LowercaseKeys<StandardSchemaV1.InferOutput<THeaders>>
+        : // if modern object-based headers
+          THeaders extends Record<string, ContractAnyType>
+          ? LowercaseKeys<
+              UnknownOrUndefinedObjectValuesToOptionalKeys<{
+                [
+                  K in keyof THeaders as THeaders[K] extends null ? never : K
+                ]: THeaders[K] extends ContractAnyType
+                  ? SchemaOutputOrType<THeaders[K]>
+                  : never;
+              }>
+            >
+          : '3';
 
 type ApplyOptions<
   TRoute extends AppRoute,

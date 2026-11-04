@@ -319,10 +319,10 @@ describe('contract', () => {
                   }
                 >;
               };
-              headers: {
+              headers: ContractPlainType<{
                 'x-foo': string;
                 'x-bar': string;
-              };
+              }>;
             };
           };
         }
@@ -1215,7 +1215,7 @@ describe('header types', () => {
       typeof rightSchema
     >;
 
-    type TestResult = Expect<Equal<Result, {}>>; // correctly unset 'left'
+    type TestResult = Expect<Equal<Result, { left: null }>>; // retain the removal for outer routers
   });
 
   it('should handle left null and right record', () => {
@@ -1232,7 +1232,7 @@ describe('header types', () => {
       typeof rightSchema
     >;
 
-    type TestResult = Expect<Equal<Result, { right: z.ZodString }>>; // right wins
+    type TestResult = Expect<Equal<Result, { left: null; right: z.ZodString }>>;
   });
 
   it('should handle both null', () => {
@@ -1249,7 +1249,7 @@ describe('header types', () => {
       typeof rightSchema
     >;
 
-    type TestResult = Expect<Equal<Result, {}>>; // correctly unset 'left' and 'right'
+    type TestResult = Expect<Equal<Result, { left: null; right: null }>>;
   });
 
   it('should handle both entirely undefined', () => {

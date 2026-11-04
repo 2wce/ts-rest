@@ -86,7 +86,12 @@ export const validateMultiSchemaObject = (
     };
   }
 
-  const headersMap = new Map<string, unknown>(Object.entries(data ?? {}));
+  const headersMap = new Map<string, unknown>(
+    Object.entries(data ?? {}).map(([key, value]) => [
+      key.toLowerCase(),
+      value,
+    ]),
+  );
 
   const subSchemas = new Map<string, StandardSchemaV1<unknown, unknown>>();
 
@@ -102,7 +107,7 @@ export const validateMultiSchemaObject = (
     }
 
     if (parsedSchema !== null) {
-      subSchemas.set(key, parsedSchema);
+      subSchemas.set(key.toLowerCase(), parsedSchema);
     } else {
       throw new Error(
         `Invalid schema provided for header ${key}; use a Standard Schema or a contract type marker`,
@@ -112,7 +117,7 @@ export const validateMultiSchemaObject = (
 
   if (subSchemas.size === 0) {
     return {
-      value: data,
+      value: data == null ? data : Object.fromEntries(headersMap),
       schemasUsed: [],
     };
   }
@@ -223,8 +228,18 @@ export const mergeHeaderSchemasForRoute = (
   }
 
   const mergedObjects = {
-    ...baseSchema,
-    ...routeSchema,
+    ...Object.fromEntries(
+      Object.entries(baseSchema ?? {}).map(([key, schema]) => [
+        key.toLowerCase(),
+        schema,
+      ]),
+    ),
+    ...Object.fromEntries(
+      Object.entries(routeSchema ?? {}).map(([key, schema]) => [
+        key.toLowerCase(),
+        schema,
+      ]),
+    ),
   };
 
   return mergedObjects;
