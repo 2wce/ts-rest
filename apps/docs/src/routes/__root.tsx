@@ -15,10 +15,11 @@ export const Route = createRootRoute({
     meta: [
       { charSet: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { title: 'ts-rest' },
+      { title: 'ts-restless' },
       {
         name: 'description',
-        content: 'ts-rest is a library for building REST APIs with TypeScript.',
+        content:
+          'Contract-first, end-to-end typed REST for TypeScript. A maintained fork of ts-rest.',
       },
     ],
     links: [
@@ -37,9 +38,9 @@ function RootComponent() {
       </head>
       <body className="flex min-h-screen flex-col">
         <PostHogProvider>
-          <Banner variant="rainbow" id="standard-schema-major-preview">
-            Documentation for the fork's unreleased major version.{' '}
-            <a href="/standard-schema-migration">Read the migration guide.</a>
+          <Banner variant="rainbow" id="ts-restless-v4-preview">
+            ts-restless v4 development preview. New-scope packages are being
+            prepared. <a href="/ts-restless-migration">Release and migration guide.</a>
           </Banner>
           <RootProvider
             search={{ options: { type: 'static', api: '/api/search.json' } }}

@@ -1,7 +1,7 @@
 import type { BaseLayoutProps } from 'fumadocs-ui/layouts/shared';
 
 export const baseOptions: BaseLayoutProps = {
-  githubUrl: 'https://github.com/ts-rest/ts-rest',
+  githubUrl: 'https://github.com/2wce/ts-rest',
   nav: {
     title: (
       <>
@@ -29,7 +29,7 @@ export const baseOptions: BaseLayoutProps = {
             </clipPath>
           </defs>
         </svg>
-        ts-rest
+        ts-restless
       </>
     ),
   },

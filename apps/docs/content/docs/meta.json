@@ -10,6 +10,7 @@
     "openapi",
     "---Extras---",
     "recipies",
+    "ts-restless-migration",
     "standard-schema-migration",
     "changelog",
     "faq"

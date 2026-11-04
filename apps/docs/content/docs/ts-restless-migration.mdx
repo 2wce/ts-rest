@@ -1,0 +1,65 @@
+---
+title: ts-restless migration and prereleases
+description: Package names, release status and migration from ts-rest v3 to ts-restless v4.
+---
+
+**ts-restless** is a maintained fork of [ts-rest](https://github.com/ts-rest/ts-rest), with contract-first, end-to-end typed REST for TypeScript.
+
+## Release status
+
+The first stable release will be **4.0.0**. Interim `4.0.0-alpha.*` releases can ship while stable-launch compatibility fixes continue, followed by beta and release candidates as needed. Prereleases use their explicit `alpha`, `beta` or `rc` npm tag; stable `4.0.0` will use `latest`.
+
+**New-scope packages are being prepared and are not published yet.** This checkout still uses `@ts-rest/*` package names. The compiled examples on this site describe this fork's development source, which differs from published upstream v3. The package rename will update executable examples and dependencies together.
+
+## Package migration
+
+Public packages will belong to the project-owned npm organization `ts-restless`, with [@2wce](https://github.com/2wce) as its initial owner.
+
+| Upstream dependency    | ts-restless dependency    |
+| ---------------------- | ------------------------- |
+| `@ts-rest/core`         | `@ts-restless/core`        |
+| `@ts-rest/express`      | `@ts-restless/express`     |
+| `@ts-rest/fastify`      | `@ts-restless/fastify`     |
+| `@ts-rest/nest`         | `@ts-restless/nest`        |
+| `@ts-rest/next`         | `@ts-restless/next`        |
+| `@ts-rest/serverless`   | `@ts-restless/serverless`  |
+| `@ts-rest/react-query`  | `@ts-restless/react-query` |
+| `@ts-rest/open-api`     | `@ts-restless/open-api`    |
+| `@ts-rest/solid-query`  | `@ts-restless/solid-query` |
+| `@ts-rest/vue-query`    | `@ts-restless/vue-query`   |
+
+Replace the ts-rest dependencies your application uses as a matched set, including shared contract packages. Then update their imports. Public API names and supported subpaths such as `/zod3` and React Query `/v5` stay familiar:
+
+```typescript
+// Intended imports after the new-scope packages become available.
+import { initClient, initContract } from '@ts-restless/core';
+import { toStandardSchema } from '@ts-restless/core/zod3';
+import { initTsrReactQuery } from '@ts-restless/react-query/v5';
+```
+
+`react-query-v5` is a private implementation package. Consumers use the public `@ts-restless/react-query/v5` entry point.
+
+## Trying an alpha after publication
+
+The following commands apply **after an alpha is published**. For an Express application, replace the old packages and select the alpha channel explicitly:
+
+```bash
+pnpm remove @ts-rest/core @ts-rest/express
+pnpm add @ts-restless/core@alpha @ts-restless/express@alpha
+```
+
+For a reproducible evaluation, use the exact version named in the release notes instead of the moving tag, for example `@ts-restless/core@4.0.0-alpha.0`. Check that all selected ts-restless libraries resolve to the same prerelease version. Use your package manager's equivalent commands if needed.
+
+Read that release's verified dependency versions and known gaps before upgrading. Current evidence covers pinned dependency combinations; the compatibility work for current Query v5, public React19 and Fastify5 is still ahead. The current public React Query peer range ends at React18, Fastify support is on major4, and OpenAPI still uses its existing Zod3 default converter with explicit converter hooks. A prerelease does not establish broader support.
+
+## Major behavioral changes
+
+The scope replacement is one part of the upgrade. Read the [Standard Schema migration guide](/standard-schema-migration) for legacy Zod bridging, moved helpers, portable validation errors and header composition. Default core/server adapters are validator independent, while schema validation remains synchronous.
+
+Applications that depend on historical error classes, serialization or whole-object header override semantics need the corresponding migration changes. Existing published ts-rest v3 packages retain their current behavior.
+
+## Feedback and attribution
+
+Report bugs in [ts-restless's issue tracker](https://github.com/2wce/ts-rest/issues), including the exact prerelease, framework, validator and TypeScript versions, the import you use, and a minimal reproduction.
+
+ts-restless preserves the original project's contributor credits and MIT licence notices. It has its own package releases, support commitments and issue reporting.
