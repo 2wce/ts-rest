@@ -155,8 +155,8 @@ jobs:
           JS
       - name: Create or update the prerelease PR, or publish its merged versions
         if: steps.head.outputs.current == 'true'
-        # CLI 2.x requires the action's maintenance/v1 implementation.
-        uses: changesets/action@ae5c373a18fe02dac7d40bcbc0184758c90d94d2
+        # Pin the released v1 bundle for CLI 2.x support.
+        uses: changesets/action@a45c4d594aa4e2c509dc14a9f2b3b67ba3780d0d # v1.9.0
         with:
           title: 'release: ts-restless prerelease'
           commit: 'release: version ts-restless prerelease'
