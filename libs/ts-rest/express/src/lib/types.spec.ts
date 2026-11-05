@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { initContract } from '@ts-rest/core';
+import { initContract } from '@ts-restless/core';
 import { AppRouteImplementation } from './types';
 import { IncomingHttpHeaders } from 'http';
 

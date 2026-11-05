@@ -1,36 +1,27 @@
-# ts-rest
+# ts-restless
+
+Contract-first, end-to-end typed REST for TypeScript. A maintained fork of [ts-rest](https://github.com/ts-rest/ts-rest).
 
 <p align="center">
- <img src="https://avatars.githubusercontent.com/u/109956939?s=400&u=8bf67b1281da46d64eab85f48255cd1892bf0885&v=4" height="150"></img>
-</p>
-
-<p align="center">Incrementally adoptable RPC-like client and server helpers for a magical end to end typed experience 🪄</p>
-
-<p align="center">
-  <a href="https://github.com/ts-rest/ts-rest">
-    <img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/ts-rest/ts-rest"/>
+  <a href="https://github.com/2wce/ts-restless">
+    <img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/2wce/ts-restless"/>
   </a>
-  <a href="https://www.npmjs.com/package/@ts-rest/core">
-    <img src="https://img.shields.io/npm/dm/%40ts-rest/core"/>
-  </a>
-  <a href="https://github.com/ts-rest/ts-rest/blob/main/LICENSE">
-    <img alt="License" src="https://img.shields.io/github/license/ts-rest/ts-rest"/>
-  </a>
-  <a href="https://bundlephobia.com/package/@ts-rest/core">
-    <img alt="Bundle Size" src="https://img.shields.io/bundlephobia/minzip/@ts-rest/core?label=%40ts-rest%2Fcore"/>
+  <a href="https://github.com/2wce/ts-restless/blob/main/LICENCE">
+    <img alt="License" src="https://img.shields.io/github/license/2wce/ts-restless"/>
   </a>
 </p>
 
-<div align="center">
-  <div>Join us on Discord for help, feedback, and discussions!</div><br></br>
-  <a href="https://discord.gg/2Megk85k5a">
-    <img src="https://discordapp.com/api/guilds/1055855205960392724/widget.png?style=banner2" alt="Discord Shield"/>
-  </a>
-</div>
+## Release status
+
+The first stable ts-restless release will be **4.0.0**, with interim `4.0.0-alpha.*` prereleases while compatibility fixes continue. No library release is available yet. The ten `@ts-restless/*` names are registered on npm with `0.0.0-stage` placeholders for trusted-publisher setup. These placeholders contain no library code and must not be installed.
+
+This development checkout uses `@ts-restless/*` package names. Its examples describe this fork's source, which includes breaking changes from published upstream v3. See the [package migration and prerelease guide](apps/docs/content/docs/ts-restless-migration.mdx) and [Standard Schema migration](apps/docs/content/docs/standard-schema-migration.mdx).
+
+Report bugs and prerelease feedback in [this fork's issues](https://github.com/2wce/ts-restless/issues). The initial maintainer is [@2wce](https://github.com/2wce).
 
 # Introduction
 
-ts-rest offers a simple way to define a contract for your API, which can be both consumed and implemented by your application, giving you end to end type safety without the hassle or code generation.
+ts-restless offers a shared API contract for clients and servers, giving you end-to-end type safety without code generation.
 
 ### Features
 
@@ -38,12 +29,10 @@ ts-rest offers a simple way to define a contract for your API, which can be both
 - RPC-like client side API ⚡️
 - Small Bundle Size 📉
 - No Code Generation 🏃‍♀️
-- Zod support for runtime validation 🔒
+- Standard Schema support for runtime validation, including modern Zod and Valibot 🔒
 - Full optional OpenAPI integration 📝
 
-<div align="center">
-  <h3>👉 Start reading the official <a href="https://ts-rest.com/docs/quickstart?utm_source=github&utm_medium=documentation&utm_campaign=readme">Quickstart Guide</a> 👈</h3>
-</div>
+Read the [development quickstart](apps/docs/content/docs/quickstart.mdx).
 
 ### Super Simple Example
 
@@ -95,9 +84,7 @@ const result = await client.getPosts({
 
 Create a contract, implement it on your server then consume it in your client. Incrementally adopt, trial it with your team, then get shipping faster.
 
-<div align="center">
-  <h3>👉 Start reading the official <a href="https://ts-rest.com/docs/quickstart?utm_source=github&utm_medium=documentation&utm_campaign=readme">Quickstart Guide</a> 👈</h3>
-</div>
+Read the [development quickstart](apps/docs/content/docs/quickstart.mdx) and the [prerelease migration guide](apps/docs/content/docs/ts-restless-migration.mdx).
 
 ## Workspace development
 
@@ -154,9 +141,9 @@ MASSIVE Thanks to all of these wonderful people ([emoji key](https://allcontribu
 
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
-## Star History
+## Upstream star history
 
-Since our first commit in 2022 we've been growing steadily. We're proud of our progress and we're excited about the future.
+The chart below records the original ts-rest project's history. Upstream contributors and licence notices are preserved in this fork.
 
 <div align="center">
 <a href="https://star-history.com/#ts-rest/ts-rest&Timeline">
@@ -166,25 +153,4 @@ Since our first commit in 2022 we've been growing steadily. We're proud of our p
     <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=ts-rest/ts-rest&type=Timeline" />
   </picture>
 </a>
-</div>
-
-<div align="center" >
-  <div>Join us on Discord for help, feedback, and discussions!</div><br></br>
-  <a href="https://discord.gg/2Megk85k5a">
-    <img src="https://discordapp.com/api/guilds/1055855205960392724/widget.png?style=banner2" alt="Discord Shield"/>
-  </a>
-</div>
-
-<div  align="center">
-  <a
-    href="https://vercel.com/?utm_source=ts-rest&utm_campaign=oss"
-    target="_blank"
-    rel="noreferrer"
-  >
-    <img
-      src="https://ts-rest.com/img/powered-by-vercel.svg"
-      alt="Powered by Vercel"
-      height="40"
-    />
-  </a>
 </div>

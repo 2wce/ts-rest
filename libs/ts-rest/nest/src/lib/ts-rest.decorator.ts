@@ -9,7 +9,7 @@ import {
   SetMetadata,
   UseInterceptors,
 } from '@nestjs/common';
-import { AppRoute } from '@ts-rest/core';
+import { AppRoute } from '@ts-restless/core';
 import { TsRestInterceptor } from './ts-rest.interceptor';
 import {
   TsRestAppRouteMetadataKey,

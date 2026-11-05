@@ -1,23 +1,23 @@
 {
-  "name": "@ts-rest/fastify",
+  "name": "@ts-restless/fastify",
   "version": "3.52.1",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ts-rest/ts-rest.git",
+    "url": "https://github.com/2wce/ts-restless.git",
     "directory": "libs/ts-rest/fastify"
   },
   "license": "MIT",
   "peerDependencies": {
     "fastify": "^4.0.0",
-    "@ts-rest/core": "workspace:^",
+    "@ts-restless/core": "workspace:^",
     "zod": "^3.22.3 || ^4.0.0"
   },
   "scripts": {
     "build": "vp pack"
   },
   "devDependencies": {
-    "@ts-rest/core": "workspace:*",
-    "@ts-rest/build-config": "workspace:*",
+    "@ts-restless/core": "workspace:*",
+    "@ts-restless/build-config": "workspace:*",
     "zod": "catalog:"
   },
   "types": "./src/index.ts",
@@ -77,5 +77,10 @@
         "./src/zod3.ts"
       ]
     }
-  }
+  },
+  "bugs": {
+    "url": "https://github.com/2wce/ts-restless/issues"
+  },
+  "homepage": "https://github.com/2wce/ts-restless#readme",
+  "description": "ts-restless fastify integration for contract-first, end-to-end typed REST."
 }

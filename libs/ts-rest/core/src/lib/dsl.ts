@@ -333,7 +333,7 @@ export type AppRouteStrictStatusCodes = Omit<AppRoute, 'strictStatusCodes'> & {
 };
 
 /**
- * A router (or contract) in @ts-rest is a collection of more routers or
+ * A router (or contract) in @ts-restless is a collection of more routers or
  * individual routes
  */
 export type AppRouter = {

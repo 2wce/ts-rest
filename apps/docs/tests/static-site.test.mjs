@@ -45,3 +45,34 @@ test('exports a static 404 page with a link back to documentation', async () => 
   assert.match(html, /404 — Page not found/);
   assert.match(html, /Return to the docs/);
 });
+
+for (const [slug, packages] of [
+  [
+    'client/react-query-v5',
+    '@ts-restless/react-query@alpha @tanstack/react-query@5',
+  ],
+  [
+    'client/react-query-v4',
+    '@ts-restless/react-query@alpha @tanstack/react-query@4',
+  ],
+  [
+    'client/vue-query-v4',
+    '@ts-restless/vue-query@alpha @tanstack/vue-query',
+  ],
+  [
+    'recipies/frontend-only',
+    '@ts-restless/core@alpha @ts-restless/react-query@alpha',
+  ],
+]) {
+  test(`/${slug} tags each fork dependency for alpha while preserving peers`, async () => {
+    const html = await readFile(resolve(output, slug, 'index.html'), 'utf8');
+    const code = [...html.matchAll(/<pre\b[^>]*>([\s\S]*?)<\/pre>/g)].map(
+      (match) => match[1].replace(/<[^>]*>/g, ''),
+    );
+    // Tabs prerender only the selected pnpm panel; all managers share the same package list.
+    assert.ok(
+      code.some((text) => text.includes(`pnpm add ${packages}`)),
+      `Missing install command: pnpm add ${packages}`,
+    );
+  });
+}

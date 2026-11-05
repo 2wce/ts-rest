@@ -2,7 +2,7 @@
 
 import { createContext } from 'react';
 import * as React from 'react';
-import { AppRouter, ClientArgs } from '@ts-rest/core';
+import { AppRouter, ClientArgs } from '@ts-restless/core';
 import type { TsRestReactQueryClient } from '../types';
 
 export const TsrQueryClientContext = createContext<

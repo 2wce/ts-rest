@@ -1,5 +1,5 @@
-import { initServer } from '@ts-rest/fastify';
-import { apiBlog } from '@ts-rest/example-contracts';
+import { initServer } from '@ts-restless/fastify';
+import { apiBlog } from '@ts-restless/example-contracts';
 import { mockPostFixtureFactory } from './main';
 
 const s = initServer();

@@ -1,19 +1,19 @@
 ---
 title: 'Frontend Only'
-description: Want to gradually introduce ts-rest to your project?
+description: Want to gradually introduce ts-restless to your project?
 ---
 
-The ideal way to use `ts-rest` is to control both the client and server, however, we don't live in a perfect world where we can afford to rewrite everything at once! This guide will show you how to use `ts-rest` without a backend, commonly utilised to help migrate an existing application to `ts-rest`.
+The ideal way to use `ts-restless` is to control both the client and server, however, we don't live in a perfect world where we can afford to rewrite everything at once! This guide will show you how to use `ts-restless` without a backend, commonly utilised to help migrate an existing application to `ts-restless`.
 
-## Adding `@ts-rest` to your project
+## Adding `@ts-restless` to your project
 
-<InstallTabs packageName="@ts-rest/core @ts-rest/react-query" />
+<InstallTabs packageName="@ts-restless/core @ts-restless/react-query" />
 
-This command installs the core, and the `react-query` adapter. We strongly recommend using `react-query` as it is a fantastic way to handle many common problems with data fetching in react, and ts-rest provides first class support for it.
+This command installs the core, and the `react-query` adapter. We strongly recommend using `react-query` as it is a fantastic way to handle many common problems with data fetching in react, and ts-restless provides first class support for it.
 
 ## Initialise a Contract
 
-The first step is to create a contract, normally in the ts-rest docs we advise you to create this in a shared library, either in a monorepo or published to a package registry. However, for this guide we're going to create it in the same project as the client.
+The first step is to create a contract, normally in the ts-restless docs we advise you to create this in a shared library, either in a monorepo or published to a package registry. However, for this guide we're going to create it in the same project as the client.
 
 ```typescript
 const c = initContract();
@@ -89,4 +89,4 @@ You should probably put the client somewhere accessible to all components, possi
 
 ## Next Steps
 
-Now that you're using ts-rest in a non-breaking way you're in an excellent position to experiment with your team, if the experiment is successful you can start to migrate your backend to use ts-rest, all incrementally and without breaking your application!
+Now that you're using ts-restless in a non-breaking way you're in an excellent position to experiment with your team, if the experiment is successful you can start to migrate your backend to use ts-restless, all incrementally and without breaking your application!

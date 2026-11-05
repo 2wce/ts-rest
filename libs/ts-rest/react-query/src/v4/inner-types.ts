@@ -5,7 +5,7 @@ import {
   AppRouteQuery,
   AreAllPropertiesOptional,
   PartialClientInferRequest,
-} from '@ts-rest/core';
+} from '@ts-restless/core';
 import {
   DataResponse,
   ReactQueryClientArgs,

@@ -1,13 +1,13 @@
 ---
 title: 'Overview'
-description: The contract is the core of ts-rest, it defines the API contract between your server and client.
+description: The contract is the core of ts-restless, it defines the API contract between your server and client.
 ---
 
-The contract is the core of ts-rest - it defines the API specification that both your server and client adhere to. This ensures type-safety across your entire stack while keeping your API close to standard HTTP/REST principles.
+The contract is the core of ts-restless - it defines the API specification that both your server and client adhere to. This ensures type-safety across your entire stack while keeping your API close to standard HTTP/REST principles.
 
 ## Contract Location
 
-Many tweams who use `ts-rest` tent to put their contract in a shared place, whether that's a shared module in a monorepo, a shared folder in a single repo or a external package.
+Many tweams who use `ts-restless` tent to put their contract in a shared place, whether that's a shared module in a monorepo, a shared folder in a single repo or a external package.
 
 <Files>
   <Folder name="shared" defaultOpen>
@@ -36,7 +36,7 @@ You can define your contract fields such as `body`, `query`, `pathParams`, and `
 <Tabs items={['Zod', 'Valibot', 'Arktype', 'Plain Types']}>
   <Tab value="Zod">
 ```typescript twoslash title="contract.ts"
-import { initContract } from '@ts-rest/core';
+import { initContract } from '@ts-restless/core';
 import { z } from 'zod'; // [!code highlight]
 
 const c = initContract();
@@ -62,7 +62,7 @@ export const contract = c.router({
   </Tab>
   <Tab value="Valibot">
 ```typescript title="contract.ts"
-import { initContract } from '@ts-rest/core';
+import { initContract } from '@ts-restless/core';
 import * as v from 'valibot'; // [!code highlight]
 
 const c = initContract();
@@ -88,7 +88,7 @@ export const contract = c.router({
   </Tab>
   <Tab value="Arktype">
 ```typescript title="contract.ts"
-import { initContract } from '@ts-rest/core';
+import { initContract } from '@ts-restless/core';
 import { type } from 'arktype'; // [!code highlight]
 
 const c = initContract();
@@ -114,7 +114,7 @@ export const contract = c.router({
   </Tab>
   <Tab value="Plain Types">
 ```typescript title="contract.ts"
-import { initContract } from '@ts-rest/core';
+import { initContract } from '@ts-restless/core';
 
 const c = initContract();
 
@@ -144,11 +144,11 @@ export const contract = c.router({
 
 ### What can be validated?
 
-If you can send it, we can probably validate it - `ts-rest` supports `body`, `query`, `pathParams` and `headers` validation,
+If you can send it, we can probably validate it - `ts-restless` supports `body`, `query`, `pathParams` and `headers` validation,
 you can also pass a schema for the response types, allowing for bidirectional validation (no more oversharing data from an overzealous service method!).
 
 ```typescript twoslash title="validated-path-params.ts"
-import { initContract, ClientInferRequest } from '@ts-rest/core';
+import { initContract, ClientInferRequest } from '@ts-restless/core';
 import { z } from 'zod';
 const c = initContract();
 
@@ -196,7 +196,7 @@ Define path parameters by adding them to the `path` string with a colon `:` foll
 We automatically infer the path parameters from this string, and treat them as `string` by default.
 
 ```typescript twoslash title="path-params.ts"
-import { initContract, ClientInferRequest } from '@ts-rest/core';
+import { initContract, ClientInferRequest } from '@ts-restless/core';
 import { z } from 'zod';
 const c = initContract();
 
@@ -235,7 +235,7 @@ If you need to run validations or transformations on path parameters, define a s
 This allows you to do any form of validation or **transformations** you want.
 
 ```typescript twoslash title="validated-path-params.ts"
-import { initContract, ClientInferRequest } from '@ts-rest/core';
+import { initContract, ClientInferRequest } from '@ts-restless/core';
 import { z } from 'zod';
 const c = initContract();
 
@@ -274,7 +274,7 @@ import {
   initContract,
   ClientInferRequest,
   ServerInferRequest,
-} from '@ts-rest/core';
+} from '@ts-restless/core';
 import { z } from 'zod';
 const c = initContract();
 
@@ -315,7 +315,7 @@ Query parameters are always strings in their raw form, so they must be typed as 
 <Tabs items={['Zod', 'Valibot', 'Arktype', 'Plain Types']}>
   <Tab value="Zod">
 ```typescript  title="query-params.ts"
-import { initContract } from '@ts-rest/core';
+import { initContract } from '@ts-restless/core';
 import { z } from 'zod';
 const c = initContract();
 // ---cut---
@@ -338,7 +338,7 @@ export const contract = c.router({
   </Tab>
   <Tab value="Valibot">
 ```typescript  title="query-params.ts"
-import { initContract } from '@ts-rest/core';
+import { initContract } from '@ts-restless/core';
 import * as v from 'valibot';
 const c = initContract();
 // ---cut---
@@ -361,7 +361,7 @@ export const contract = c.router({
   </Tab>
   <Tab value="Arktype">
 ```typescript  title="query-params.ts"
-import { initContract } from '@ts-rest/core';
+import { initContract } from '@ts-restless/core';
 import { type } from 'arktype';
 const c = initContract();
 
@@ -384,7 +384,7 @@ export const contract = c.router({
   </Tab>
   <Tab value="Plain Types">
 ```typescript  title="query-params.ts"
-import { initContract } from '@ts-rest/core';
+import { initContract } from '@ts-restless/core';
 const c = initContract();
 
 export const contract = c.router({
@@ -408,12 +408,12 @@ export const contract = c.router({
 
 ### JSON Query Parameters
 
-You can configure ts-rest to encode/decode query parameters as JSON using the `jsonQuery` option. This allows you to use complex typed objects without string coercions.
+You can configure ts-restless to encode/decode query parameters as JSON using the `jsonQuery` option. This allows you to use complex typed objects without string coercions.
 
 <Tabs items={['Zod', 'Valibot', 'Arktype']}>
   <Tab value="Zod">
 ```typescript  title="json-query.ts"
-import { initContract } from '@ts-rest/core';
+import { initContract } from '@ts-restless/core';
 import { z } from 'zod';
 const c = initContract();
 
@@ -438,7 +438,7 @@ export const contract = c.router({
   </Tab>
   <Tab value="Valibot">
 ```typescript  title="json-query.ts"
-import { initContract } from '@ts-rest/core';
+import { initContract } from '@ts-restless/core';
 import * as v from 'valibot';
 const c = initContract();
 
@@ -463,7 +463,7 @@ export const contract = c.router({
   </Tab>
   <Tab value="Arktype">
 ```typescript  title="json-query.ts"
-import { initContract } from '@ts-rest/core';
+import { initContract } from '@ts-restless/core';
 import { type } from 'arktype';
 const c = initContract();
 
@@ -509,7 +509,7 @@ separately: a schema with a default can be optional for the client and required
 for the server.
 
 ```typescript twoslash title="header-input-output.ts"
-import { initContract, ClientInferRequest, ServerInferRequest } from '@ts-rest/core';
+import { initContract, ClientInferRequest, ServerInferRequest } from '@ts-restless/core';
 import { z } from 'zod';
 
 const c = initContract();
@@ -535,14 +535,14 @@ type HandlerHeaders = ServerInferRequest<typeof contract.read>['headers'];
 
 Whole-object Standard Schemas, including Zod 4 objects, are also supported.
 Define their input and output header keys in lowercase, matching the headers
-provided by HTTP adapters. ts-rest validates these opaque schemas directly;
+provided by HTTP adapters. ts-restless validates these opaque schemas directly;
 it does not inspect or rewrite their fields. Bridge older Zod 3 objects with
-`toStandardSchema` from `@ts-rest/core/zod3`.
+`toStandardSchema` from `@ts-restless/core/zod3`.
 
 <Tabs items={['Zod', 'Valibot', 'Arktype', 'Plain Types']}>
   <Tab value="Zod">
 ```typescript  title="headers.ts"
-import { initContract } from '@ts-rest/core';
+import { initContract } from '@ts-restless/core';
 import { z } from 'zod';
 const c = initContract();
 
@@ -564,7 +564,7 @@ export const contract = c.router({
   </Tab>
   <Tab value="Valibot">
 ```typescript  title="headers.ts"
-import { initContract } from '@ts-rest/core';
+import { initContract } from '@ts-restless/core';
 import * as v from 'valibot';
 const c = initContract();
 
@@ -586,7 +586,7 @@ export const contract = c.router({
   </Tab>
   <Tab value="Arktype">
 ```typescript  title="headers.ts"
-import { initContract } from '@ts-rest/core';
+import { initContract } from '@ts-restless/core';
 import { type } from 'arktype';
 const c = initContract();
 
@@ -608,7 +608,7 @@ export const contract = c.router({
   </Tab>
   <Tab value="Plain Types">
 ```typescript  title="headers.ts"
-import { initContract } from '@ts-rest/core';
+import { initContract } from '@ts-restless/core';
 const c = initContract();
 
 export const contract = c.router({
@@ -640,7 +640,7 @@ whole-object schemas validates both schemas instead; see the
 [Standard Schema migration guide](/standard-schema-migration#whole-object-headers).
 
 ```typescript twoslash title="base-headers.ts"
-import { initContract } from '@ts-rest/core';
+import { initContract } from '@ts-restless/core';
 import { z } from 'zod';
 const c = initContract();
 
@@ -704,7 +704,7 @@ headers: {
 Base headers are also inherited by nested contracts, so this is perfectly valid:
 
 ```typescript title="base-headers.ts" twoslash
-import { initContract, ClientInferRequest } from '@ts-rest/core';
+import { initContract, ClientInferRequest } from '@ts-restless/core';
 import { z } from 'zod';
 const c = initContract();
 
@@ -764,7 +764,7 @@ Define response types as a map of status codes to response schemas. Responses de
 </Callout>
 
 ```typescript title="responses.ts" twoslash
-import { initContract } from '@ts-rest/core';
+import { initContract } from '@ts-restless/core';
 import { z } from 'zod';
 const c = initContract();
 // ---cut---
@@ -791,7 +791,7 @@ export const contract = c.router({
 To define a non `application/json` response, you can use `c.otherResponse`:
 
 ```typescript title="responses.ts" twoslash
-import { initContract } from '@ts-rest/core';
+import { initContract } from '@ts-restless/core';
 import { z } from 'zod';
 const c = initContract();
 // ---cut---
@@ -822,7 +822,7 @@ import {
   initContract,
   ClientInferRequest,
   ServerInferResponseBody,
-} from '@ts-rest/core';
+} from '@ts-restless/core';
 const c = initContract();
 // ---cut---
 
@@ -849,7 +849,7 @@ type Response = ServerInferResponseBody<typeof contract.deletePokemon, 204>;
 A common practise in API design is to define common responses across all routes in your contract, typically for error responses. We support this with the `commonResponses` option.
 
 ```typescript title="common-responses.ts" twoslash
-import { initContract, ClientInferResponses } from '@ts-rest/core';
+import { initContract, ClientInferResponses } from '@ts-restless/core';
 const c = initContract();
 type Pokemon = {
   id: string;
@@ -906,10 +906,10 @@ export const contract = c.router({
 
 ## Metadata
 
-Attach metadata to your contract routes that can be accessed throughout ts-rest. This is useful for things like role-based access control or OpenAPI documentation.
+Attach metadata to your contract routes that can be accessed throughout ts-restless. This is useful for things like role-based access control or OpenAPI documentation.
 
 ```typescript title="metadata.ts"
-import { initContract } from '@ts-rest/core';
+import { initContract } from '@ts-restless/core';
 const c = initContract();
 
 export const contract = c.router({
@@ -942,7 +942,7 @@ export const contract = c.router({
 </Callout>
 
 ```typescript twoslash title="server.ts"
-import { initContract } from '@ts-rest/core';
+import { initContract } from '@ts-restless/core';
 
 const c = initContract();
 
@@ -974,10 +974,10 @@ Configure some extra behaviour with these contract options.
 
 ### Strict Status Codes
 
-By default, ts-rest allows any response status code. Enable `strictStatusCodes` to only allow status codes defined in your contract.
+By default, ts-restless allows any response status code. Enable `strictStatusCodes` to only allow status codes defined in your contract.
 
 ```typescript title="strict-status-codes.ts" twoslash
-import { initContract } from '@ts-rest/core';
+import { initContract } from '@ts-restless/core';
 const c = initContract();
 type Pokemon = {
   id: string;
@@ -1014,7 +1014,7 @@ export const contract = c.router(
 Add a prefix to all paths in your contract, useful for API versioning or modular routing.
 
 ```typescript title="path-prefix.ts" twoslash
-import { initContract } from '@ts-rest/core';
+import { initContract } from '@ts-restless/core';
 const c = initContract();
 type Pokemon = {
   id: string;
@@ -1056,7 +1056,7 @@ const fullPath = apiContract.pokemon.getPokemon.path;
 For better developer experience, you can add JSDoc comments to provide intellisense on your contract types.
 
 ```typescript title="intellisense.ts" twoslash
-import { initContract, ClientInferRequest, initClient } from '@ts-rest/core';
+import { initContract, ClientInferRequest, initClient } from '@ts-restless/core';
 import { z } from 'zod';
 const c = initContract();
 type Pokemon = {

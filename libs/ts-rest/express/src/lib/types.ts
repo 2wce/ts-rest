@@ -8,7 +8,7 @@ import {
   ServerInferRequest,
   ServerInferResponseBody,
   ServerInferResponses,
-} from '@ts-rest/core';
+} from '@ts-restless/core';
 import { Express, NextFunction, Response, Request } from 'express';
 import { RequestValidationError } from './request-validation-error';
 

@@ -1,6 +1,6 @@
 import fastify from 'fastify';
-import { initServer } from '@ts-rest/fastify';
-import { apiBlog, Post } from '@ts-rest/example-contracts';
+import { initServer } from '@ts-restless/fastify';
+import { apiBlog, Post } from '@ts-restless/example-contracts';
 import { getPost } from './get-post';
 
 export const mockPostFixtureFactory = (partial: Partial<Post>): Post => ({

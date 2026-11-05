@@ -14,8 +14,8 @@
     "vitest": "5.0.5"
   },
   "dependencies": {
-    "@ts-rest/core": "file:../../dist/packages/ts-rest-core.tgz",
-    "@ts-rest/express": "file:../../dist/packages/ts-rest-express.tgz",
+    "@ts-restless/core": "file:../../dist/packages/ts-restless-core.tgz",
+    "@ts-restless/express": "file:../../dist/packages/ts-restless-express.tgz",
     "express": "5.0.1",
     "valibot": "1.1.0",
     "body-parser": "2.0.2"

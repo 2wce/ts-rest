@@ -1,10 +1,10 @@
 {
-  "name": "@ts-rest/example-microservice-util-posts-api",
+  "name": "@ts-restless/example-microservice-util-posts-api",
   "version": "0.0.1",
   "type": "commonjs",
   "private": true,
   "dependencies": {
-    "@ts-rest/core": "workspace:*",
+    "@ts-restless/core": "workspace:*",
     "zod": "catalog:"
   },
   "exports": {

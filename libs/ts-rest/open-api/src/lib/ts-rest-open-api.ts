@@ -2,7 +2,7 @@ import {
   type AppRoute,
   type AppRouter,
   isAppRouteOtherResponse,
-} from '@ts-rest/core';
+} from '@ts-restless/core';
 import type {
   ExamplesObject,
   InfoObject,

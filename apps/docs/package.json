@@ -1,5 +1,5 @@
 {
-  "name": "@ts-rest/docs",
+  "name": "@ts-restless/docs",
   "version": "3.53.0",
   "private": true,
   "scripts": {
@@ -13,10 +13,10 @@
   },
   "dependencies": {
     "@shikijs/transformers": "4.5.0",
-    "@ts-rest/core": "workspace:*",
-    "@ts-rest/express": "workspace:*",
-    "@ts-rest/nest": "workspace:*",
-    "@ts-rest/react-query": "workspace:*",
+    "@ts-restless/core": "workspace:*",
+    "@ts-restless/express": "workspace:*",
+    "@ts-restless/nest": "workspace:*",
+    "@ts-restless/react-query": "workspace:*",
     "fumadocs-core": "16.17.7",
     "fumadocs-mdx": "15.4.8",
     "fumadocs-twoslash": "4.0.2",

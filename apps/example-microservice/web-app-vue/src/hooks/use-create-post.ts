@@ -1,4 +1,4 @@
-import { Post } from '@ts-rest/example-contracts';
+import { Post } from '@ts-restless/example-contracts';
 import { ref, watch } from 'vue';
 import { client } from '../api/client';
 

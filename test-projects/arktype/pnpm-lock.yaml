@@ -170,12 +170,12 @@ importers:
 
   .:
     dependencies:
-      '@ts-rest/core':
-        specifier: file:../../dist/packages/ts-rest-core.tgz
-        version: file:../../dist/packages/ts-rest-core.tgz(@types/node@22.13.1)
-      '@ts-rest/express':
-        specifier: file:../../dist/packages/ts-rest-express.tgz
-        version: file:../../dist/packages/ts-rest-express.tgz(@ts-rest/core@file:../../dist/packages/ts-rest-core.tgz(@types/node@22.13.1))(express@5.0.1)
+      '@ts-restless/core':
+        specifier: file:../../dist/packages/ts-restless-core.tgz
+        version: file:../../dist/packages/ts-restless-core.tgz(@types/node@22.13.1)
+      '@ts-restless/express':
+        specifier: file:../../dist/packages/ts-restless-express.tgz
+        version: file:../../dist/packages/ts-restless-express.tgz(@ts-restless/core@file:../../dist/packages/ts-restless-core.tgz(@types/node@22.13.1))(express@5.0.1)
       arktype:
         specifier: 2.1.20
         version: 2.1.20
@@ -552,8 +552,8 @@ packages:
     peerDependencies:
       '@testing-library/dom': '>=7.21.4'
 
-  '@ts-rest/core@file:../../dist/packages/ts-rest-core.tgz':
-    resolution: {integrity: sha512-chQGn85XyzrLES0gwVLdrz0ZAblOOs/l7YfWqfCDbBvcdTYtE1/rMlBnDJaStw0eS5FdXBNaodmy2aeKetnr/A==, tarball: file:../../dist/packages/ts-rest-core.tgz}
+  '@ts-restless/core@file:../../dist/packages/ts-restless-core.tgz':
+    resolution: {integrity: sha512-chQGn85XyzrLES0gwVLdrz0ZAblOOs/l7YfWqfCDbBvcdTYtE1/rMlBnDJaStw0eS5FdXBNaodmy2aeKetnr/A==, tarball: file:../../dist/packages/ts-restless-core.tgz}
     version: 3.52.1
     peerDependencies:
       '@types/node': ^18.18.7 || >=20.8.4
@@ -564,11 +564,11 @@ packages:
       zod:
         optional: true
 
-  '@ts-rest/express@file:../../dist/packages/ts-rest-express.tgz':
-    resolution: {integrity: sha512-9VK/PaCQ9R6EoZPQITNFBmwLOSV79T26a4z0m+oLk2Z5auUV7Pkp7KnZh4WxW9wCksQn2Jn8A8p7SjnLfcXlwg==, tarball: file:../../dist/packages/ts-rest-express.tgz}
+  '@ts-restless/express@file:../../dist/packages/ts-restless-express.tgz':
+    resolution: {integrity: sha512-9VK/PaCQ9R6EoZPQITNFBmwLOSV79T26a4z0m+oLk2Z5auUV7Pkp7KnZh4WxW9wCksQn2Jn8A8p7SjnLfcXlwg==, tarball: file:../../dist/packages/ts-restless-express.tgz}
     version: 3.52.1
     peerDependencies:
-      '@ts-rest/core': ^3.52.1
+      '@ts-restless/core': ^3.52.1
       express: ^4.0.0 || ^5.0.0
       zod: ^3.22.3 || ^4.0.0
     peerDependenciesMeta:
@@ -1776,13 +1776,13 @@ snapshots:
     dependencies:
       '@testing-library/dom': 10.4.2
 
-  '@ts-rest/core@file:../../dist/packages/ts-rest-core.tgz(@types/node@22.13.1)':
+  '@ts-restless/core@file:../../dist/packages/ts-restless-core.tgz(@types/node@22.13.1)':
     optionalDependencies:
       '@types/node': 22.13.1
 
-  '@ts-rest/express@file:../../dist/packages/ts-rest-express.tgz(@ts-rest/core@file:../../dist/packages/ts-rest-core.tgz(@types/node@22.13.1))(express@5.0.1)':
+  '@ts-restless/express@file:../../dist/packages/ts-restless-express.tgz(@ts-restless/core@file:../../dist/packages/ts-restless-core.tgz(@types/node@22.13.1))(express@5.0.1)':
     dependencies:
-      '@ts-rest/core': file:../../dist/packages/ts-rest-core.tgz(@types/node@22.13.1)
+      '@ts-restless/core': file:../../dist/packages/ts-restless-core.tgz(@types/node@22.13.1)
       express: 5.0.1
 
   '@types/aria-query@5.0.4': {}

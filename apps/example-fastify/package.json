@@ -8,13 +8,13 @@
     "start": "node dist/main.cjs"
   },
   "devDependencies": {
-    "@ts-rest/core": "workspace:*",
+    "@ts-restless/core": "workspace:*",
     "vite-plus": "catalog:",
-    "@ts-rest/build-config": "workspace:*"
+    "@ts-restless/build-config": "workspace:*"
   },
   "dependencies": {
-    "@ts-rest/example-contracts": "workspace:*",
-    "@ts-rest/fastify": "workspace:*",
+    "@ts-restless/example-contracts": "workspace:*",
+    "@ts-restless/fastify": "workspace:*",
     "fastify": "catalog:"
   }
 }

@@ -1,5 +1,5 @@
-import { apiBlog } from '@ts-rest/example-contracts';
-import { initQueryClient } from '@ts-rest/vue-query';
+import { apiBlog } from '@ts-restless/example-contracts';
+import { initQueryClient } from '@ts-restless/vue-query';
 
 export const client = initQueryClient(apiBlog, {
   baseUrl: 'http://localhost:3334',

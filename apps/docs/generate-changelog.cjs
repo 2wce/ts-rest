@@ -26,7 +26,7 @@ function parseChangelog(filePath, packageName) {
     const line = lines[i];
 
     // Skip the package title line
-    if (line.startsWith('# @ts-rest/')) {
+    if (line.startsWith('# @ts-restless/')) {
       continue;
     }
 
@@ -187,7 +187,7 @@ function generateMDX(versionMap) {
 
   let content = `---
 title: Changelog
-description: This is a combined changelog for all ts-rest packages, automatically generated from individual package changelogs.
+description: Combined ts-restless changelog, including historical upstream ts-rest releases.
 
 ---
 
@@ -210,7 +210,8 @@ description: This is a combined changelog for all ts-rest packages, automaticall
     for (const entry of entries) {
       if (entry.changes.length > 0) {
         for (const change of entry.changes) {
-          const githubUrl = `https://github.com/ts-rest/ts-rest/commit/${change.hash}`;
+          const repository = Number(version.split('.')[0]) >= 4 ? '2wce/ts-restless' : 'ts-rest/ts-rest';
+          const githubUrl = `https://github.com/${repository}/commit/${change.hash}`;
           content += `- ([${change.hash}](${githubUrl})) **${entry.package}**: ${change.description}\n`;
         }
       } else if (entry.hasContent) {

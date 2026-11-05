@@ -1,4 +1,4 @@
-import { initContract, TsRestResponseError } from '@ts-rest/core';
+import { initContract, TsRestResponseError } from '@ts-restless/core';
 import {
   nestControllerContract,
   NestControllerInterface,

@@ -1,7 +1,7 @@
-import { createExpressEndpoints, initServer } from '@ts-rest/express';
+import { createExpressEndpoints, initServer } from '@ts-restless/express';
 import express from 'express';
 import * as bodyParser from 'body-parser';
-import { initClient, initContract } from '@ts-rest/core';
+import { initClient, initContract } from '@ts-restless/core';
 
 export type Equal<a, b> =
   (<T>() => T extends a ? 1 : 2) extends <T>() => T extends b ? 1 : 2

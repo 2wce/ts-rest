@@ -1,6 +1,6 @@
 {
   "next": {
-    "name": "@ts-rest/next",
+    "name": "@ts-restless/next",
     "peerDependencies": {
       "next": "^12.0.0 || ^13.0.0 || ^14.0.0 || ^15.0.0 || ^16.0.0",
       "zod": "^3.22.3 || ^4.0.0"
@@ -13,14 +13,14 @@
     }
   },
   "vue-query": {
-    "name": "@ts-rest/vue-query",
+    "name": "@ts-restless/vue-query",
     "peerDependencies": {
       "@tanstack/vue-query": "^4.0.0"
     },
     "subpaths": ["./package.json", "."]
   },
   "react-query": {
-    "name": "@ts-rest/react-query",
+    "name": "@ts-restless/react-query",
     "peerDependencies": {
       "@tanstack/react-query": "^4.0.0 || ^5.0.0",
       "react": "^16.8.0 || ^17.0.0 || ^18.0.0"
@@ -28,7 +28,7 @@
     "subpaths": ["./package.json", ".", "./tanstack", "./v5"]
   },
   "core": {
-    "name": "@ts-rest/core",
+    "name": "@ts-restless/core",
     "peerDependencies": {
       "@types/node": "^18.18.7 || >=20.8.4",
       "zod": "^3.22.3 || ^4.0.0"
@@ -44,7 +44,7 @@
     "subpaths": ["./package.json", ".", "./zod3"]
   },
   "express": {
-    "name": "@ts-rest/express",
+    "name": "@ts-restless/express",
     "peerDependencies": {
       "express": "^4.0.0 || ^5.0.0",
       "zod": "^3.22.3 || ^4.0.0"
@@ -57,7 +57,7 @@
     }
   },
   "serverless": {
-    "name": "@ts-rest/serverless",
+    "name": "@ts-restless/serverless",
     "peerDependencies": {
       "@azure/functions": "^4.0.0",
       "@types/aws-lambda": "^8.10.115",
@@ -89,21 +89,21 @@
     ]
   },
   "solid-query": {
-    "name": "@ts-rest/solid-query",
+    "name": "@ts-restless/solid-query",
     "peerDependencies": {
       "@tanstack/solid-query": "^4.0.0"
     },
     "subpaths": ["./package.json", "."]
   },
   "open-api": {
-    "name": "@ts-rest/open-api",
+    "name": "@ts-restless/open-api",
     "peerDependencies": {
       "zod": "^3.22.3"
     },
     "subpaths": ["./package.json", "."]
   },
   "nest": {
-    "name": "@ts-rest/nest",
+    "name": "@ts-restless/nest",
     "peerDependencies": {
       "@nestjs/common": "^9.0.0 || ^10.0.0 || ^11.0.0 || ^12.0.0",
       "@nestjs/core": "^9.0.0 || ^10.0.0 || ^11.0.0 || ^12.0.0",
@@ -118,7 +118,7 @@
     }
   },
   "fastify": {
-    "name": "@ts-rest/fastify",
+    "name": "@ts-restless/fastify",
     "peerDependencies": {
       "fastify": "^4.0.0",
       "zod": "^3.22.3 || ^4.0.0"

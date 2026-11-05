@@ -1,12 +1,12 @@
 import { Controller, Get, Query } from '@nestjs/common';
-import { apiBlog } from '@ts-rest/example-contracts';
+import { apiBlog } from '@ts-restless/example-contracts';
 import {
   nestControllerContract,
   NestControllerInterface,
   NestRequestShapes,
   TsRest,
   TsRestRequest,
-} from '@ts-rest/nest';
+} from '@ts-restless/nest';
 import { PostService } from './post.service';
 
 const c = nestControllerContract(apiBlog);

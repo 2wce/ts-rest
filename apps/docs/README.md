@@ -17,12 +17,12 @@ Open http://localhost:3000. Build and preview production from the root:
 
 ```sh
 pnpm docs:build
-pnpm --filter @ts-rest/docs test
+pnpm --filter @ts-restless/docs test
 pnpm docs:start
 ```
 
 `docs:start` previews the built site. Development and preview tasks are never
-cached. Package scripts also support `pnpm --filter @ts-rest/docs dev`, `build`,
+cached. Package scripts also support `pnpm --filter @ts-restless/docs dev`, `build`,
 `start` and `typecheck`. The build includes uncached native TypeScript checking. The root esbuild catalog
 peer keeps docs and the root Vite+ CLI on the same Vite runtime.
 

@@ -72,7 +72,7 @@ A01's [support inventory](support-inventory.md) completes the manifest, lockfile
 
 ## Release handling
 
-The current [Changesets configuration](../.changeset/config.json) places `@ts-rest/*` in a fixed group, so compatibility removal currently requires a coordinated major release. Independent adapter versioning can later reduce the release impact through A17; it is not a prerequisite for documenting the policy.
+The current [Changesets configuration](../.changeset/config.json) places `@ts-restless/*` in a fixed group, so compatibility removal currently requires a coordinated major release. Independent adapter versioning can later reduce the release impact through A17; it is not a prerequisite for documenting the policy.
 
 Use support documentation, migration guides and release notes to communicate retirement. Avoid blanket npm deprecation of releases that still contain supported integrations or entry points. Any npm deprecation must identify a specific obsolete or unusable release and explain the replacement accurately.
 

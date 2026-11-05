@@ -1,5 +1,5 @@
 ---
-'@ts-rest/express': minor
+'@ts-restless/express': minor
 ---
 
-add express v5 support to @ts-rest/express
+add express v5 support to @ts-restless/express

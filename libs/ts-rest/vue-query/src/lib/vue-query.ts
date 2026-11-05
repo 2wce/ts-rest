@@ -8,7 +8,7 @@ import {
   getRouteQuery,
   isAppRoute,
   Without,
-} from '@ts-rest/core';
+} from '@ts-restless/core';
 import { DataReturnQuery, getRouteUseQuery } from './use-query';
 import {
   DataReturnInfiniteQuery,

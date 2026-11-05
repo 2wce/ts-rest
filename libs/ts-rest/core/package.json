@@ -1,8 +1,8 @@
 {
-  "name": "@ts-rest/core",
+  "name": "@ts-restless/core",
   "version": "3.52.1",
   "private": false,
-  "description": "RPC-like experience over a regular REST API, with type safe server implementations \ud83e\ude84",
+  "description": "Contract-first, end-to-end typed REST for TypeScript. A maintained fork of ts-rest.",
   "keywords": [
     "rpc",
     "rest",
@@ -14,7 +14,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/ts-rest/ts-rest.git",
+    "url": "https://github.com/2wce/ts-restless.git",
     "directory": "libs/ts-rest/core"
   },
   "license": "MIT",
@@ -41,7 +41,7 @@
     "./zod3": "./src/zod3.ts"
   },
   "devDependencies": {
-    "@ts-rest/build-config": "workspace:*",
+    "@ts-restless/build-config": "workspace:*",
     "zod-legacy": "npm:zod@3.22.3",
     "zod": "catalog:"
   },
@@ -91,5 +91,9 @@
         "./src/zod3.ts"
       ]
     }
-  }
+  },
+  "bugs": {
+    "url": "https://github.com/2wce/ts-restless/issues"
+  },
+  "homepage": "https://github.com/2wce/ts-restless#readme"
 }

@@ -3,7 +3,7 @@ import { app, contract } from './index';
 import {
   generateOpenApiAsync,
   type SchemaTransformerAsync,
-} from '@ts-rest/open-api';
+} from '@ts-restless/open-api';
 import request from 'supertest';
 import { z } from 'zod';
 import { convert } from '@openapi-contrib/json-schema-to-openapi-schema';

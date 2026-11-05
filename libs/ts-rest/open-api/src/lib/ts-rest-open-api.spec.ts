@@ -1,4 +1,4 @@
-import { initContract, type AppRoute } from '@ts-rest/core';
+import { initContract, type AppRoute } from '@ts-restless/core';
 import { z } from 'zod';
 import { generateOpenApi } from './ts-rest-open-api';
 import { extendApi } from '@anatine/zod-openapi';

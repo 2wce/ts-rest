@@ -1,6 +1,6 @@
 import { defineConfig } from 'vite-plus';
 import swc from 'unplugin-swc';
-import { nodePack, decoratorOptions } from '@ts-rest/build-config';
+import { nodePack, decoratorOptions } from '@ts-restless/build-config';
 
 export default defineConfig({
   pack: {

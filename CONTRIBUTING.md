@@ -81,7 +81,7 @@ owns build ordering; these references are for editor/checker project selection,
 and are not a `tsc --build` pipeline. Source-only private libraries and Node
 examples need one config. Next retains its framework-specific config.
 
-The private `@ts-rest/build-config` workspace package shares the library pack
+The private `@ts-restless/build-config` workspace package shares the library pack
 task, cache inputs/outputs, ESM/CJS builds, Node example pack preset
 and Nest decorator transform. Consumers declare it in `devDependencies` as
 `workspace:*` and import presets by package name. It owns its Vite+/SWC tooling
@@ -163,7 +163,7 @@ JavaScript editor SDK.
 ## Example database
 
 `libs/example-database` owns the shared PostgreSQL schema, Prisma CLI and client
-for Nest and Next. Those applications depend on `@ts-rest/example-database`;
+for Nest and Next. Those applications depend on `@ts-restless/example-database`;
 published ts-rest libraries do not. Workspace installation does not generate a
 Prisma client. `pnpm examples:generate` generates it explicitly. Vite+ task
 dependencies also generate it before Nest/Next build and development tasks and
@@ -173,7 +173,7 @@ lint and formatting.
 
 `pnpm build` and `pnpm exec vp test run --project core` do not run generation.
 To install only core and its dependencies, use
-`pnpm --filter @ts-rest/core... install --frozen-lockfile` in a fresh checkout.
+`pnpm --filter @ts-restless/core... install --frozen-lockfile` in a fresh checkout.
 The [database README](libs/example-database/README.md) describes PostgreSQL setup.
 
 ## Example build outputs
@@ -227,14 +227,19 @@ these runs.
 
 ## Release automation
 
-Releases are paused while the fork groundwork lands. Pushes to `main` do not
-trigger the stable release workflow, and both stable and prerelease jobs are
-blocked, including manual runs. Build/test CI remains active. Changesets and
-release scripts stay in place for a future release.
+Prereleases use Changesets release PRs after successful `main` CI and all
+compatibility fixtures in `.github/workflows/build-test.yml`. Pending Changesets
+open/update the coordinated numbered prerelease PR. Merging it and passing CI
+publishes its versions under the tag in committed Changesets prerelease state.
+The dedicated release PR credential ensures those PRs trigger normal CI.
 
-To resume releases, restore the `push` trigger for `main` in
-`.github/workflows/release.yml` and remove the `if: ${{ false }}` job guards from
-both release workflows.
+The job defaults off until the GitHub `RELEASE_PR_TOKEN` credential and each package's npm trusted publisher
+are configured and the identity branch passes review/CI. Publishing uses OIDC
+with provenance and no npm write-token secret. Activation uses repository
+variable `PRERELEASE_ENABLED=true`. See the [prerelease checklist](docs/prerelease-checklist.md)
+for credentials, artifacts, release notes and registry verification. Stable
+publishing remains paused in `.github/workflows/release.yml` and needs its own
+release decision.
 
 ## Host integration examples
 
@@ -260,7 +265,7 @@ on newer compilers.
 pnpm install --frozen-lockfile
 pnpm docs:dev
 pnpm docs:build
-pnpm --filter @ts-rest/docs test
+pnpm --filter @ts-restless/docs test
 pnpm docs:start
 ```
 
@@ -306,7 +311,7 @@ readmes and the workspace license. Packing uses normal pnpm metadata handling;
 development dependency metadata may remain in the manifest, but consumers do not
 install those dependencies.
 
-`pnpm pack:packages` creates `dist/packages/ts-rest-<package>.tgz` without publishing.
+`pnpm pack:packages` creates `dist/packages/ts-restless-<package>.tgz` without publishing.
 `pnpm test:packages` runs real Changesets versioning probes and installs these
 tarballs into a temporary consumer. It checks ESM/CJS exports, declaration
 resolution, public peer ranges, Nest metadata and React directives.
@@ -319,16 +324,16 @@ leaves their range, avoiding a major adapter bump for a compatible core minor.
 This is configured through Changesets' built-in experimental
 `onlyUpdatePeerDependentsWhenOutOfRange` option and covered by release probes.
 
-Prereleases use Changesets snapshots: `pnpm version-packages --snapshot rc`
-produces versions such as `3.53.0-rc.20261020120000` and native caret core peers.
-Snapshot versions are disposable CI outputs. Versioning consumes the checkout
-copies of the changesets; the workflow does not commit or push those changes, so
-the stable branch retains its pending changesets. No persistent prerelease mode
-is needed. The disabled prerelease workflow
-publishes them with `changeset publish --tag <tag>`. There is no registry-version
-lookup or custom peer normalizer.
+Numbered prereleases use committed Changesets prerelease state. Automation runs
+`pnpm prerelease:version`, which enters alpha mode only when no state exists,
+versions the original manifests and refreshes the lockfile. The version PR
+contains that state and its changelogs for review. `pnpm prerelease:verify` checks
+the coordinated new-scope versions and tag; `pnpm prerelease:publish` repeats
+validation, builds and invokes `changeset publish --tag <committed-tag>`.
+Snapshot commands remain available for disposable versioning probes and are
+separate from the numbered publication flow.
 
-Once publishing is ready to resume, `pnpm release` builds the libraries and runs
-`changeset publish` from the source workspace. It does not generate release
-manifests or copy Changesets into a second workspace. Both release workflows
-remain disabled during the fork groundwork.
+There is no generated release workspace or custom peer normalizer. Changesets
+owns pending-change detection and registry checks. The stable `pnpm release`
+script remains available, but its workflow stays disabled; the prerelease
+coordinator rejects stable or exited state.

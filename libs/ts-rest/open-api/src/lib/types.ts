@@ -1,4 +1,4 @@
-import { AppRoute, StandardSchemaV1 } from '@ts-rest/core';
+import { AppRoute, StandardSchemaV1 } from '@ts-restless/core';
 import { ParameterObject, ResponseObject, SchemaObject } from 'openapi3-ts';
 
 type SchemaTransformerArgs = {

@@ -1,6 +1,6 @@
 # Fork adoption and first-release backlog
 
-**Recorded:** 2026-11-04. **Source baseline:** merged main `2c4f2e379e0e949c30befad180aae1c1bfa28332`. **Status:** Prioritized future fixes; documenting an issue is not its implementation or release. The fork's Standard Schema core/adapter separation and header inference are merged groundwork. Packages still use upstream identity, and publication remains disabled.
+**Recorded:** 2026-11-04. **Source baseline:** merged main `2c4f2e379e0e949c30befad180aae1c1bfa28332`. **Status:** Prioritized future fixes; documenting an issue is not its implementation or release. Standard Schema core/adapter separation, header inference and A01/A02 are merged groundwork. The identity branch implements `@ts-restless/*`; publishing remains guarded pending reviewed release artifacts, authentication and current-commit CI.
 
 **Goal:** Make the fork a credible maintained replacement by resolving concrete adoption blockers, with tested migration and compatibility claims. Extend existing inference, validation, converters and transport logic where possible. The [adapter maintenance epic](superpowers/plans/2026-11-04-adapter-maintenance-epic.md) reduces future upkeep incrementally; completing all nineteen slices is not a launch prerequisite.
 
@@ -13,7 +13,7 @@
 
 ## F01 — Current TanStack Query v5 infinite types
 
-**Evidence:** upstream [#815](https://github.com/ts-rest/ts-rest/issues/815), [#825](https://github.com/ts-rest/ts-rest/issues/825); existing fork [#5](https://github.com/2wce/ts-rest/issues/5). [hooks-options.ts](../libs/ts-rest/react-query-v5/src/v5/types/hooks-options.ts) supplies six native generics to infinite/suspense-infinite options. The workspace pins Query `5.51.11` and query-core `5.51.9`; upstream reports concern later five-argument signatures. This code coupling is confirmed; the exact current-version failure must be reproduced against a recorded consumer before fixing.
+**Evidence:** upstream [#815](https://github.com/ts-rest/ts-rest/issues/815), [#825](https://github.com/ts-rest/ts-rest/issues/825); existing fork [#5](https://github.com/2wce/ts-restless/issues/5). [hooks-options.ts](../libs/ts-rest/react-query-v5/src/v5/types/hooks-options.ts) supplies six native generics to infinite/suspense-infinite options. The workspace pins Query `5.51.11` and query-core `5.51.9`; upstream reports concern later five-argument signatures. This code coupling is confirmed; the exact current-version failure must be reproduced against a recorded consumer before fixing.
 
 **Deliverable:** Extend the existing option/inference mapping to the approved Query5 baseline/current line, preserving request, selected data, page parameters, errors, initial data and suspense behavior. Avoid copying a fresh hierarchy of upstream overloads. A12/A13 native composition can later reduce this coupling.
 
@@ -53,7 +53,7 @@
 
 ## F05 — Modern validator-independent OpenAPI
 
-**Evidence:** [#813](https://github.com/ts-rest/ts-rest/issues/813), [#839](https://github.com/ts-rest/ts-rest/issues/839), existing fork [#4](https://github.com/2wce/ts-rest/issues/4). [The generator](../libs/ts-rest/open-api/src/lib/ts-rest-open-api.ts) defaults to Zod3 conversion and emits OpenAPI `3.0.2`. Converter hooks already exist; the Zod4 fixture uses an explicit async converter. Core Standard Schema support does not supply JSON Schema conversion automatically.
+**Evidence:** [#813](https://github.com/ts-rest/ts-rest/issues/813), [#839](https://github.com/ts-rest/ts-rest/issues/839), existing fork [#4](https://github.com/2wce/ts-restless/issues/4). [The generator](../libs/ts-rest/open-api/src/lib/ts-rest-open-api.ts) defaults to Zod3 conversion and emits OpenAPI `3.0.2`. Converter hooks already exist; the Zod4 fixture uses an explicit async converter. Core Standard Schema support does not supply JSON Schema conversion automatically.
 
 **Deliverable:** Extend existing converter/traversal/reference logic with explicit supported OpenAPI dialects and validator-independent converter selection. Keep legacy Zod3 compatibility explicit. Specify sync versus async transformer pairing and conversion failure behavior; do not infer arbitrary validator JSON Schema from Standard Schema validation alone.
 
@@ -63,11 +63,13 @@
 
 ## F06 — Fork identity, migration and release readiness
 
-**Evidence:** existing fork [#6](https://github.com/2wce/ts-rest/issues/6). Public package metadata still points to the upstream repository/namespace; [Changesets](../.changeset/config.json) coordinates packages; stable/prerelease workflows are guarded off. The migration guide describes an unreleased major. These launch prerequisites are confirmed; release automation being present is not authorization to enable it.
+**Evidence:** existing fork [#6](https://github.com/2wce/ts-restless/issues/6). The identity branch updates package names and repository/issue routing, retains coordinated [Changesets](../.changeset/config.json), verifies native tarball consumers and initial version dry runs, and prepares Changesets release PRs and automatic numbered prerelease publication after main CI and compatibility fixtures pass. The prerelease job defaults off behind `PRERELEASE_ENABLED`; stable publishing remains guarded off. The migration guide describes the unreleased v4; review and publishing gates still apply.
 
-**Deliverable:** Approve publication names/ownership and import migration; reconcile repository metadata, README/docs/examples, package exports and Changesets against actual major breaks. Define supported lines, semver, prerelease validation, maintainer/security/issue routes and the first stable release checklist. Keep disabled release guards through review.
+**Identity decisions adopted 2026-11-04:** `ts-restless`, project-owned npm organization `ts-restless` with the user as initial owner, public packages under `@ts-restless/*`, and first stable version `4.0.0`. Authenticated checks confirm `2wce` owns the npm organization, and private vulnerability reporting is enabled. Interim public `4.0.0-alpha.*` releases are approved once artifact/authentication/CI gates pass; F01–F05 can follow in successive prereleases. See the [identity design](superpowers/specs/2026-11-04-ts-restless-identity-design.md) and [prerelease checklist](prerelease-checklist.md). Package renaming is implemented on the identity branch; release versioning and publication remain unperformed.
 
-**Acceptance:** native tarballs with correct identity/exports/peers, strict copyable migration consumers and all applicable source/native/CI fixture checks pass for promised lines; release/versioning dry-run evidence matches package relationships. A separate explicit release decision authorizes enabling workflows or publishing. No package renaming, versioning or publishing is part of this backlog documentation.
+**Deliverable:** Implement the adopted identity and import migration; reconcile repository metadata, README/docs/examples, package exports and Changesets against actual major breaks. Define supported lines, semver, prerelease validation, maintainer/security/issue routes and the first stable release checklist. Keep disabled release guards through review.
+
+**Acceptance:** native tarballs with correct identity/exports/peers, strict copyable migration consumers and all applicable source/native/CI fixture checks pass for promised lines; release/versioning dry-run evidence matches package relationships. Activate the approved release-PR prerelease path only after its credential/artifact/CI gates pass; stable publishing remains a separate explicit release decision. No package renaming, versioning or publishing is part of this backlog documentation.
 
 **Dependency:** Selected launch fixes and support claims must be verified. A17 independent versions can follow separately; it is not required to ship the fork under the current coordinated scheme.
 

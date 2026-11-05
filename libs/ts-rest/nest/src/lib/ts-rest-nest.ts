@@ -3,7 +3,7 @@ import {
   AppRouter,
   Without,
   ServerInferResponses,
-} from '@ts-rest/core';
+} from '@ts-restless/core';
 import { TsRestRequestShape } from './ts-rest-request.decorator';
 
 type AppRouterMethodShape<T extends AppRoute> = (

@@ -1,13 +1,13 @@
 ---
 title: 'Defining Routers'
-description: How to use ts-rest with Defining Routers
+description: How to use ts-restless with Defining Routers
 ---
 
 For all the serverless handlers we export a helper object that can help you define your router implementation separate from the main handler function.
 You can also use it to split up the implementation for different parts of your application. This can be useful for organizing your code and keeping it maintainable.
 
 ```typescript
-import { tsr } from '@ts-rest/serverless/aws';
+import { tsr } from '@ts-restless/serverless/aws';
 import { contract } from './contract';
 
 export const postsRouter = tsr.router(contract.posts, {
@@ -34,7 +34,7 @@ Doing this however, you will lose any type-inference for the request object if y
 To get around this, you can manually add back the extended part in the generics of `tsr.router` function.
 
 ```typescript
-import { tsr } from '@ts-rest/serverless/aws';
+import { tsr } from '@ts-restless/serverless/aws';
 import { contract } from './contract';
 
 export const postsRouter = tsr.routerWithMiddleware(contract)<

@@ -5,7 +5,7 @@ import {
   InferResponseUndefinedStatusCodes,
   exhaustiveGuard,
   isUnknownErrorResponse,
-} from '@ts-rest/core';
+} from '@ts-restless/core';
 
 type FetchError = Error;
 

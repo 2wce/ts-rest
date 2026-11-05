@@ -19,13 +19,13 @@
     "@types/supertest": "catalog:",
     "@types/swagger-ui-express": "catalog:",
     "vite-plus": "catalog:",
-    "@ts-rest/build-config": "workspace:*"
+    "@ts-restless/build-config": "workspace:*"
   },
   "dependencies": {
-    "@ts-rest/core": "workspace:*",
-    "@ts-rest/example-contracts": "workspace:*",
-    "@ts-rest/express": "workspace:*",
-    "@ts-rest/open-api": "workspace:*",
+    "@ts-restless/core": "workspace:*",
+    "@ts-restless/example-contracts": "workspace:*",
+    "@ts-restless/express": "workspace:*",
+    "@ts-restless/open-api": "workspace:*",
     "body-parser": "catalog:",
     "cors": "catalog:",
     "express": "catalog:",

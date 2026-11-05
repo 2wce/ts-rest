@@ -3,9 +3,11 @@ title: Quickstart
 description: Let's get started, making a basic contract, server, and client.
 ---
 
+This quickstart describes the **ts-restless v4 development checkout** and compiles against its `@ts-restless/*` packages. No library release is available yet; npm's `0.0.0-stage` registration placeholders contain no library code and must not be installed. Installation commands apply after the first alpha is available. See the [prerelease and migration guide](/ts-restless-migration) for release status. Published upstream v3 packages do not include this fork's major changes.
+
 <Steps>
   <Step>
-    <p>Create a contract with `@ts-rest/core`</p>
+    <p>Create a contract with `@ts-restless/core`</p>
   </Step>
   <Step>
     <p>Create a server implementation with one of our supported frameworks</p>
@@ -17,11 +19,11 @@ description: Let's get started, making a basic contract, server, and client.
 
 ## Installation
 
-Install the `@ts-rest/core` package, this is the core package that provides the type-safe contract, and a basic fetch based client.
+The core package provides the type-safe contract and a basic Fetch client. Until the new-scope packages are published, these examples use this fork's development checkout.
 
-<InstallTabs packageName="@ts-rest/core" />
+<InstallTabs packageName="@ts-restless/core" />
 
-Enable `strict` in your `tsconfig.json`, this is required to work with some ts-rest functionality, and often downstream libraries like [Zod](https://github.com/colinhacks/zod#requirements)
+Enable `strict` in your `tsconfig.json`, this is required to work with some ts-restless functionality, and often downstream libraries like [Zod](https://github.com/colinhacks/zod#requirements)
 
 ```json title="tsconfig.json"
   "compilerOptions": {
@@ -46,7 +48,7 @@ This provides **runtime validation** of your contract, as opposed to just type s
   <Tab value="Zod">
 
 ```typescript title="contract.ts"
-import { initContract } from '@ts-rest/core';
+import { initContract } from '@ts-restless/core';
 import { z } from 'zod';
 
 const c = initContract();
@@ -71,7 +73,7 @@ export const pokemonContract = c.router({
   <Tab value="Valibot">
 
 ```typescript title="contract.ts"
-import { initContract } from '@ts-rest/core';
+import { initContract } from '@ts-restless/core';
 import * as v from 'valibot';
 
 const c = initContract();
@@ -96,7 +98,7 @@ export const pokemonContract = c.router({
   <Tab value="Arktype">
 
 ```typescript title="contract.ts"
-import { initContract } from '@ts-rest/core';
+import { initContract } from '@ts-restless/core';
 import { type } from 'arktype';
 
 const c = initContract();
@@ -121,7 +123,7 @@ export const pokemonContract = c.router({
   <Tab value="None">
 
 ```typescript title="contract.ts"
-import { initContract } from '@ts-rest/core';
+import { initContract } from '@ts-restless/core';
 
 const c = initContract();
 
@@ -148,14 +150,14 @@ export const pokemonContract = c.router({
 
 <Tabs items={['Nest', 'Express', 'Fastify', 'Next']}>
   <Tab value="Nest">
-  <InstallTabs packageName="@ts-rest/nest" />
-<p>ts-rest offers a unique way to create a fully type safe REST API server,
+  <InstallTabs packageName="@ts-restless/nest" />
+<p>ts-restless offers a unique way to create a fully type safe REST API server,
 normally Nest APIs are extremely powerful, but hard to make type safe.</p>
 
-Let's add `@ts-rest/nest` to a basic Nest controller:
+Let's add `@ts-restless/nest` to a basic Nest controller:
 
 ```typescript title="pokemon.controller.ts"
-import { TsRestHandler, tsRestHandler } from '@ts-rest/nest';
+import { TsRestHandler, tsRestHandler } from '@ts-restless/nest';
 import { Controller } from '@nestjs/common';
 import { pokemonContract } from './contract';
 
@@ -182,15 +184,15 @@ You can see that we're using the modern `@TsRestHandler` decorator with the `tsR
 
   </Tab>
   <Tab value="Express">
-  <InstallTabs packageName="@ts-rest/express" />
+  <InstallTabs packageName="@ts-restless/express" />
 <p>The express implementaton allows full type safety, offering; body parsing, query parsing, param parsing and full error handling</p>
 
 ```typescript title="main.ts"
 import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
-import { initServer } from '@ts-rest/express';
-import { createExpressEndpoints } from '@ts-rest/express';
+import { initServer } from '@ts-restless/express';
+import { createExpressEndpoints } from '@ts-restless/express';
 import { pokemonContract } from './contract';
 
 const app = express();
@@ -230,12 +232,12 @@ const server = app.listen(port, () => {
 
   </Tab>
    <Tab value="Fastify">
-  <InstallTabs packageName="@ts-rest/fastify" />
+  <InstallTabs packageName="@ts-restless/fastify" />
 <p>The fastify implementaton allows full type safety, offering; body parsing, query parsing, param parsing and full error handling</p>
 
 ```typescript title="main.ts"
 import fastify from 'fastify';
-import { initServer } from '@ts-rest/fastify';
+import { initServer } from '@ts-restless/fastify';
 import { pokemonContract } from './contract';
 
 const app = fastify();
@@ -277,10 +279,10 @@ start();
 
   </Tab>
   <Tab value="Next">
-  <InstallTabs packageName="@ts-rest/next" />
+  <InstallTabs packageName="@ts-restless/next" />
 
 ```typescript title="pages/api/[...ts-rest].tsx"
-import { createNextRoute, createNextRouter } from '@ts-rest/next';
+import { createNextRoute, createNextRouter } from '@ts-restless/next';
 import { pokemonContract } from './contract';
 
 const router = createNextRoute(pokemonContract, {
@@ -315,10 +317,10 @@ export default createNextRouter(pokemonContract, router);
   <Tab value="Fetch">
 
 This is the basic client, using fetch under the hood which is exported
-from @ts-rest/core.
+from @ts-restless/core.
 
 ```typescript title="client.ts" twoslash
-import { initContract } from '@ts-rest/core';
+import { initContract } from '@ts-restless/core';
 
 const c = initContract();
 
@@ -338,7 +340,7 @@ export const pokemonContract = c.router({
 });
 
 // ---cut---
-import { initClient } from '@ts-rest/core';
+import { initClient } from '@ts-restless/core';
 
 const client = initClient(pokemonContract, {
   baseUrl: 'http://localhost:3000',
@@ -360,13 +362,13 @@ if (res.status === 200) {
 
   </Tab>
   <Tab value="react-query">
-  <InstallTabs packageName="@ts-rest/react-query" />
+  <InstallTabs packageName="@ts-restless/react-query" />
 
-The `@ts-rest/react-query` integration follows the same underlying pattern as the core `@tanstack/react-query` package so it should feel super familiar.
+The `@ts-restless/react-query` integration follows the same underlying pattern as the core `@tanstack/react-query` package so it should feel super familiar.
 
 ```tsx title="pokemon-component.tsx" twoslash
 import React from 'react';
-import { initContract } from '@ts-rest/core';
+import { initContract } from '@ts-restless/core';
 
 const c = initContract();
 
@@ -386,7 +388,7 @@ export const pokemonContract = c.router({
 });
 
 // ---cut---
-import { initQueryClient } from '@ts-rest/react-query';
+import { initQueryClient } from '@ts-restless/react-query';
 
 export const client = initQueryClient(pokemonContract, {
   baseUrl: 'http://localhost:3333',

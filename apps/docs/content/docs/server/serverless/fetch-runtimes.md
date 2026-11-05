@@ -1,9 +1,9 @@
 ---
 title: 'Fetch Runtimes'
-description: How to use ts-rest with Fetch Runtimes
+description: How to use ts-restless with Fetch Runtimes
 ---
 
-The default `@ts-rest/serverless/fetch` handler is able to handle and route requests for any runtime that follows the [WinterCG](https://wintercg.org/) [Minimum Common Web Platform API](https://common-min-api.proposal.wintercg.org/).
+The default `@ts-restless/serverless/fetch` handler is able to handle and route requests for any runtime that follows the [WinterCG](https://wintercg.org/) [Minimum Common Web Platform API](https://common-min-api.proposal.wintercg.org/).
 
 This includes but is not limited to:
 
@@ -17,7 +17,7 @@ Some platforms provide additional context arguments that you may want to pass to
 You need to first instantiate a router object with the correct context type, and then pass it with that type to the `fetchRequestHandler` function.
 
 ```typescript
-import { fetchRequestHandler, tsr } from '@ts-rest/serverless/fetch';
+import { fetchRequestHandler, tsr } from '@ts-restless/serverless/fetch';
 import { contract } from './contract';
 
 export const router = tsr.platformContext<{ customContext: PlatformContext }>().router(contract, {
@@ -40,7 +40,7 @@ export const router = tsr.platformContext<{ customContext: PlatformContext }>().
 
 ```typescript
 import type { Request as WorkerRequest, ExecutionContext, KVNamespace } from '@cloudflare/workers-types/experimental';
-import { fetchRequestHandler, tsr } from '@ts-rest/serverless/fetch';
+import { fetchRequestHandler, tsr } from '@ts-restless/serverless/fetch';
 import { contract } from './contract';
 
 interface Env {
@@ -86,7 +86,7 @@ export default {
 
 ```typescript
 import type { Context } from '@netlify/functions';
-import { fetchRequestHandler, tsr } from '@ts-rest/serverless/fetch';
+import { fetchRequestHandler, tsr } from '@ts-restless/serverless/fetch';
 import { contract } from './contract';
 
 const router = tsr.platformContext<{ netlifyContext: Context }>().router(contract, {
@@ -118,7 +118,7 @@ export default async (request: Request, netlifyContext: Context) => {
 
 ```typescript
 import type { RequestContext } from '@vercel/edge';
-import { fetchRequestHandler, tsr } from '@ts-rest/serverless/fetch';
+import { fetchRequestHandler, tsr } from '@ts-restless/serverless/fetch';
 import { contract } from './contract';
 
 const router = tsr.platformContext<{ vercelContext: RequestContext }>().router(contract, {

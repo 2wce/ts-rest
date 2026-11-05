@@ -1,5 +1,5 @@
-import { initServer } from '@ts-rest/express';
-import { contractTs } from '@ts-rest/example-contracts';
+import { initServer } from '@ts-restless/express';
+import { contractTs } from '@ts-restless/example-contracts';
 import { mockPostFixtureFactory } from './fixtures';
 
 const s = initServer();

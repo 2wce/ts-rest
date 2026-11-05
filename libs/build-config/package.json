@@ -1,5 +1,5 @@
 {
-  "name": "@ts-rest/build-config",
+  "name": "@ts-restless/build-config",
   "version": "0.0.0",
   "private": true,
   "type": "module",

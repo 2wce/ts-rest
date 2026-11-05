@@ -1,5 +1,5 @@
 import * as v from 'valibot';
-import { initContract, type StandardSchemaV1 } from '@ts-rest/core';
+import { initContract, type StandardSchemaV1 } from '@ts-restless/core';
 import { generateOpenApi, generateOpenApiAsync } from './ts-rest-open-api';
 import { VALIBOT_ASYNC } from './parsers/test-helpers';
 

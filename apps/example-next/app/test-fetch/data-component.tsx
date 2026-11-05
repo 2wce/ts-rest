@@ -1,4 +1,4 @@
-import { ClientInferResponseBody } from '@ts-rest/core';
+import { ClientInferResponseBody } from '@ts-restless/core';
 import type { testContract } from '../../contracts/test-contract';
 
 type TestData = ClientInferResponseBody<typeof testContract.test, 200>;

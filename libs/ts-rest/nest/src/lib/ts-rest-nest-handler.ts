@@ -33,7 +33,7 @@ import {
   TsRestResponseError,
   validateMultiSchemaObject,
   validateIfSchema,
-} from '@ts-rest/core';
+} from '@ts-restless/core';
 import {
   TsRestAppRouteMetadataKey,
   TsRestOptionsMetadataKey,

@@ -3,7 +3,7 @@ import {
   initContract,
   TsRestResponseValidationError as ResponseValidationError,
   TsRestResponseError,
-} from '@ts-rest/core';
+} from '@ts-restless/core';
 import { NextApiRequest, NextApiResponse } from 'next';
 import {
   createNextRoute,

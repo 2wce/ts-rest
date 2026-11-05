@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { initContract } from '@ts-rest/core';
+import { initContract } from '@ts-restless/core';
 import { tsr } from '../handlers/ts-rest-fetch';
 import { ContractSubContractPaths } from './types';
 import { getBoundary, parse as parseMultipart } from 'parse-multipart-data';

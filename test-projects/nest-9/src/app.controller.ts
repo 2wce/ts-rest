@@ -1,5 +1,5 @@
 import { Controller } from '@nestjs/common';
-import { tsRestHandler, TsRestHandler } from '@ts-rest/nest';
+import { tsRestHandler, TsRestHandler } from '@ts-restless/nest';
 import { AppService } from './app.service';
 import { contract } from './contract';
 

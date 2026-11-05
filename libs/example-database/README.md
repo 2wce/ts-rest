@@ -19,7 +19,7 @@ does not generate it.
 
 Nest/Next build and development tasks, full unit tests and lint/check commands
 depend on generation. Core builds and direct core tests do not. Applications
-import `PrismaClient` and `Post` from `@ts-rest/example-database`.
+import `PrismaClient` and `Post` from `@ts-restless/example-database`.
 
 ## Run a database example
 
@@ -27,7 +27,7 @@ Set `DATABASE_URL` in your shell to your PostgreSQL connection string, then
 create the example tables:
 
 ```sh
-pnpm --filter @ts-rest/example-database exec prisma db push
+pnpm --filter @ts-restless/example-database exec prisma db push
 pnpm nest
 # Or start the Next example:
 pnpm --filter example-next dev

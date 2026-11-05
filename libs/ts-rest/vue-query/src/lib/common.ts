@@ -14,7 +14,7 @@ import {
   fetchApi,
   evaluateFetchApiArgs,
   isErrorResponse,
-} from '@ts-rest/core';
+} from '@ts-restless/core';
 
 // Data response if it's a 2XX
 export type DataResponse<TAppRoute extends AppRoute> = ClientInferResponses<

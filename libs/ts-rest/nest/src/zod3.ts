@@ -4,8 +4,8 @@ import {
   BadRequestException,
   InternalServerErrorException,
 } from '@nestjs/common';
-import type { AppRoute } from '@ts-rest/core';
-export { RequestValidationErrorSchemaForNest as RequestValidationErrorSchema } from '@ts-rest/core/zod3';
+import type { AppRoute } from '@ts-restless/core';
+export { RequestValidationErrorSchemaForNest as RequestValidationErrorSchema } from '@ts-restless/core/zod3';
 
 export class RequestValidationError extends BadRequestException {
   constructor(

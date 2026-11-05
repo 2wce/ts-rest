@@ -24,7 +24,7 @@ import {
   isAppRoute,
   isAppRouteQuery,
   isErrorResponse,
-} from '@ts-rest/core';
+} from '@ts-restless/core';
 import {
   MutationHooks,
   QueryHooks,

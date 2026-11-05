@@ -4,7 +4,7 @@ import {
   ServerInferRequest,
   ServerInferResponses,
   StandardSchemaError,
-} from '@ts-rest/core';
+} from '@ts-restless/core';
 import { TsRestRequest } from './request';
 import { TsRestHttpError } from './http-error';
 import { TsRestResponse } from './response';

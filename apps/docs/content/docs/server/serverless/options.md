@@ -1,6 +1,6 @@
 ---
 title: 'Common Options'
-description: How to use ts-rest with Common Options
+description: How to use ts-restless with Common Options
 ---
 
 All of the serverless handlers support a common set of options to configure the behavior of the handlers.
@@ -26,12 +26,12 @@ We use `itty-router` under the hood for routing and CORS handling, so the option
 ### Custom Error Handler
 
 The `errorHandler` option allows you to define a custom error handler to handle any uncaught exceptions. The error handler is a function that takes an error and request and optionally returns a response object.
-If you do not return a response object, ts-rest will return a default 500 server error.
+If you do not return a response object, ts-restless will return a default 500 server error.
 
 Note that this will catch
 
 ```typescript
-import { TsRestRequest, TsRestResponse } from '@ts-rest/serverless';
+import { TsRestRequest, TsRestResponse } from '@ts-restless/serverless';
 
 const errorHandler = (error: unknown, request: TsRestRequest) => {
   console.error('Server Error', error);
@@ -52,8 +52,8 @@ You can optionally return a response object from the middleware to short-circuit
 You can also extend the request object with additional properties that can be accessed in the router handlers in a type-safe manner.
 
 ```typescript
-import { TsRestResponse } from '@ts-rest/serverless';
-import { fetchRequestHandler, tsr } from '@ts-rest/serverless/fetch';
+import { TsRestResponse } from '@ts-restless/serverless';
+import { fetchRequestHandler, tsr } from '@ts-restless/serverless/fetch';
 import { contract } from './contract';
 
 export default async (request: Request) => {
@@ -95,7 +95,7 @@ You can set global response handlers by using the `responseHandlers` option. Thi
 This can be useful for logging, adding headers, etc.
 
 ```typescript
-import { fetchRequestHandler, tsr } from '@ts-rest/serverless/fetch';
+import { fetchRequestHandler, tsr } from '@ts-restless/serverless/fetch';
 import { contract } from './contract';
 import { router } from './router';
 
@@ -125,7 +125,7 @@ export default async (request: Request) => {
 You can also set middleware for individual routes by passing an object in the form of `{ middleware: RequestHandler[], handler: (...) => ... }` to the route definition.
 
 ```typescript
-import { fetchRequestHandler } from '@ts-rest/serverless/fetch';
+import { fetchRequestHandler } from '@ts-restless/serverless/fetch';
 import { contract } from './contract';
 
 export default async (request: Request) => {
@@ -155,7 +155,7 @@ Please note, that you will need to manually pass the global request middleware c
 so it would be a good idea to define it outside your router definition and use that everywhere.
 
 ```typescript
-import { fetchRequestHandler, tsr } from '@ts-rest/serverless/fetch';
+import { fetchRequestHandler, tsr } from '@ts-restless/serverless/fetch';
 import { contract } from './contract';
 
 type GlobalRequestContext = {

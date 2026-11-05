@@ -1,4 +1,8 @@
-import { AppRouter, isAppRoute, isAppRouteOtherResponse } from '@ts-rest/core';
+import {
+  AppRouter,
+  isAppRoute,
+  isAppRouteOtherResponse,
+} from '@ts-restless/core';
 import {
   AsyncAndSyncHelper,
   GetAsyncFunction,

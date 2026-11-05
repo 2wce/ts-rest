@@ -1,6 +1,6 @@
 # Workspace build configuration
 
-`@ts-rest/build-config` is a private, source-only workspace package. Vite configs
+`@ts-restless/build-config` is a private, source-only workspace package. Vite configs
 import its presets directly; there is no build or pack task for this package.
 
 ```ts
@@ -8,7 +8,7 @@ import {
   libraryConfig,
   nodePack,
   decoratorOptions,
-} from '@ts-rest/build-config';
+} from '@ts-restless/build-config';
 ```
 
 - `libraryConfig(name, entry, options?)` declares a library's Vite+ pack task,

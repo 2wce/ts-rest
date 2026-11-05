@@ -1,11 +1,11 @@
 ---
 title: 'React Query (v4)'
-description: The React Query client provides a lightweight, type-safe way to make HTTP requests using your ts-rest contract.
+description: The React Query client provides a lightweight, type-safe way to make HTTP requests using your ts-restless contract.
 ---
 
 ## Installation
 
-<InstallTabs packageName="@ts-rest/react-query @tanstack/react-query@4" />
+<InstallTabs packageName="@ts-restless/react-query @tanstack/react-query@4" />
 
 This is a client using `@tanstack/react-query` under the hood.
 
@@ -27,10 +27,10 @@ For more detailed information, refer to the [official `react-query` documentatio
 
 ## initQueryClient
 
-The below snippet is how you'd create a query client, this is pretty much the same structure as the `@ts-rest/core` client.
+The below snippet is how you'd create a query client, this is pretty much the same structure as the `@ts-restless/core` client.
 
 ```tsx
-import { initQueryClient } from '@ts-rest/react-query';
+import { initQueryClient } from '@ts-restless/react-query';
 
 export const client = initQueryClient(router, {
   baseUrl: 'http://localhost:3333',
@@ -43,7 +43,7 @@ To customise the API, follow the same docs as the core client [here](/docs/core/
 
 <Callout title="JSON Query Parameters">
 
-By default, ts-rest encodes query parameters as regular URL encoded strings (with support for nested objects, arrays etc) with full decode compatibility from [`qs`](https://www.npmjs.com/package/qs)
+By default, ts-restless encodes query parameters as regular URL encoded strings (with support for nested objects, arrays etc) with full decode compatibility from [`qs`](https://www.npmjs.com/package/qs)
 
 To encode query parameters as JSON, you can use the `jsonQuery` option, please note you'll need to configure your backend to support decoding JSON query parameters.
 
@@ -71,7 +71,7 @@ const queryResult = client.posts.get.useQuery(
 
 <Callout title="Design Philosophy">
 
-The design philosophy of `@ts-rest/react-query` is to make it as easy as possible to use `react-query` with `@ts-rest`. This means that the `useQuery` and `useMutation` hooks are as close to the original `react-query` hooks as possible, as such we don't abstract away from the query keys or the options. Only the query function itself!
+The design philosophy of `@ts-restless/react-query` is to make it as easy as possible to use `react-query` with `@ts-restless`. This means that the `useQuery` and `useMutation` hooks are as close to the original `react-query` hooks as possible, as such we don't abstract away from the query keys or the options. Only the query function itself!
 
 </Callout>
 
@@ -103,7 +103,7 @@ const App = () => {
 
 <Callout type="info" title="Response Structure">
 
-When destructing the response from `useQuery` or `useMutation`, remember that ts-rest returns a `status` and `body` property, so you'll need to destructure those as well.
+When destructing the response from `useQuery` or `useMutation`, remember that ts-restless returns a `status` and `body` property, so you'll need to destructure those as well.
 
 The reason for this is error handling! Please see the [Relevant Docs](/docs/core/errors#client-error-typing)
 
@@ -130,11 +130,11 @@ export const client = initQueryClient(router, {
 
 This will force you the handle these errors if you attempt to access the `error.status` property, without first checking if the error is an instance of `Error`.
 
-This will be enabled by default starting from `@ts-rest/react-query` v4.0.0.
+This will be enabled by default starting from `@ts-restless/react-query` v4.0.0.
 
 ## Regular Query and Mutations
 
-`@ts-rest/react-query` allows for a regular fetch or mutation if you want, without having to initialise two different clients, one with `@ts-rest/core` and one with `@ts-rest/react-query`.
+`@ts-restless/react-query` allows for a regular fetch or mutation if you want, without having to initialise two different clients, one with `@ts-restless/core` and one with `@ts-restless/react-query`.
 
 ```typescript
 // Normal fetch
@@ -148,7 +148,7 @@ const { data, isLoading } = client.posts.get.useQuery();
 
 One fantastic feature of `react-query` is the ability to create infinite queries. This is a great way to handle pagination.
 
-[Prisma's Docs](https://www.prisma.io/docs/concepts/components/prisma-client/pagination) explain the concepts of cursor and offset pagination fantastically, especially if you use Prisma client with `@ts-rest`
+[Prisma's Docs](https://www.prisma.io/docs/concepts/components/prisma-client/pagination) explain the concepts of cursor and offset pagination fantastically, especially if you use Prisma client with `@ts-restless`
 
 ### Cursor Pagination
 
@@ -243,10 +243,10 @@ return (
 
 ## QueryClient Helpers
 
-In addition to the hooks provided, `@ts-rest/react-query` also provides a custom hook `useTsRestQueryClient` with wrapper functions around some `QueryClient` functions to help invoke the API as well as provide some typing.
+In addition to the hooks provided, `@ts-restless/react-query` also provides a custom hook `useTsRestQueryClient` with wrapper functions around some `QueryClient` functions to help invoke the API as well as provide some typing.
 
 ```tsx
-import { initQueryClient, useTsRestQueryClient } from '@ts-rest/react-query';
+import { initQueryClient, useTsRestQueryClient } from '@ts-restless/react-query';
 
 export const client = initQueryClient(router);
 
@@ -330,14 +330,14 @@ If you see this error despite having set a `QueryClient` using `QueryClientProvi
 This can also happen in rare cases when ESM and CJS versions of the package are mixed by a bundler like Webpack.
 
 If you have made sure that you are using the same version of `@tanstack/react-query` across your project, and are still having problems, you can work around this
-by importing `@tanstack/react-query` from `@ts-rest/react-query/tanstack` instead of `@tanstack/react-query`. This will ensure that you are using the same version as the one used
-by `@ts-rest/react-query`.
+by importing `@tanstack/react-query` from `@ts-restless/react-query/tanstack` instead of `@tanstack/react-query`. This will ensure that you are using the same version as the one used
+by `@ts-restless/react-query`.
 
 ```tsx
 import {
   QueryClient,
   QueryClientProvider,
-} from '@ts-rest/react-query/tanstack';
+} from '@ts-restless/react-query/tanstack';
 
 const queryClient = new QueryClient();
 

@@ -1,6 +1,6 @@
 ---
 title: 'React Query (v5)'
-description: The React Query client provides a lightweight, type-safe way to make HTTP requests using your ts-rest contract.
+description: The React Query client provides a lightweight, type-safe way to make HTTP requests using your ts-restless contract.
 ---
 
 Fully typed RPC-like client for React Query v5? Oh, yes!
@@ -23,7 +23,7 @@ const {
 
 This documentation is for React Query v5. If you are looking for the v4 docs, please click [here](/docs/react-query/v4).
 
-In order to use the React Query v5 version of `@ts-rest/react-query`, make sure you import `@ts-rest/react-query/v5` in your code and not `@ts-rest/react-query`.
+In order to use the React Query v5 version of `@ts-restless/react-query`, make sure you import `@ts-restless/react-query/v5` in your code and not `@ts-restless/react-query`.
 
 </Callout>
 
@@ -31,7 +31,7 @@ In order to use the React Query v5 version of `@ts-rest/react-query`, make sure 
 
 ### 1. Installation
 
-<InstallTabs packageName="@ts-rest/react-query @tanstack/react-query@5" />
+<InstallTabs packageName="@ts-restless/react-query @tanstack/react-query@5" />
 
 ### 2. Setup React Query
 
@@ -39,12 +39,12 @@ If you are not familiar enough with React Query, check out the [official `@tanst
 
 Before proceeding, make sure you set up your `QueryClientProvider` at the root of your application or layout.
 
-### 3. Initialize ts-rest React Query
+### 3. Initialize ts-restless React Query
 
-Import your contract, and pass it with the client options to the `initTsrReactQuery` function. The client options are the same as the ones you would pass to the `initClient` function in `@ts-rest/core`.
+Import your contract, and pass it with the client options to the `initTsrReactQuery` function. The client options are the same as the ones you would pass to the `initClient` function in `@ts-restless/core`.
 
 ```tsx
-import { initTsrReactQuery } from '@ts-rest/react-query/v5';
+import { initTsrReactQuery } from '@ts-restless/react-query/v5';
 import { getAccessToken } from '@some-auth-lib/sdk';
 import { contract } from './contract';
 
@@ -64,9 +64,9 @@ For more information, see the [fetch client documentation](/docs/core/fetch).
 
 </Callout>
 
-### 4. Setup ts-rest Provider
+### 4. Setup ts-restless Provider
 
-Add the `tsr.ReactQueryProvider` to your root component, just below the `QueryClientProvider`. It is important that it lives as a child of the `QueryClientProvider` so that ts-rest can access the query client.
+Add the `tsr.ReactQueryProvider` to your root component, just below the `QueryClientProvider`. It is important that it lives as a child of the `QueryClientProvider` so that ts-restless can access the query client.
 
 ```tsx
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -153,7 +153,7 @@ All the hooks have the same function signatures and options exactly as the ones 
 
 <Callout type="info" title="Response Structure">
 
-When destructing the response from `useQuery` or `useMutation`, remember that ts-rest returns a `status` and `body` property, so you'll need to destructure those as well.
+When destructing the response from `useQuery` or `useMutation`, remember that ts-restless returns a `status` and `body` property, so you'll need to destructure those as well.
 
 </Callout>
 
@@ -171,10 +171,10 @@ const { data, isLoading } = tsr.posts.get.useQuery();
 
 ## Query Client
 
-In addition to the hooks provided, `@ts-rest/react-query` also provides an extended version of `QueryClient` that is fully type-safe.
+In addition to the hooks provided, `@ts-restless/react-query` also provides an extended version of `QueryClient` that is fully type-safe.
 
 It follows the same structure as your contract, and can be used the same way as the original `QueryClient` with similar function
-signatures to the ts-rest hooks for functions such as `queryClient.fetchQuery` and it's respective `useQuery` hook.
+signatures to the ts-restless hooks for functions such as `queryClient.fetchQuery` and it's respective `useQuery` hook.
 
 ```tsx
 import { tsr } from './tsr';
@@ -231,7 +231,7 @@ For functions that do not consume or provide typed data such as `queryClient.inv
 As such, these functions are provided as-is at the root level of the `tsr.useQueryClient()` instance.
 
 You can actually use the `QueryClient` returned from `tsr.useQueryClient()` anywhere you would normally use a `QueryClient` instance, as under the hood
-we use the `QueryClient` returned from `useQueryClient()`, and we simply extend it with the ts-rest functions.
+we use the `QueryClient` returned from `useQueryClient()`, and we simply extend it with the ts-restless functions.
 
 ## Error Handling
 
@@ -243,7 +243,7 @@ set to your response schema for status codes defined in your contract, or `unkno
 The `Error` type is included because requests can fail without returning a response. See [Fetch#Exceptions](https://developer.mozilla.org/en-US/docs/Web/API/Window/fetch#exceptions) for more information.
 
 ```tsx
-import { isFetchError } from '@ts-rest/react-query/v5';
+import { isFetchError } from '@ts-restless/react-query/v5';
 import { tsr } from './tsr';
 
 const Post = ({ id }: { id: string }) => {
@@ -300,7 +300,7 @@ import {
   isFetchError,
   isUnknownErrorResponse,
   exhaustiveGuard,
-} from '@ts-rest/react-query/v5';
+} from '@ts-restless/react-query/v5';
 import { tsr } from './tsr';
 
 const Post = ({ id }: { id: string }) => {
@@ -352,9 +352,9 @@ const Post = ({ id }: { id: string }) => {
 The common strategy to efficiently and optimally do server side rendering, as well as prevent request waterfalls on the client, is to do prefetching on the server,
 then pass a dehydrated form of the query cache from the server to the client.
 
-In these scenarios, the React Query code will not run inside a provider, so we need to initialize the `QueryClient` manually and pass it to ts-rest.
+In these scenarios, the React Query code will not run inside a provider, so we need to initialize the `QueryClient` manually and pass it to ts-restless.
 
-Therefore, instead of using `tsr.useQueryClient()` as you usually would in your components, use `tsr.initQueryClient(queryClient)` to pass your created `QueryClient` to ts-rest.
+Therefore, instead of using `tsr.useQueryClient()` as you usually would in your components, use `tsr.initQueryClient(queryClient)` to pass your created `QueryClient` to ts-restless.
 
 See the [`@tanstack/react-query` Server Rendering Guide](https://tanstack.com/query/v5/docs/framework/react/guides/ssr) for an in-depth guide on how to properly do server side rendering.
 
@@ -408,7 +408,7 @@ export default async function PostsPage() {
 
 You can also fetch multiple queries at once using `useQueries` or `useSuspenseQueries`. It can be useful for fetching multiple queries, usually from the same endpoint.
 
-ts-rest currently does not support multiple queries from different endpoints. While it is an uncommon use case, we are open to implementing it in the future.
+ts-restless currently does not support multiple queries from different endpoints. While it is an uncommon use case, we are open to implementing it in the future.
 
 ```tsx
 import { tsr } from './tsr';
@@ -501,7 +501,7 @@ See the [official `useInfiniteQuery()` docs](https://tanstack.com/query/v5/docs/
 
 ### QueryClient Methods
 
-You can also use `fetchInfiniteQuery` and `prefetchInfiniteQuery` on the ts-rest extended `QueryClient`.
+You can also use `fetchInfiniteQuery` and `prefetchInfiniteQuery` on the ts-restless extended `QueryClient`.
 
 These will take the same arguments as `fetchQuery`, but need to specify an `initialPageParam` in order to correctly put the data in the cache with its corresponding `pageParam`.
 
@@ -544,14 +544,14 @@ If you see this error despite having set a `QueryClient` using `QueryClientProvi
 This can also happen in rare cases when ESM and CJS versions of the package are mixed by a bundler like Webpack.
 
 If you have made sure that you are using the same version of `@tanstack/react-query` across your project, and are still having problems, you can work around this
-by importing `@tanstack/react-query` from `@ts-rest/react-query/tanstack` instead of `@tanstack/react-query`. This will ensure that you are using the same version as the one used
-by `@ts-rest/react-query`.
+by importing `@tanstack/react-query` from `@ts-restless/react-query/tanstack` instead of `@tanstack/react-query`. This will ensure that you are using the same version as the one used
+by `@ts-restless/react-query`.
 
 ```tsx
 import {
   QueryClient,
   QueryClientProvider,
-} from '@ts-rest/react-query/tanstack';
+} from '@ts-restless/react-query/tanstack';
 
 const queryClient = new QueryClient();
 
@@ -562,6 +562,6 @@ function App() {
 
 <Callout type="info" title="Import Path">
 
-The import path is `@ts-rest/react-query/tanstack` and not `@ts-rest/react-query/v5/tanstack`. `@ts-rest/react-query/tanstack` simply re-exports whichever version of `@tanstack/react-query` you have installed.
+The import path is `@ts-restless/react-query/tanstack` and not `@ts-restless/react-query/v5/tanstack`. `@ts-restless/react-query/tanstack` simply re-exports whichever version of `@tanstack/react-query` you have installed.
 
 </Callout>

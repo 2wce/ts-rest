@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
 import { cp, mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { dirname, join } from 'node:path';
 import { test } from 'vitest';
 import { fileURLToPath } from 'node:url';
 
@@ -11,7 +11,7 @@ const cli = join(root, 'node_modules/@changesets/cli/bin.js');
 const archive = 'nest.tgz';
 
 async function workspace() {
-  const cwd = await mkdtemp(join(tmpdir(), 'ts-rest-version-'));
+  const cwd = await mkdtemp(join(tmpdir(), 'ts-restless-version-'));
   await mkdir(join(cwd, '.changeset'));
   await cp(
     join(root, '.changeset/config.json'),
@@ -34,13 +34,13 @@ async function workspace() {
     await writeFile(
       join(cwd, 'libs/ts-rest', name, 'package.json'),
       JSON.stringify({
-        name: `@ts-rest/${name}`,
+        name: `@ts-restless/${name}`,
         version: '3.52.1',
         private: name === 'react-query-v5',
         ...(name === 'nest'
           ? {
               peerDependencies: {
-                '@ts-rest/core': 'workspace:^',
+                '@ts-restless/core': 'workspace:^',
                 '@nestjs/core': '^9 || ^10 || ^11 || ^12',
               },
             }
@@ -58,7 +58,7 @@ function changeset(cwd, ...args) {
 async function bump(cwd, type, ...args) {
   await writeFile(
     join(cwd, '.changeset/test-bump.md'),
-    `---\n"@ts-rest/core": ${type}\n---\nTest release.\n`,
+    `---\n"@ts-restless/core": ${type}\n---\nTest release.\n`,
   );
   changeset(cwd, 'version', ...args);
 }
@@ -68,7 +68,7 @@ async function assertVersion(cwd, version, peer) {
     await readFile(join(cwd, 'libs/ts-rest/nest/package.json')),
   );
   assert.equal(pkg.version, version);
-  assert.equal(pkg.peerDependencies['@ts-rest/core'], 'workspace:^');
+  assert.equal(pkg.peerDependencies['@ts-restless/core'], 'workspace:^');
   execFileSync(
     'pnpm',
     [
@@ -86,7 +86,7 @@ async function assertVersion(cwd, version, peer) {
       encoding: 'utf8',
     }),
   );
-  assert.equal(published.peerDependencies['@ts-rest/core'], peer);
+  assert.equal(published.peerDependencies['@ts-restless/core'], peer);
   assert.equal(pkg.peerDependencies['@nestjs/core'], '^9 || ^10 || ^11 || ^12');
   const privatePkg = JSON.parse(
     await readFile(join(cwd, 'libs/ts-rest/react-query-v5/package.json')),
@@ -118,6 +118,322 @@ test('snapshot prereleases pack native caret peers using the calculated release 
     );
     assert.match(core.version, /^3\.53\.0-rc\.\d+$/);
     await assertVersion(cwd, core.version, `^${core.version}`);
+  } finally {
+    await rm(cwd, { recursive: true, force: true });
+  }
+});
+
+test('numbered alpha releases progress together and exit to the intended stable major', async () => {
+  const cwd = await workspace();
+  try {
+    changeset(cwd, 'pre', 'enter', 'alpha');
+    await bump(cwd, 'major');
+    await assertVersion(cwd, '4.0.0-alpha.0', '^4.0.0-alpha.0');
+    await writeFile(
+      join(cwd, '.changeset/next-alpha.md'),
+      '---\n"@ts-restless/core": patch\n---\nNext alpha fix.\n',
+    );
+    changeset(cwd, 'version');
+    await assertVersion(cwd, '4.0.0-alpha.1', '^4.0.0-alpha.1');
+    changeset(cwd, 'pre', 'exit');
+    changeset(cwd, 'version');
+    await assertVersion(cwd, '4.0.0', '^4.0.0');
+  } finally {
+    await rm(cwd, { recursive: true, force: true });
+  }
+});
+
+async function forkWorkspace(sourceRoot = root) {
+  const cwd = await mkdtemp(join(tmpdir(), 'ts-restless-fork-version-'));
+  const manifests = execFileSync('git', ['ls-files', '*package.json'], {
+    cwd: root,
+    encoding: 'utf8',
+  })
+    .trim()
+    .split('\n')
+    .filter((path) => path.startsWith('apps/') || path.startsWith('libs/'));
+  for (const path of ['package.json', 'pnpm-workspace.yaml', ...manifests]) {
+    await mkdir(dirname(join(cwd, path)), { recursive: true });
+    await cp(join(sourceRoot, path), join(cwd, path));
+  }
+  // These characterize the initial major using today's real manifests. The
+  // fixture must stay independent of alpha/stable state created by release PRs.
+  for (const path of manifests) {
+    const pkgPath = join(cwd, path);
+    const pkg = JSON.parse(await readFile(pkgPath, 'utf8'));
+    if (pkg.name.startsWith('@ts-restless/')) {
+      pkg.version = '3.52.1';
+      await writeFile(pkgPath, JSON.stringify(pkg));
+    }
+  }
+  await mkdir(join(cwd, '.changeset'));
+  await cp(
+    join(sourceRoot, '.changeset/config.json'),
+    join(cwd, '.changeset/config.json'),
+  );
+  await writeFile(
+    join(cwd, '.changeset/initial-major.md'),
+    '---\n"@ts-restless/core": major\n---\nInitial fork major.\n',
+  );
+  return cwd;
+}
+
+function prerelease(cwd, command) {
+  return execFileSync(
+    process.execPath,
+    [join(root, 'scripts/prerelease.mjs'), command],
+    { cwd, encoding: 'utf8', stdio: 'pipe' },
+  );
+}
+
+function rejectPrerelease(cwd, pattern) {
+  assert.throws(
+    () => prerelease(cwd, 'verify'),
+    (error) => {
+      assert.match(error.stderr, pattern);
+      return true;
+    },
+  );
+}
+
+test('actual fork manifests with an initial major produce ten v4 packages and correctly packed first-alpha peers', async () => {
+  const publicLibraries = [
+    'core',
+    'express',
+    'fastify',
+    'nest',
+    'next',
+    'serverless',
+    'react-query',
+    'open-api',
+    'solid-query',
+    'vue-query',
+  ];
+  for (const tag of [undefined, 'alpha']) {
+    const cwd = await forkWorkspace();
+    try {
+      if (tag) changeset(cwd, 'pre', 'enter', tag);
+      changeset(cwd, 'version');
+      const version = tag ? '4.0.0-alpha.0' : '4.0.0';
+      if (tag) {
+        assert.match(prerelease(cwd, 'verify'), /4\.0\.0-alpha\.0 under alpha/);
+        const prePath = join(cwd, '.changeset/pre.json');
+        const pre = JSON.parse(await readFile(prePath));
+        for (const invalidTag of ['beta', 'latest']) {
+          await writeFile(prePath, JSON.stringify({ ...pre, tag: invalidTag }));
+          rejectPrerelease(cwd, /tag|version/);
+        }
+        await writeFile(prePath, JSON.stringify({ ...pre, mode: 'exit' }));
+        rejectPrerelease(cwd, /active prerelease/);
+        await writeFile(prePath, JSON.stringify(pre));
+        const corePath = join(cwd, 'libs/ts-rest/core/package.json');
+        const core = JSON.parse(await readFile(corePath));
+        await writeFile(
+          corePath,
+          JSON.stringify({ ...core, version: '4.0.0-alpha.1' }),
+        );
+        rejectPrerelease(cwd, /share one release version/);
+        await writeFile(
+          corePath,
+          JSON.stringify({ ...core, version: '4.0.0' }),
+        );
+        rejectPrerelease(cwd, /numbered prerelease version/);
+        await writeFile(corePath, JSON.stringify(core));
+      } else {
+        rejectPrerelease(cwd, /active prerelease/);
+      }
+      for (const name of publicLibraries) {
+        const pkg = JSON.parse(
+          await readFile(join(cwd, 'libs/ts-rest', name, 'package.json')),
+        );
+        assert.equal(pkg.name, `@ts-restless/${name}`);
+        assert.equal(pkg.version, version, `${name}: first release version`);
+        assert.notEqual(pkg.private, true);
+      }
+      const bundled = JSON.parse(
+        await readFile(join(cwd, 'libs/ts-rest/react-query-v5/package.json')),
+      );
+      assert.equal(bundled.private, true);
+      execFileSync(
+        'pnpm',
+        [
+          '--dir',
+          join(cwd, 'libs/ts-rest/nest'),
+          'pack',
+          '--out',
+          join(cwd, archive),
+          '--silent',
+        ],
+        { stdio: 'pipe' },
+      );
+      const packed = JSON.parse(
+        execFileSync(
+          'tar',
+          ['-xOf', join(cwd, archive), 'package/package.json'],
+          { encoding: 'utf8' },
+        ),
+      );
+      assert.equal(packed.version, version);
+      assert.equal(packed.peerDependencies['@ts-restless/core'], `^${version}`);
+      assert.equal(packed.peerDependencies['@ts-rest/core'], undefined);
+      console.log(
+        `Verified actual fork: ten public ${version} packages and native core peer ranges.`,
+      );
+    } finally {
+      await rm(cwd, { recursive: true, force: true });
+    }
+  }
+});
+
+test('release PR version command bootstraps alpha once and advances the actual fork', async () => {
+  const cwd = await forkWorkspace();
+  try {
+    rejectPrerelease(cwd, /active prerelease/);
+    prerelease(cwd, 'version');
+    assert.match(prerelease(cwd, 'verify'), /4\.0\.0-alpha\.0 under alpha/);
+    const initial = JSON.parse(
+      await readFile(join(cwd, '.changeset/pre.json')),
+    );
+    await writeFile(
+      join(cwd, '.changeset/followup-alpha.md'),
+      '---\n"@ts-restless/core": patch\n---\nFollowup alpha fix.\n',
+    );
+    prerelease(cwd, 'version');
+    assert.match(prerelease(cwd, 'verify'), /4\.0\.0-alpha\.1 under alpha/);
+    const next = JSON.parse(await readFile(join(cwd, '.changeset/pre.json')));
+    assert.deepEqual(next.initialVersions, initial.initialVersions);
+    assert.ok(next.changesets.includes('followup-alpha'));
+    changeset(cwd, 'pre', 'exit');
+    assert.throws(
+      () => prerelease(cwd, 'version'),
+      (error) => {
+        assert.match(error.stderr, /active prerelease/);
+        return true;
+      },
+    );
+  } finally {
+    await rm(cwd, { recursive: true, force: true });
+  }
+});
+
+test('publication uses the committed prerelease tag and rejects stable state before building', async () => {
+  const { publishPrerelease } = await import('../../scripts/prerelease.mjs');
+  for (const tag of ['alpha', 'beta', 'rc']) {
+    const cwd = await forkWorkspace();
+    try {
+      const commands = [];
+      const run = (command, args) => commands.push({ command, args });
+      await assert.rejects(publishPrerelease(cwd, run), /active prerelease/);
+      assert.deepEqual(commands, []);
+      changeset(cwd, 'pre', 'enter', tag);
+      changeset(cwd, 'version');
+      await publishPrerelease(cwd, run);
+      assert.deepEqual(commands[0], { command: 'pnpm', args: ['build'] });
+      assert.equal(commands.length, 2);
+      assert.equal(commands[1].command, process.execPath);
+      assert.deepEqual(commands[1].args, [cli, 'publish', '--tag', tag]);
+    } finally {
+      await rm(cwd, { recursive: true, force: true });
+    }
+  }
+});
+
+test('initial-release probes also run from a generated release PR and later alpha', async () => {
+  const release = await forkWorkspace();
+  try {
+    prerelease(release, 'version');
+    for (const expected of ['4.0.0-alpha.0', '4.0.0-alpha.1']) {
+      assert.match(
+        prerelease(release, 'verify'),
+        new RegExp(expected.replaceAll('.', '\\.')),
+      );
+      for (const tag of [undefined, 'alpha']) {
+        const probe = await forkWorkspace(release);
+        try {
+          if (tag) changeset(probe, 'pre', 'enter', tag);
+          changeset(probe, 'version');
+          const core = JSON.parse(
+            await readFile(join(probe, 'libs/ts-rest/core/package.json')),
+          );
+          assert.equal(core.version, tag ? '4.0.0-alpha.0' : '4.0.0');
+        } finally {
+          await rm(probe, { recursive: true, force: true });
+        }
+      }
+      await writeFile(
+        join(release, '.changeset/next-probe.md'),
+        '---\n"@ts-restless/core": patch\n---\nNext alpha.\n',
+      );
+      prerelease(release, 'version');
+    }
+  } finally {
+    await rm(release, { recursive: true, force: true });
+  }
+});
+
+test('real Changesets publish preflight preserves alpha state and keeps prerelease-only packages off latest', async () => {
+  const { publishPrerelease } = await import('../../scripts/prerelease.mjs');
+  const cwd = await forkWorkspace();
+  try {
+    prerelease(cwd, 'version');
+    await writeFile(
+      join(cwd, '.changeset/new-alpha.md'),
+      '---\n"@ts-restless/core": patch\n---\nNext alpha.\n',
+    );
+    prerelease(cwd, 'version');
+    const prePath = join(cwd, '.changeset/pre.json');
+    const original = await readFile(prePath, 'utf8');
+    const bin = join(cwd, 'bin');
+    const log = join(cwd, 'publish-commands.jsonl');
+    await mkdir(bin);
+    // Only the external npm/pnpm boundary is replaced. The real Changesets CLI
+    // reads manifests/prestate and decides all tags and publication eligibility.
+    for (const tool of ['npm', 'pnpm']) {
+      await writeFile(
+        join(bin, tool),
+        `#!${process.execPath}
+const fs = require('node:fs');
+const args = process.argv.slice(2);
+if (args[0] === 'info') console.log(JSON.stringify({ versions: ['4.0.0-alpha.0'] }));
+else if (args[0] === '--version') console.log('12.14.0');
+else if (args[0] === 'publish') {
+  const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+  fs.appendFileSync(${JSON.stringify(log)}, JSON.stringify({ name: pkg.name, args }) + '\\n');
+  console.log('{}');
+} else { console.error('Unexpected registry command', args); process.exit(1); }
+`,
+        { mode: 0o755 },
+      );
+    }
+    const run = (command, args) => {
+      if (command === 'pnpm' && args[0] === 'build') return;
+      execFileSync(command, [...args, '--no-git-tag'], {
+        cwd,
+        env: { ...process.env, PATH: `${bin}:${process.env.PATH}` },
+        stdio: 'pipe',
+      });
+    };
+    await publishPrerelease(cwd, run);
+    const publications = (await readFile(log, 'utf8'))
+      .trim()
+      .split('\n')
+      .map(JSON.parse);
+    assert.equal(publications.length, 10);
+    for (const publication of publications) {
+      assert.ok(publication.name.startsWith('@ts-restless/'));
+      assert.equal(
+        publication.args[publication.args.indexOf('--tag') + 1],
+        'alpha',
+      );
+    }
+    assert.equal(await readFile(prePath, 'utf8'), original);
+    await assert.rejects(
+      publishPrerelease(cwd, (command) => {
+        if (command !== 'pnpm') throw new Error('publish failed');
+      }),
+      /publish failed/,
+    );
+    assert.equal(await readFile(prePath, 'utf8'), original);
   } finally {
     await rm(cwd, { recursive: true, force: true });
   }

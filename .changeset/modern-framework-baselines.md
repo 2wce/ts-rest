@@ -1,8 +1,8 @@
 ---
-'@ts-rest/nest': minor
-'@ts-rest/next': minor
-'@ts-rest/serverless': minor
-'@ts-rest/open-api': patch
+'@ts-restless/nest': minor
+'@ts-restless/next': minor
+'@ts-restless/serverless': minor
+'@ts-restless/open-api': patch
 ---
 
 Support Nest 12 and Next 15/16 while retaining older framework peer ranges.

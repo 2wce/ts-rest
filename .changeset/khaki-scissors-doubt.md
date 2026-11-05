@@ -1,5 +1,5 @@
 ---
-'@ts-rest/serverless': patch
+'@ts-restless/serverless': patch
 ---
 
 Expose more types to fix build issues with "verbatimModuleSyntax" and other such build configs

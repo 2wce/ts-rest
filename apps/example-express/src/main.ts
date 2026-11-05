@@ -1,8 +1,8 @@
 import express from 'express';
-import { initContract, TsRestResponseValidationError } from '@ts-rest/core';
-import { apiBlog, contractTs } from '@ts-rest/example-contracts';
-import { createExpressEndpoints, initServer } from '@ts-rest/express';
-import { generateOpenApi } from '@ts-rest/open-api';
+import { initContract, TsRestResponseValidationError } from '@ts-restless/core';
+import { apiBlog, contractTs } from '@ts-restless/example-contracts';
+import { createExpressEndpoints, initServer } from '@ts-restless/express';
+import { generateOpenApi } from '@ts-restless/open-api';
 import bodyParser from 'body-parser';
 import { Request, Response, NextFunction } from 'express';
 import { serve, setup } from 'swagger-ui-express';

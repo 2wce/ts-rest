@@ -27,7 +27,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { Post } from '@ts-rest/example-contracts';
+import type { Post } from '@ts-restless/example-contracts';
 import { client } from './api/client';
 import { computed, ref } from 'vue';
 

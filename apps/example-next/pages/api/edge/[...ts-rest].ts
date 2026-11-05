@@ -1,4 +1,4 @@
-import { createNextHandler } from '@ts-rest/serverless/next';
+import { createNextHandler } from '@ts-restless/serverless/next';
 import { testContract } from '../../../contracts/test-contract';
 
 export const config = {

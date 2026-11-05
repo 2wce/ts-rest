@@ -1,5 +1,5 @@
 {
-  "name": "@ts-rest/react-query-v5",
+  "name": "@ts-restless/react-query-v5",
   "version": "3.52.1",
   "private": true,
   "license": "MIT",
@@ -18,7 +18,7 @@
   "dependencies": {
     "@tanstack/query-core": "catalog:",
     "@tanstack/react-query": "catalog:",
-    "@ts-rest/core": "workspace:*",
+    "@ts-restless/core": "workspace:*",
     "react": "catalog:"
   },
   "exports": {

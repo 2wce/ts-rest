@@ -1,9 +1,11 @@
 ---
 title: Intro
-description: A seriously tiny type-safe wrapper around existing, battle-tested, established tech.
+description: Contract-first, end-to-end typed REST for TypeScript. A maintained fork of ts-rest.
 ---
 
-Simple cross-stack type-safety for your API, with just a sprinkle of TypeScript magic ✨
+**ts-restless** is a maintained fork of ts-rest. Define a shared REST contract and use it on your clients and servers.
+
+This documentation previews **4.0.0**. No library release is available yet. npm's `@ts-restless/*` registration placeholders (`0.0.0-stage`) contain no library code and must not be installed. Examples compile against this fork's new-scope development packages. See the [package migration and prerelease guide](/ts-restless-migration) before installing or upgrading from upstream v3.
 
 - 🛟 Contract-First API
 - 🌈 It's just HTTP/REST
@@ -19,7 +21,7 @@ We support any Typescript validation library that supports [Standard Schema](htt
 <Tabs items={['Zod', 'Valibot', 'Arktype', 'None']}>
   <Tab value="Zod">
 ```typescript title="contract.ts"
-    import { initContract } from '@ts-rest/core';
+    import { initContract } from '@ts-restless/core';
     import { z } from 'zod'; // [!code highlight]
 
     const c = initContract();
@@ -40,7 +42,7 @@ We support any Typescript validation library that supports [Standard Schema](htt
   </Tab>
   <Tab value="Valibot">
     ```typescript title="contract.ts"
-    import { initContract } from '@ts-rest/core';
+    import { initContract } from '@ts-restless/core';
     import * as v from 'valibot'; // [!code highlight]
 
     const c = initContract();
@@ -61,7 +63,7 @@ We support any Typescript validation library that supports [Standard Schema](htt
   </Tab>
   <Tab value="Arktype">
     ```typescript title="contract.ts"
-    import { initContract } from '@ts-rest/core';
+    import { initContract } from '@ts-restless/core';
     import { type } from 'arktype'; // [!code highlight]
 
     const c = initContract();
@@ -82,7 +84,7 @@ We support any Typescript validation library that supports [Standard Schema](htt
   </Tab>
    <Tab value="None">
     ```typescript title="contract.ts"
-    import { initContract } from '@ts-rest/core';
+    import { initContract } from '@ts-restless/core';
 
     const c = initContract();
 
@@ -105,7 +107,7 @@ We support any Typescript validation library that supports [Standard Schema](htt
 We support Nest, Next.js, Express, Fastify and more - Our server implementation allows you to guarentee your backend stays in sync with your API contract.
 
 ```typescript twoslash title="server.ts"
-import { initContract } from '@ts-rest/core';
+import { initContract } from '@ts-restless/core';
 const c = initContract();
 
 export const contract = c.router({
@@ -125,7 +127,7 @@ const pokemonService = {
 };
 
 // ---cut---
-import { initServer } from '@ts-rest/express';
+import { initServer } from '@ts-restless/express';
 
 const s = initServer();
 
@@ -144,10 +146,10 @@ const router = s.router(contract, {
 
 ### Use the API on the client
 
-Our `@ts-rest/core` package provides a super light-weight fetch based client - We remain close to HTTP fundamentals, so we always return a status code, and body.
+Our `@ts-restless/core` package provides a super light-weight fetch based client - We remain close to HTTP fundamentals, so we always return a status code, and body.
 
 ```typescript twoslash title="client.ts"
-import { initContract } from '@ts-rest/core';
+import { initContract } from '@ts-restless/core';
 const c = initContract();
 
 export const contract = c.router({
@@ -161,7 +163,7 @@ export const contract = c.router({
 });
 
 // ---cut---
-import { initClient } from '@ts-rest/core';
+import { initClient } from '@ts-restless/core';
 
 const client = initClient(contract, {
   baseUrl: 'http://localhost:3000',
@@ -180,13 +182,8 @@ if (result.status === 200) {
 
 ---
 
-## Meet the team
+## Maintainer and upstream credits
 
-We've got many, many contributors, but the core team consists of:
+The initial ts-restless maintainer is [@2wce](https://github.com/2wce). Report bugs and prerelease feedback in [this fork's issues](https://github.com/2wce/ts-restless/issues).
 
-- [@oliverbutler](https://github.com/oliverbutler) - Founder of ts-rest, Lead Engineer at [Onsi](https://onsi.com)
-- [@gabrola](https://github.com/Gabrola) - Typescript Expert and first to join the team
-- [@michaelangeloio](https://github.com/michaelangeloio) - SWE at [GitLab](https://gitlab.com), second to join the team
-
-We all work full time, so we tend to have non overlapping schedules, which normally means at some point one of us will be available to help with
-issues - We respond more easily on GitHub than on Discord, although reach out to us on Discord if you'd like to chat.
+ts-restless builds on [ts-rest](https://github.com/ts-rest/ts-rest), founded by [@oliverbutler](https://github.com/oliverbutler), and the work of its contributors, including [@gabrola](https://github.com/Gabrola) and [@michaelangeloio](https://github.com/michaelangeloio). Upstream credits and MIT licence notices are preserved.

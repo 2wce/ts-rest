@@ -8,7 +8,7 @@
     "start": "node dist/main.cjs"
   },
   "devDependencies": {
-    "@ts-rest/core": "workspace:*",
+    "@ts-restless/core": "workspace:*",
     "@nestjs/testing": "catalog:",
     "@types/cors": "catalog:",
     "supertest": "catalog:",
@@ -17,16 +17,16 @@
     "vite-plus": "catalog:",
     "vitest": "catalog:",
     "typescript": "catalog:classic-tooling",
-    "@ts-rest/build-config": "workspace:*"
+    "@ts-restless/build-config": "workspace:*"
   },
   "dependencies": {
     "@nestjs/common": "catalog:",
     "@nestjs/core": "catalog:",
     "@nestjs/swagger": "catalog:",
-    "@ts-rest/example-contracts": "workspace:*",
-    "@ts-rest/example-database": "workspace:*",
-    "@ts-rest/nest": "workspace:*",
-    "@ts-rest/open-api": "workspace:*",
+    "@ts-restless/example-contracts": "workspace:*",
+    "@ts-restless/example-database": "workspace:*",
+    "@ts-restless/nest": "workspace:*",
+    "@ts-restless/open-api": "workspace:*",
     "cors": "catalog:",
     "zod": "catalog:",
     "@nestjs/platform-express": "catalog:"

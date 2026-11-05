@@ -1,8 +1,8 @@
 {
-  "name": "@ts-rest/nest",
+  "name": "@ts-restless/nest",
   "version": "3.52.1",
   "private": false,
-  "description": "Nest server integration for @ts-rest",
+  "description": "ts-restless nest integration for contract-first, end-to-end typed REST.",
   "keywords": [
     "rpc",
     "rest",
@@ -15,7 +15,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/ts-rest/ts-rest.git",
+    "url": "https://github.com/2wce/ts-restless.git",
     "directory": "libs/ts-rest/nest"
   },
   "license": "MIT",
@@ -23,11 +23,11 @@
     "@nestjs/platform-express": "catalog:",
     "@nestjs/platform-fastify": "catalog:",
     "fastify": "5.12.7",
-    "@ts-rest/core": "workspace:*",
+    "@ts-restless/core": "workspace:*",
     "@nestjs/common": "catalog:",
     "@nestjs/core": "catalog:",
     "@nestjs/testing": "catalog:",
-    "@ts-rest/build-config": "workspace:*",
+    "@ts-restless/build-config": "workspace:*",
     "zod": "catalog:",
     "zod-legacy": "npm:zod@3.22.3"
   },
@@ -35,7 +35,7 @@
     "@nestjs/common": "^9.0.0 || ^10.0.0 || ^11.0.0 || ^12.0.0",
     "@nestjs/core": "^9.0.0 || ^10.0.0 || ^11.0.0 || ^12.0.0",
     "rxjs": "^7.1.0",
-    "@ts-rest/core": "workspace:^",
+    "@ts-restless/core": "workspace:^",
     "zod": "^3.22.3 || ^4.0.0"
   },
   "scripts": {
@@ -99,5 +99,9 @@
         "./src/zod3.ts"
       ]
     }
-  }
+  },
+  "bugs": {
+    "url": "https://github.com/2wce/ts-restless/issues"
+  },
+  "homepage": "https://github.com/2wce/ts-restless#readme"
 }

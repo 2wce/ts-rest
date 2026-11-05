@@ -1,4 +1,4 @@
-import { AppRoute, AppRouter } from '@ts-rest/core';
+import { AppRoute, AppRouter } from '@ts-restless/core';
 import { RequestHandler } from 'itty-router';
 import { TsRestRequest } from '../request';
 import {

@@ -5,11 +5,11 @@ export default defineConfig({
     tasks: {
       'build-app': {
         command: 'next build',
-        dependsOn: ['@ts-rest/example-database#generate'],
+        dependsOn: ['@ts-restless/example-database#generate'],
       },
       'dev-app': {
         command: 'next dev',
-        dependsOn: ['@ts-rest/example-database#generate'],
+        dependsOn: ['@ts-restless/example-database#generate'],
         cache: false,
       },
     },

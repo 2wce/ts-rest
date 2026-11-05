@@ -12,7 +12,7 @@ import {
   ClientArgs,
   ClientInferRequest,
   PartialClientInferRequest,
-} from '@ts-rest/core';
+} from '@ts-restless/core';
 import { DataResponse, ErrorResponse, queryFn } from './common';
 
 // Used on X.useInfiniteQuery

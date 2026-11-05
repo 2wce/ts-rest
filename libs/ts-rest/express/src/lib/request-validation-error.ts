@@ -1,4 +1,4 @@
-import { StandardSchemaError } from '@ts-rest/core';
+import { StandardSchemaError } from '@ts-restless/core';
 
 export class RequestValidationError extends Error {
   constructor(

@@ -2,9 +2,9 @@ import type { Component } from 'solid-js';
 
 import logo from './logo.svg';
 import styles from './App.module.css';
-import { postsApi } from '@ts-rest/example-microservice-util-posts-api';
-import { initQueryClient } from '@ts-rest/solid-query';
-import { ApiFetcherArgs, tsRestFetchApi } from '@ts-rest/core';
+import { postsApi } from '@ts-restless/example-microservice-util-posts-api';
+import { initQueryClient } from '@ts-restless/solid-query';
+import { ApiFetcherArgs, tsRestFetchApi } from '@ts-restless/core';
 
 const client = initQueryClient(postsApi, {
   baseUrl: 'http://localhost:5003',

@@ -11,16 +11,27 @@ const baseline = JSON.parse(
   await readFile(new URL('./package-baseline.json', import.meta.url)),
 );
 test('packed packages preserve their public API and consumer compatibility', async () => {
-  const consumer = await mkdtemp(join(tmpdir(), 'ts-rest-consumer-'));
+  const consumer = await mkdtemp(join(tmpdir(), 'ts-restless-consumer-'));
   try {
     const dependencies = {};
     const archives = resolve(root, 'dist/packages');
     for (const name of Object.keys(baseline)) {
-      const archive = join(archives, `ts-rest-${name}.tgz`);
+      const archive = join(archives, `ts-restless-${name}.tgz`);
       const pkg = JSON.parse(
         execFileSync('tar', ['-xOf', archive, 'package/package.json'], {
           encoding: 'utf8',
         }),
+      );
+      assert.equal(pkg.name, `@ts-restless/${name}`, `${name}: fork identity`);
+      assert.equal(
+        pkg.repository.url,
+        'https://github.com/2wce/ts-restless.git',
+        `${name}: actual fork repository`,
+      );
+      assert.equal(
+        pkg.bugs.url,
+        'https://github.com/2wce/ts-restless/issues',
+        `${name}: actual fork issue reporting`,
       );
       for (const [subpath, target] of Object.entries(pkg.exports)) {
         if (subpath === './package.json') continue;
@@ -62,8 +73,8 @@ test('packed packages preserve their public API and consumer compatibility', asy
         `${name}: published file allowlist`,
       );
       assert.ok(
-        !pkg.dependencies?.['@ts-rest/build-config'] &&
-          !pkg.dependencies?.['@ts-rest/react-query-v5'],
+        !pkg.dependencies?.['@ts-restless/build-config'] &&
+          !pkg.dependencies?.['@ts-restless/react-query-v5'],
         `${name}: no private runtime dependencies`,
       );
       dependencies[pkg.name] = `file:${archive}`;
@@ -101,7 +112,7 @@ test('packed packages preserve their public API and consumer compatibility', asy
     await writeFile(
       join(consumer, 'package.json'),
       JSON.stringify({
-        name: 'ts-rest-package-consumer',
+        name: 'ts-restless-package-consumer',
         private: true,
         dependencies,
       }),
@@ -119,7 +130,7 @@ test('packed packages preserve their public API and consumer compatibility', asy
     for (const [name, before] of Object.entries(baseline)) {
       const pkg = JSON.parse(
         await readFile(
-          join(consumer, 'node_modules/@ts-rest', name, 'package.json'),
+          join(consumer, 'node_modules/@ts-restless', name, 'package.json'),
         ),
       );
       assert.deepEqual(
@@ -133,7 +144,7 @@ test('packed packages preserve their public API and consumer compatibility', asy
       assert.equal(pkg.version, source.version, `${name}: release version`);
       const peers = { ...before.peerDependencies };
       if (name !== 'core') {
-        peers['@ts-rest/core'] = `^${source.version}`;
+        peers['@ts-restless/core'] = `^${source.version}`;
       }
       assert.deepEqual(pkg.peerDependencies, peers, `${name}: peer ranges`);
       assert.deepEqual(
@@ -159,10 +170,10 @@ for (const name of ${JSON.stringify(imports)}) {
  const esm = await import(name); const cjs = require(name);
  assert.deepEqual(Object.keys(esm).filter(k => k !== 'default').sort(), Object.keys(cjs).sort(), name);
 }
-const { initContract } = await import('@ts-rest/core');
+const { initContract } = await import('@ts-restless/core');
 assert.equal(initContract().router({ get: { method: 'GET', path: '/test', responses: {} } }).get.path, '/test');
 await import('reflect-metadata');
-const { TsRestInterceptor } = await import('@ts-rest/nest');
+const { TsRestInterceptor } = await import('@ts-restless/nest');
 const { Reflector } = await import('@nestjs/core');
 assert.equal(Reflect.getMetadata('design:paramtypes', TsRestInterceptor)[0], Reflector);
 `,
@@ -171,7 +182,7 @@ assert.equal(Reflect.getMetadata('design:paramtypes', TsRestInterceptor)[0], Ref
       stdio: 'inherit',
     });
     const files = await readdir(
-      join(consumer, 'node_modules/@ts-rest/react-query'),
+      join(consumer, 'node_modules/@ts-restless/react-query'),
       { recursive: true },
     );
     for (const name of ['provider-inner', 'use-tsr-query-client']) {
@@ -180,7 +191,7 @@ assert.equal(Reflect.getMetadata('design:paramtypes', TsRestInterceptor)[0], Ref
         assert.ok(file, `${name}: preserved module`);
         assert.match(
           await readFile(
-            join(consumer, 'node_modules/@ts-rest/react-query', file),
+            join(consumer, 'node_modules/@ts-restless/react-query', file),
             'utf8',
           ),
           /["']use client["']/,
@@ -194,10 +205,10 @@ assert.equal(Reflect.getMetadata('design:paramtypes', TsRestInterceptor)[0], Ref
           `import * as entry${index} from ${JSON.stringify(name)}; void entry${index};`,
       )
       .join('\n');
-    const typeConsumer = `${typeImports}\nimport { initContract, ClientInferResponseBody } from '@ts-rest/core';
-import { initQueryClient } from '@ts-rest/react-query';
-import { initTsrReactQuery } from '@ts-rest/react-query/v5';
-import { createFetchHandler } from '@ts-rest/serverless/fetch';
+    const typeConsumer = `${typeImports}\nimport { initContract, ClientInferResponseBody } from '@ts-restless/core';
+import { initQueryClient } from '@ts-restless/react-query';
+import { initTsrReactQuery } from '@ts-restless/react-query/v5';
+import { createFetchHandler } from '@ts-restless/serverless/fetch';
 const contract = initContract().router({ get: { method: 'GET', path: '/test', responses: { 200: initContract().type<{ value: string }>() } } });
 const value: ClientInferResponseBody<typeof contract.get, 200> = { value: 'ok' };
 // @ts-expect-error response inference must reject incompatible body values
