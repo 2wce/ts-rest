@@ -8,6 +8,6 @@ After publication, use the latest prerelease for evaluation. Stable release secu
 
 ## Reporting a vulnerability
 
-Use [GitHub private vulnerability reporting](https://github.com/2wce/ts-rest/security/advisories/new) on this repository. Private reporting is enabled and reports go to this fork's maintainers. Include affected versions, a minimal reproduction, impact and any proposed mitigation. Keep vulnerability details in that private channel.
+Use [GitHub private vulnerability reporting](https://github.com/2wce/ts-restless/security/advisories/new) on this repository. Private reporting is enabled and reports go to this fork's maintainers. Include affected versions, a minimal reproduction, impact and any proposed mitigation. Keep vulnerability details in that private channel.
 
-The initial maintainer is [@2wce](https://github.com/2wce). General bugs and prerelease feedback belong in [the public issue tracker](https://github.com/2wce/ts-rest/issues).
+The initial maintainer is [@2wce](https://github.com/2wce). General bugs and prerelease feedback belong in [the public issue tracker](https://github.com/2wce/ts-restless/issues).

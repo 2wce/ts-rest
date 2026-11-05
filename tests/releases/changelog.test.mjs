@@ -32,7 +32,7 @@ test('generated changelog routes fork releases to this repository while retainin
   );
   assert.ok(
     content.includes(
-      '[8d63911c](https://github.com/2wce/ts-rest/commit/8d63911c)',
+      '[8d63911c](https://github.com/2wce/ts-restless/commit/8d63911c)',
     ),
   );
   assert.ok(

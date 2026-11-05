@@ -35,7 +35,7 @@
     "node": "26.12.0"
   },
   "packageManager": "pnpm@12.14.0",
-  "repository": "https://github.com/2wce/ts-rest",
+  "repository": "https://github.com/2wce/ts-restless",
   "private": true,
   "devDependencies": {
     "@anatine/zod-openapi": "catalog:",

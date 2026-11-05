@@ -3,11 +3,11 @@
 Contract-first, end-to-end typed REST for TypeScript. A maintained fork of [ts-rest](https://github.com/ts-rest/ts-rest).
 
 <p align="center">
-  <a href="https://github.com/2wce/ts-rest">
-    <img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/2wce/ts-rest"/>
+  <a href="https://github.com/2wce/ts-restless">
+    <img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/2wce/ts-restless"/>
   </a>
-  <a href="https://github.com/2wce/ts-rest/blob/main/LICENCE">
-    <img alt="License" src="https://img.shields.io/github/license/2wce/ts-rest"/>
+  <a href="https://github.com/2wce/ts-restless/blob/main/LICENCE">
+    <img alt="License" src="https://img.shields.io/github/license/2wce/ts-restless"/>
   </a>
 </p>
 
@@ -17,7 +17,7 @@ The first stable ts-restless release will be **4.0.0**, with interim `4.0.0-alph
 
 This development checkout uses `@ts-restless/*` package names. Its examples describe this fork's source, which includes breaking changes from published upstream v3. See the [package migration and prerelease guide](apps/docs/content/docs/ts-restless-migration.mdx) and [Standard Schema migration](apps/docs/content/docs/standard-schema-migration.mdx).
 
-Report bugs and prerelease feedback in [this fork's issues](https://github.com/2wce/ts-rest/issues). The initial maintainer is [@2wce](https://github.com/2wce).
+Report bugs and prerelease feedback in [this fork's issues](https://github.com/2wce/ts-restless/issues). The initial maintainer is [@2wce](https://github.com/2wce).
 
 # Introduction
 

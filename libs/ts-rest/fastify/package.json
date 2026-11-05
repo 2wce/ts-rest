@@ -3,7 +3,7 @@
   "version": "3.52.1",
   "repository": {
     "type": "git",
-    "url": "https://github.com/2wce/ts-rest.git",
+    "url": "https://github.com/2wce/ts-restless.git",
     "directory": "libs/ts-rest/fastify"
   },
   "license": "MIT",
@@ -79,8 +79,8 @@
     }
   },
   "bugs": {
-    "url": "https://github.com/2wce/ts-rest/issues"
+    "url": "https://github.com/2wce/ts-restless/issues"
   },
-  "homepage": "https://github.com/2wce/ts-rest#readme",
+  "homepage": "https://github.com/2wce/ts-restless#readme",
   "description": "ts-restless fastify integration for contract-first, end-to-end typed REST."
 }

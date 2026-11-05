@@ -2,7 +2,7 @@
 
 **Recorded:** 2026-11-04. **Status:** The user selected `ts-restless`, an initial stable version of `4.0.0`, and project-owned npm organization `ts-restless` with the user as its initial owner. The user also approved interim public prereleases while stable-launch fixes continue. This document defines the identity implementation boundary; package renaming, organization creation, versioning and publication have not been performed.
 
-**Related:** [Fork release readiness issue #6](https://github.com/2wce/ts-rest/issues/6), [F06 release backlog](../../release-readiness-backlog.md#f06--fork-identity-migration-and-release-readiness), [Standard Schema separation design](2026-10-20-standard-schema-separation-design.md).
+**Related:** [Fork release readiness issue #6](https://github.com/2wce/ts-restless/issues/6), [F06 release backlog](../../release-readiness-backlog.md#f06--fork-identity-migration-and-release-readiness), [Standard Schema separation design](2026-10-20-standard-schema-separation-design.md).
 
 ## Project identity
 
@@ -12,7 +12,7 @@ The project is **ts-restless**. Its public description is:
 
 Use the complete name consistently in package descriptions, README, documentation navigation and release notes. Describe its upstream lineage explicitly and preserve upstream credits and MIT licence notices. Support and maintenance claims concern ts-restless releases and their recorded dependency support; they must not imply ownership or maintenance of upstream published packages.
 
-Keep the current repository at `https://github.com/2wce/ts-rest` for the initial release. Set package repository and issue links to that actual repository. A later move to a project GitHub organization can be delivered separately with its own metadata/link updates. A custom domain and redesigned logo are not first-release requirements; documentation must use an actual hosted destination when one is available.
+Use the current repository at `https://github.com/2wce/ts-restless` for the initial release. GitHub API verification on 2026-11-05 confirmed the renamed repository retains ID `1425753666`; the old URL redirects to it. Set package repository, issue links and npm trusted-publisher bindings to the actual name. A later move to a project GitHub organization can be delivered separately with its own metadata/link updates. A custom domain and redesigned logo are not first-release requirements; documentation must use an actual hosted destination when one is available.
 
 ## Publication names and ownership
 

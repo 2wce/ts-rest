@@ -25,12 +25,12 @@ test('packed packages preserve their public API and consumer compatibility', asy
       assert.equal(pkg.name, `@ts-restless/${name}`, `${name}: fork identity`);
       assert.equal(
         pkg.repository.url,
-        'https://github.com/2wce/ts-rest.git',
+        'https://github.com/2wce/ts-restless.git',
         `${name}: actual fork repository`,
       );
       assert.equal(
         pkg.bugs.url,
-        'https://github.com/2wce/ts-rest/issues',
+        'https://github.com/2wce/ts-restless/issues',
         `${name}: actual fork issue reporting`,
       );
       for (const [subpath, target] of Object.entries(pkg.exports)) {

@@ -29,19 +29,19 @@ export function DocsContent({ path }: { path: string }) {
               padding: '0',
             }}
           >
-            <a href="https://github.com/2wce/ts-rest">
+            <a href="https://github.com/2wce/ts-restless">
               <img
                 alt="GitHub Repo stars"
-                src="https://img.shields.io/github/stars/2wce/ts-rest"
+                src="https://img.shields.io/github/stars/2wce/ts-restless"
               />
             </a>
             <a
-              href="https://github.com/2wce/ts-rest/blob/main/LICENCE"
+              href="https://github.com/2wce/ts-restless/blob/main/LICENCE"
               className="hidden lg:block"
             >
               <img
                 alt="License"
-                src="https://img.shields.io/github/license/2wce/ts-rest"
+                src="https://img.shields.io/github/license/2wce/ts-restless"
               />
             </a>
           </div>

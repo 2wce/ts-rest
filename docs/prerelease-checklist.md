@@ -44,7 +44,7 @@ Verify actual ownership and private reporting:
 ```sh
 npm whoami --registry=https://registry.npmjs.org
 npm org ls ts-restless --json --registry=https://registry.npmjs.org
-gh api repos/2wce/ts-rest/private-vulnerability-reporting
+gh api repos/2wce/ts-restless/private-vulnerability-reporting
 ```
 
 Configure npm trusted publishing for each of the ten public packages. The release job uses GitHub-hosted Ubuntu runners with `id-token: write`; pinned Node 26 provides npm 11.20.0 locally, and the job checks npm >=11.5.1. The repository's pnpm 12 publish path supports OIDC and provenance. Public registry metadata reads need no npm token.
@@ -54,18 +54,18 @@ In each package's npm settings, add a GitHub Actions trusted publisher with thes
 | Field                | Value                                                                                       |
 | -------------------- | ------------------------------------------------------------------------------------------- |
 | Organization or user | `2wce`                                                                                      |
-| Repository           | `ts-rest`                                                                                   |
+| Repository           | `ts-restless`                                                                               |
 | Workflow filename    | `build-test.yml`                                                                            |
 | Environment name     | Leave empty; this job does not use a GitHub environment                                     |
 | Allowed actions      | Enable direct `npm publish`; current new trust configurations otherwise permit staging only |
 
-All ten connections were created on 2026-11-04 with direct and staged publishing allowed, and dist-tag management disabled. They are pending validation by the first successful OIDC publication. The earliest connection must be validated before **2026-11-06 15:35 UTC** or recreated. Existing package token-access settings have not been tightened; that remains a separate step after successful OIDC publication.
+The original ten connections were created on 2026-11-04 for `2wce/ts-rest`, with direct and staged publishing allowed and dist-tag management disabled. GitHub renamed the same repository (ID `1425753666`) to `2wce/ts-restless` by 2026-11-05. All ten replacement connections were created on 2026-11-05 with the exact binding above and the same permissions. Final verification and retirement of the obsolete old-name bindings remain pending npm authentication. Every new connection needs its first successful OIDC publication within two days. Existing package token-access settings have not been tightened; that remains a separate step after successful OIDC publication.
 
 Names include all ten entries in the package migration table: core, express, fastify, nest, next, serverless, react-query, open-api, solid-query and vue-query. Keep private packages excluded. The public manifests already point to the actual fork repository, as npm requires. Package settings are case-sensitive; the workflow filename is the filename alone.
 
 The workflow has no `NPM_TOKEN` or `NODE_AUTH_TOKEN` publishing secret. GitHub issues a short-lived OIDC identity, and the package manager exchanges it for scoped registry access. GitHub trusted publishing automatically adds provenance for these public packages/public repository; explicit npm/pnpm provenance settings retain that requirement. Local `npm whoami` is not a check of OIDC permissions. Verify the actual publication's registry provenance before declaring the setup complete.
 
-A dedicated repository secret `RELEASE_PR_TOKEN` is still required for GitHub contents/pull-requests write access so generated release PRs trigger ordinary PR CI. It is a GitHub PR credential, independent of npm publishing. Prefer a project-owned GitHub App identity when configuring this credential. Never print or commit its value.
+A dedicated repository secret `RELEASE_PR_TOKEN` provides GitHub contents/pull-requests write access so generated release PRs trigger ordinary PR CI. A secret-name-only GitHub API read confirmed the user saved it on 2026-11-05; its actual permissions still need verification by a successful release-PR job. It is a GitHub PR credential, independent of npm publishing. A future project-owned GitHub App identity can generate installation tokens in the workflow. Never print or commit the credential's value.
 
 ### First-package registration
 

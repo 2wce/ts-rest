@@ -13,7 +13,7 @@
 ## Global Constraints
 
 - Public identity is `ts-restless`, under project-owned `@ts-restless/*`, with the user as initial npm owner. First stable version is `4.0.0`; first numbered prerelease is `4.0.0-alpha.0`.
-- Keep the current repository `https://github.com/2wce/ts-rest`, existing ten public leaf names, all supported exports, API identifiers and peer ranges. Keep private packages/examples private and React Query v5 bundled through public `/v5`.
+- Use the current repository `https://github.com/2wce/ts-restless` (renamed on 2026-11-05), existing ten public leaf names, all supported exports, API identifiers and peer ranges. Keep private packages/examples private and React Query v5 bundled through public `/v5`.
 - Preserve directory/file names containing `ts-rest`, upstream attribution, licences and historical changelogs/plans. Update active consumers/configuration, not historical records.
 - Preserve validator-independent defaults, explicit `/zod3`, synchronous validation and native lifecycle/behavior. F01–F05 and A03–A19 remain separate work.
 - No credentials in source or tool output. Verify real npm identity/organization ownership before publication. Keep stable workflow disabled and prerelease guard disabled until all prerequisites pass.
@@ -85,3 +85,15 @@ The user selected npm provenance + trusted publishing after authorizing draft PR
 - npm automatically assigned each placeholder to `latest`. An authenticated `npm dist-tag rm @ts-restless/core latest` returned HTTP 400; a subsequent public registry read confirmed the tag remained. No other tag removals were attempted. Registration stages remain unapproved; an attempted Core-stage rejection did not complete authentication. Do not approve those payloads or delete the package records.
 - Live GitHub API reads still returned no repository secrets or variables. `RELEASE_PR_TOKEN` remains missing and `PRERELEASE_ENABLED` remains unset. PR #10 is draft; no merge, workflow activation or real alpha publication is authorized by the registration/setup step.
 - The registration-status documentation follow-up passed the docs build/type checks and all 30 rendered-site tests. The initial sandboxed run failed to bind the local prerender listener (`listen EPERM ::1`); the unchanged command passed with approved execution. Formatting and whitespace checks passed. The previous implementation head `a47c0890` passed full branch CI, including default Next and all ten isolated compatibility fixtures.
+
+### Repository rename correction (2026-11-05)
+
+GitHub now identifies repository ID `1425753666` as `2wce/ts-restless`; the old URL redirects to it. The user saved `RELEASE_PR_TOKEN`, and a secret-name-only API read confirmed its presence. Full CI passed on `c3425b3f`. The token's permission scope still requires proof from an actual release-PR job. The existing npm connections target the old repository name, so they need replacement before OIDC publication; the original setup above is historical evidence.
+
+- [x] Update the existing packed-metadata and generated-changelog expectations to the canonical repository. Both checks failed against the old implementation/artifacts before source changes.
+- [x] Align public manifests, root metadata, active fork links, changelog generation and release setup documentation with `2wce/ts-restless`. Preserve upstream attribution, historical changelogs, APIs, versions, peers and paused release guards.
+- [x] Run the package/release suite, docs build/type checks and rendered tests; check formatting and remaining old-name references. All 20 package/release tests and 30 rendered-site tests passed. The initial sandboxed consumer installation hit DNS restrictions; the same suite passed with approved network access. Formatting and whitespace checks passed. Active old-name references are only the documented original bindings; historical plans/changelogs retain their recorded names.
+- [ ] Configure equivalent npm trust bindings to `2wce/ts-restless` / `build-test.yml`, with direct/staged publishing allowed and dist-tag management excluded; retire the obsolete connections after the replacements are verified.
+- [ ] Record evidence, commit and push to the existing draft PR. Publication and merge remain separate from this metadata/authentication correction.
+
+The local npm login returned E401 and was refreshed by the user through npm's browser login flow. npm's supported CLI then reported successful creation of all ten replacement connections with the canonical repository and direct/staged publishing permissions. Core's authenticated list showed both old and replacement bindings. Final verification/retirement of the obsolete bindings requires another authenticated window; one browser verification request expired, and a fresh prompt is open. No library version or public dist-tag was changed. The local origin remote now uses the canonical repository URL.

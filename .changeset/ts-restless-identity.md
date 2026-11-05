@@ -7,7 +7,7 @@ Launch the maintained fork as **ts-restless**, with the ten public packages unde
 releases are available before the remaining compatibility work is complete.
 Replace upstream dependencies and imports as a matched package set; public API
 identifiers and supported subpaths, including `/zod3` and React Query `/v5`, remain.
-Report bugs and prerelease feedback at https://github.com/2wce/ts-rest/issues.
+Report bugs and prerelease feedback at https://github.com/2wce/ts-restless/issues.
 
 This major includes the Standard Schema default API and the separately documented
 legacy Zod bridge. A prerelease does not widen framework support: public React

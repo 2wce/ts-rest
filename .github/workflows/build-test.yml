@@ -165,6 +165,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_PR_TOKEN }}
           # npm authenticates using this job's OIDC identity. The trust must be
-          # configured on every public package for 2wce/ts-rest/build-test.yml.
+          # configured on every public package for 2wce/ts-restless/build-test.yml.
           NPM_CONFIG_PROVENANCE: true
           PNPM_CONFIG_PROVENANCE: true

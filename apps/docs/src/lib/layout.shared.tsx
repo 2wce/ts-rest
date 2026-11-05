@@ -1,7 +1,7 @@
 import type { BaseLayoutProps } from 'fumadocs-ui/layouts/shared';
 
 export const baseOptions: BaseLayoutProps = {
-  githubUrl: 'https://github.com/2wce/ts-rest',
+  githubUrl: 'https://github.com/2wce/ts-restless',
   nav: {
     title: (
       <>
