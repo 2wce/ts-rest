@@ -7,7 +7,7 @@ These documents refine A04 of the existing adapter epic. Read the approved desig
 | [001 Response contract evaluation design](001-response-contract-evaluation-design.md) | A04, with F04 kept separate                          | Approved 2026-11-05                    |
 | [002 Core evaluation and Express adoption](002-response-contract-evaluation.md)       | A04 implementation; depends on 001 and completed A02 | DONE locally; CI compatibility pending |
 
-Plan 002 has three sequential tasks: characterize compatibility, establish the core capability and packed API evidence, then adopt it in Express and run the final gates. Source baseline: `aaae50b5`. Update its status after verified execution. Implemented on `feat/response-contract-evaluation`; all required local gates passed on 2026-11-06.
+Plan 002 has three sequential tasks: characterize compatibility, establish the core capability and packed API evidence, then adopt it in Express and run the final gates. Original planning baseline: `aaae50b5`; delivery rebased onto `2bbc84e4` to exclude the already merged Changesets correction. Implemented on `feat/response-contract-evaluation`; all required local gates passed on 2026-11-06.
 
 ## Alternatives considered
 
@@ -17,8 +17,8 @@ Plan 002 has three sequential tasks: characterize compatibility, establish the c
 
 ## Execution evidence (2026-11-06)
 
-- Compatibility checkpoint: `f35c9387`, 286 core/Express tests passed before production extraction; all nine inference tasks passed.
-- Core capability checkpoint: `2826c302`, 266 core tests and all nine inference tasks passed. The first new evaluator run failed for the missing response module, then passed after implementation. Packed checks passed against real installed ESM/CommonJS exports and strict declarations.
+- Compatibility checkpoint: `a15a7077` (originally `f35c9387`), 286 core/Express tests passed before production extraction; all nine inference tasks passed.
+- Core capability checkpoint: `e763bd33` (originally `2826c302`), 266 core tests and all nine inference tasks passed. The first new evaluator run failed for the missing response module, then passed after implementation. Packed checks passed against real installed ESM/CommonJS exports and strict declarations.
 - Completed adoption: 301 focused core/Express tests passed, including native JSON/text transform counts, stream bypass and existing middleware/conformance cases.
 - Final `pnpm typecheck`, `pnpm test` and `pnpm test:packages` all exited 0; the final packed suite passed 20 tests across four files. Changed-file formatting and whitespace checks passed.
 - Existing CI `Compatibility Fixtures` remains a merge gate; it was not run locally. No publication, dependency-floor change or host/client-policy migration is included.
