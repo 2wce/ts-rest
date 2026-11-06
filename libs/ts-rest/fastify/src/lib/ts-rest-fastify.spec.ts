@@ -1,10 +1,16 @@
 import { vi } from 'vitest';
-import { initContract, TsRestResponseError } from '@ts-restless/core';
+import {
+  initContract,
+  StandardSchemaV1,
+  TsRestResponseError,
+  TsRestResponseValidationError,
+} from '@ts-restless/core';
 import { initServer } from './ts-rest-fastify';
 import { z } from 'zod';
-import fastify from 'fastify';
+import fastify, { FastifyInstance } from 'fastify';
 import supertest from 'supertest';
 import * as v from 'valibot';
+import { Readable } from 'node:stream';
 
 declare module 'fastify' {
   interface FastifyReply {
@@ -88,6 +94,244 @@ const contract = c.router({
 });
 
 vi.setConfig({ testTimeout: 30000 });
+
+describe('response evaluation compatibility', () => {
+  const s = initServer();
+  let app: FastifyInstance;
+
+  beforeEach(() => {
+    app = fastify({ logger: false });
+  });
+
+  afterEach(async () => {
+    await app.close();
+  });
+
+  it.each([
+    {
+      responseValidation: true,
+      expectedBody: { wrapped: { original: true } },
+      expectedCalls: 1,
+      expectedEvents: ['handler', 'validate', 'preSerialization', 'onSend'],
+    },
+    {
+      responseValidation: false,
+      expectedBody: { original: true },
+      expectedCalls: 0,
+      expectedEvents: ['handler', 'preSerialization', 'onSend'],
+    },
+  ])(
+    'preserves JSON evaluation before native response hooks (validation: $responseValidation)',
+    async ({
+      responseValidation,
+      expectedBody,
+      expectedCalls,
+      expectedEvents,
+    }) => {
+      let calls = 0;
+      const events: string[] = [];
+      const hookBodies: unknown[] = [];
+      const schema: StandardSchemaV1<unknown, { wrapped: unknown }> = {
+        '~standard': {
+          version: 1,
+          vendor: 'fastify-response-test',
+          validate(value) {
+            calls += 1;
+            events.push('validate');
+            return { value: { wrapped: value } };
+          },
+        },
+      };
+      const contract = c.router({
+        get: {
+          method: 'GET',
+          path: '/json-count',
+          responses: { 200: schema },
+        },
+      });
+      app.addHook('preSerialization', async (_request, _reply, payload) => {
+        events.push('preSerialization');
+        hookBodies.push(payload);
+        return payload;
+      });
+      app.addHook('onSend', async (_request, reply, payload) => {
+        events.push('onSend');
+        reply.header('x-native-response', 'yes');
+        return payload;
+      });
+      s.registerRouter(
+        contract,
+        s.router(contract, {
+          get: async ({ request, reply, appRoute }) => {
+            events.push('handler');
+            expect(reply.request).toBe(request);
+            expect(appRoute).toBe(contract.get);
+            expect(request.routeOptions.config.tsRestRoute).toBe(contract.get);
+            return { status: 200, body: { original: true } };
+          },
+        }),
+        app,
+        { responseValidation, logInitialization: false },
+      );
+      await app.ready();
+
+      const response = await supertest(app.server).get('/json-count');
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual(expectedBody);
+      expect(response.headers['content-type']).toMatch(/^application\/json/);
+      expect(response.headers['x-native-response']).toBe('yes');
+      expect(hookBodies).toEqual([expectedBody]);
+      expect(calls).toBe(expectedCalls);
+      expect(events).toEqual(expectedEvents);
+    },
+  );
+
+  it.each([
+    { responseValidation: true, expectedText: 'input!', expectedCalls: 1 },
+    { responseValidation: false, expectedText: 'input', expectedCalls: 0 },
+  ])(
+    'preserves explicit media types and transform counts (validation: $responseValidation)',
+    async ({ responseValidation, expectedText, expectedCalls }) => {
+      let calls = 0;
+      const schema: StandardSchemaV1<string> = {
+        '~standard': {
+          version: 1,
+          vendor: 'fastify-response-test',
+          validate(value) {
+            calls += 1;
+            return { value: String(value) + '!' };
+          },
+        },
+      };
+      const contract = c.router({
+        get: {
+          method: 'GET',
+          path: '/text-count',
+          responses: {
+            200: c.otherResponse({ contentType: 'text/plain', body: schema }),
+          },
+        },
+      });
+      s.registerRouter(
+        contract,
+        s.router(contract, {
+          get: async () => ({ status: 200, body: 'input' }),
+        }),
+        app,
+        { responseValidation, logInitialization: false },
+      );
+      await app.ready();
+
+      const response = await supertest(app.server).get('/text-count');
+      expect(response.status).toBe(200);
+      expect(response.text).toBe(expectedText);
+      expect(response.headers['content-type']).toBe('text/plain');
+      expect(calls).toBe(expectedCalls);
+    },
+  );
+
+  it.each([true, false])(
+    'passes through an undeclared status (validation: %s)',
+    async (responseValidation) => {
+      let calls = 0;
+      const schema: StandardSchemaV1 = {
+        '~standard': {
+          version: 1,
+          vendor: 'fastify-response-test',
+          validate() {
+            calls += 1;
+            return { issues: [{ message: 'Do not validate this status' }] };
+          },
+        },
+      };
+      const contract = c.router({
+        get: {
+          method: 'GET',
+          path: '/undeclared',
+          responses: { 200: schema },
+        },
+      });
+      s.registerRouter(
+        contract,
+        s.router(contract, {
+          get: async () => ({ status: 201, body: { original: true } }),
+        }),
+        app,
+        { responseValidation, logInitialization: false },
+      );
+      await app.ready();
+
+      const response = await supertest(app.server).get('/undeclared');
+      expect(response.status).toBe(201);
+      expect(response.body).toEqual({ original: true });
+      expect(response.headers['content-type']).toMatch(/^application\/json/);
+      expect(calls).toBe(0);
+    },
+  );
+
+  it.each([true, false])(
+    'preserves validation of native streams (validation: %s)',
+    async (responseValidation) => {
+      const stream = Readable.from(['streamed']);
+      const validationInputs: unknown[] = [];
+      const errors: unknown[] = [];
+      const schema: StandardSchemaV1<Readable> = {
+        '~standard': {
+          version: 1,
+          vendor: 'fastify-response-test',
+          validate(value) {
+            validationInputs.push(value);
+            return { issues: [{ message: 'Stream rejected by contract' }] };
+          },
+        },
+      };
+      const contract = c.router({
+        get: {
+          method: 'GET',
+          path: '/stream-count',
+          responses: {
+            200: c.otherResponse({ contentType: 'text/plain', body: schema }),
+          },
+        },
+      });
+      app.addHook('onError', async (_request, _reply, error) => {
+        errors.push(error);
+      });
+      s.registerRouter(
+        contract,
+        s.router(contract, {
+          get: async () => ({ status: 200, body: stream }),
+        }),
+        app,
+        { responseValidation, logInitialization: false },
+      );
+      await app.ready();
+
+      try {
+        const response = await supertest(app.server).get('/stream-count');
+        if (responseValidation) {
+          expect(response.status).toBe(500);
+          expect(validationInputs).toHaveLength(1);
+          expect(validationInputs[0]).toBe(stream);
+          expect(errors).toHaveLength(1);
+          expect(errors[0]).toBeInstanceOf(TsRestResponseValidationError);
+          expect(errors[0]).toMatchObject({
+            appRoute: contract.get,
+            cause: { issues: [{ message: 'Stream rejected by contract' }] },
+          });
+        } else {
+          expect(response.status).toBe(200);
+          expect(response.text).toBe('streamed');
+          expect(response.headers['content-type']).toBe('text/plain');
+          expect(validationInputs).toEqual([]);
+          expect(errors).toEqual([]);
+        }
+      } finally {
+        stream.destroy();
+      }
+    },
+  );
+});
 
 describe('ts-rest-fastify', () => {
   const s = initServer();
