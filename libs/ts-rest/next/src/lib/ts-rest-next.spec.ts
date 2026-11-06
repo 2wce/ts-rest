@@ -3,6 +3,8 @@ import {
   initContract,
   TsRestResponseValidationError as ResponseValidationError,
   TsRestResponseError,
+  StandardSchemaV1,
+  StandardSchemaError,
 } from '@ts-restless/core';
 import { NextApiRequest, NextApiResponse } from 'next';
 import {
@@ -177,6 +179,317 @@ const mockRes = {
   })),
   setHeader: vi.fn(),
 } as unknown as NextApiResponse;
+
+describe.each(['router', 'single'] as const)(
+  '%s response compatibility',
+  (mode) => {
+    beforeEach(() => {
+      vi.clearAllMocks();
+    });
+
+    const request = () =>
+      mode === 'router'
+        ? mockReq('/response', { method: 'GET' })
+        : mockSingleUrlReq('/response', { method: 'GET' });
+
+    it.each([undefined, false, true])(
+      'preserves JSON transforms and numeric status coercion (validation: %s)',
+      async (responseValidation) => {
+        const validate = vi.fn((value: unknown) => ({
+          value: { wrapped: value },
+        }));
+        const schema: StandardSchemaV1<unknown, { wrapped: unknown }> = {
+          '~standard': { version: 1, vendor: 'next-response-test', validate },
+        };
+        const router = c.router({
+          get: { method: 'GET', path: '/response', responses: { 200: schema } },
+        });
+        const body = { original: true };
+        const req = request();
+        const implementation = async (context: {
+          req: NextApiRequest;
+          res: NextApiResponse;
+        }) => {
+          expect(context.req).toBe(req);
+          expect(context.res).toBe(mockRes);
+          // JavaScript callers can supply a string status; Next normalizes it.
+          return { status: '200' as unknown as 200, body };
+        };
+        const handler =
+          mode === 'router'
+            ? createNextRouter(
+                router,
+                { get: implementation },
+                { responseValidation },
+              )
+            : createSingleRouteHandler(router.get, implementation, {
+                responseValidation,
+              });
+
+        await handler(req, mockRes);
+
+        expect(mockRes.status).toHaveBeenCalledWith(200);
+        expect(jsonMock).toHaveBeenCalledExactlyOnceWith(
+          responseValidation ? { wrapped: body } : body,
+        );
+        expect(validate).toHaveBeenCalledTimes(responseValidation ? 1 : 0);
+        if (responseValidation) expect(validate).toHaveBeenCalledWith(body);
+        expect(sendMock).not.toHaveBeenCalled();
+        expect(endMock).not.toHaveBeenCalled();
+        expect(mockRes.setHeader).not.toHaveBeenCalled();
+      },
+    );
+
+    it.each([false, true])(
+      'preserves text and thrown declared response transforms (validation: %s)',
+      async (responseValidation) => {
+        const validate = vi.fn((value: unknown) => ({
+          value: String(value) + '!',
+        }));
+        const schema: StandardSchemaV1<string> = {
+          '~standard': { version: 1, vendor: 'next-response-test', validate },
+        };
+        const router = c.router({
+          get: {
+            method: 'GET',
+            path: '/response',
+            responses: {
+              400: c.otherResponse({ contentType: 'text/plain', body: schema }),
+            },
+          },
+        });
+        const implementation = async () => {
+          throw new TsRestResponseError(router.get, {
+            status: 400,
+            body: 'input',
+          });
+        };
+        const handler =
+          mode === 'router'
+            ? createNextRouter(
+                router,
+                { get: implementation },
+                { responseValidation },
+              )
+            : createSingleRouteHandler(router.get, implementation, {
+                responseValidation,
+              });
+
+        await handler(request(), mockRes);
+
+        expect(mockRes.status).toHaveBeenCalledWith(400);
+        expect(mockRes.setHeader).toHaveBeenCalledExactlyOnceWith(
+          'content-type',
+          'text/plain',
+        );
+        expect(sendMock).toHaveBeenCalledExactlyOnceWith(
+          responseValidation ? 'input!' : 'input',
+        );
+        expect(validate).toHaveBeenCalledTimes(responseValidation ? 1 : 0);
+        expect(jsonMock).not.toHaveBeenCalled();
+        expect(endMock).not.toHaveBeenCalled();
+      },
+    );
+
+    it.each([false, true])(
+      'passes undeclared statuses through without validation (validation: %s)',
+      async (responseValidation) => {
+        const validate = vi.fn(() => ({
+          issues: [{ message: 'must not run' }],
+        }));
+        const schema: StandardSchemaV1 = {
+          '~standard': { version: 1, vendor: 'next-response-test', validate },
+        };
+        const router = c.router({
+          get: { method: 'GET', path: '/response', responses: { 200: schema } },
+        });
+        const implementation = async () => ({
+          status: 202 as const,
+          body: false,
+        });
+        const handler =
+          mode === 'router'
+            ? createNextRouter(
+                router,
+                { get: implementation },
+                { responseValidation },
+              )
+            : createSingleRouteHandler(router.get, implementation, {
+                responseValidation,
+              });
+
+        await handler(request(), mockRes);
+
+        expect(mockRes.status).toHaveBeenCalledWith(202);
+        expect(jsonMock).toHaveBeenCalledExactlyOnceWith(false);
+        expect(validate).not.toHaveBeenCalled();
+        expect(mockRes.setHeader).not.toHaveBeenCalled();
+        expect(sendMock).not.toHaveBeenCalled();
+      },
+    );
+
+    it.each([false, true])(
+      'ends a no-body response without JSON or text writes (validation: %s)',
+      async (responseValidation) => {
+        const router = c.router({
+          get: {
+            method: 'GET',
+            path: '/response',
+            responses: { 204: c.noBody() },
+          },
+        });
+        const implementation = async () => ({
+          status: 204 as const,
+          body: undefined,
+        });
+        const handler =
+          mode === 'router'
+            ? createNextRouter(
+                router,
+                { get: implementation },
+                { responseValidation },
+              )
+            : createSingleRouteHandler(router.get, implementation, {
+                responseValidation,
+              });
+
+        await handler(request(), mockRes);
+
+        expect(mockRes.status).toHaveBeenCalledWith(204);
+        expect(endMock).toHaveBeenCalledExactlyOnceWith();
+        expect(jsonMock).not.toHaveBeenCalled();
+        expect(sendMock).not.toHaveBeenCalled();
+        expect(mockRes.setHeader).not.toHaveBeenCalled();
+      },
+    );
+
+    it.each([false, true])(
+      'preserves validation errors and callback context (custom handler: %s)',
+      async (customHandler) => {
+        const schema: StandardSchemaV1 = {
+          '~standard': {
+            version: 1,
+            vendor: 'next-response-test',
+            validate: () => ({
+              issues: [{ message: 'invalid response', path: ['value'] }],
+            }),
+          },
+        };
+        const router = c.router({
+          get: { method: 'GET', path: '/response', responses: { 200: schema } },
+        });
+        const implementation = async () => ({ status: 200 as const, body: {} });
+        const errorHandler = vi.fn();
+        const options = {
+          responseValidation: true,
+          errorHandler: customHandler ? errorHandler : undefined,
+        };
+        const handler =
+          mode === 'router'
+            ? createNextRouter(router, { get: implementation }, options)
+            : createSingleRouteHandler(router.get, implementation, options);
+        const req = request();
+        let error: unknown;
+        if (customHandler) {
+          await handler(req, mockRes);
+          expect(errorHandler).toHaveBeenCalledExactlyOnceWith(
+            expect.any(ResponseValidationError),
+            req,
+            mockRes,
+          );
+          error = errorHandler.mock.calls[0][0];
+        } else {
+          error = await handler(req, mockRes).catch(
+            (caught: unknown) => caught,
+          );
+        }
+        expect(error).toBeInstanceOf(ResponseValidationError);
+        const validationError = error as ResponseValidationError;
+        expect(validationError.appRoute.responses).toBe(router.get.responses);
+        expect(validationError.cause).toBeInstanceOf(StandardSchemaError);
+        expect(validationError.cause.issues).toEqual([
+          { message: 'invalid response', path: ['value'] },
+        ]);
+        expect(mockRes.status).not.toHaveBeenCalled();
+        expect(jsonMock).not.toHaveBeenCalled();
+        expect(sendMock).not.toHaveBeenCalled();
+        expect(endMock).not.toHaveBeenCalled();
+      },
+    );
+
+    it('passes asynchronous validator configuration errors to the callback', async () => {
+      const schema: StandardSchemaV1 = {
+        '~standard': {
+          version: 1,
+          vendor: 'next-response-test',
+          validate: async (value) => ({ value }),
+        },
+      };
+      const router = c.router({
+        get: { method: 'GET', path: '/response', responses: { 200: schema } },
+      });
+      const implementation = async () => ({
+        status: 200 as const,
+        body: 'input',
+      });
+      const errorHandler = vi.fn();
+      const options = { responseValidation: true, errorHandler };
+      const handler =
+        mode === 'router'
+          ? createNextRouter(router, { get: implementation }, options)
+          : createSingleRouteHandler(router.get, implementation, options);
+      const req = request();
+
+      await handler(req, mockRes);
+
+      expect(errorHandler).toHaveBeenCalledExactlyOnceWith(
+        expect.objectContaining({
+          message: 'Schema validation must be synchronous',
+        }),
+        req,
+        mockRes,
+      );
+      expect(errorHandler.mock.calls[0][0]).not.toBeInstanceOf(
+        ResponseValidationError,
+      );
+      expect(mockRes.status).not.toHaveBeenCalled();
+    });
+
+    it.each([false, true])(
+      'preserves thrown native error identity (custom handler: %s)',
+      async (customHandler) => {
+        const router = c.router({
+          get: { method: 'GET', path: '/response', responses: { 200: null } },
+        });
+        const error = new Error('native handler failed');
+        const implementation = async () => {
+          throw error;
+        };
+        const errorHandler = vi.fn();
+        const options = {
+          responseValidation: true,
+          errorHandler: customHandler ? errorHandler : undefined,
+        };
+        const handler =
+          mode === 'router'
+            ? createNextRouter(router, { get: implementation }, options)
+            : createSingleRouteHandler(router.get, implementation, options);
+        const req = request();
+        if (customHandler) {
+          await handler(req, mockRes);
+          expect(errorHandler).toHaveBeenCalledExactlyOnceWith(
+            error,
+            req,
+            mockRes,
+          );
+        } else {
+          await expect(handler(req, mockRes)).rejects.toBe(error);
+        }
+        expect(mockRes.status).not.toHaveBeenCalled();
+      },
+    );
+  },
+);
 
 describe('strict mode', () => {
   const c = initContract();
