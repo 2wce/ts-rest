@@ -99,9 +99,10 @@ res.status(evaluation.metadata.status).json(evaluation.body);
 ## Execution evidence
 
 - Baseline: 32 Next tests passed.
-- Compatibility checkpoint `c7e32709`: 28 additional cases across both entry points; all 60 Next tests passed against the old implementation. Inverting validation produced 14 expected failures; the restored policy passed.
+- Compatibility checkpoint `965e64f5`: 28 additional cases across both entry points; all 60 Next tests passed against the old implementation. Inverting validation produced 14 expected failures; the restored policy passed.
 - Adoption: 326 core/Next tests and Next source/test typing passed.
 - Full `pnpm check`: 728 tests and all configured typechecks passed, with zero lint errors and 393 existing warnings.
 - Packed suite: 21 tests in four files passed. All four validator profiles exercise strict ESM/CommonJS handler inference and real Next 12.3.7 HTTP serialization for router/single handlers with zero/one response validation calls.
 - Local runtime: Node 24.21.0 and pnpm 12.14.0; CI must verify pinned Node 26.12.0.
 - Direct workspace Next 16.4.2 example build passed. Two task-runner invocations hit a CSS-worker port restriction, including the escalated rerun; the direct command completed compilation, typing and page generation without source/config changes.
+- Rebased onto `a708f059` after PR #16 merged. A frozen dependency refresh left tracked files unchanged; the 21 packed tests, full `pnpm check` (728 tests/all typechecks), Next source/test typing and direct example build passed again on the current alpha.1 baseline.
