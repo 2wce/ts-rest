@@ -183,6 +183,36 @@ describe('response evaluation compatibility', () => {
     expect(response.headers['content-type']).toBe('text/plain');
     expect(validate).not.toHaveBeenCalled();
   });
+
+  it('evaluates an ordinary JSON response once', async () => {
+    const validate = vi.fn((value: unknown) => ({
+      value: { transformed: value },
+    }));
+    const schema: StandardSchemaV1<unknown, { transformed: unknown }> = {
+      '~standard': { version: 1, vendor: 'test', validate },
+    };
+    const contract = c.router({
+      get: {
+        method: 'GET',
+        path: '/json-count',
+        responses: { 200: schema },
+      },
+    });
+    const app = express();
+    createExpressEndpoints(
+      contract,
+      s.router(contract, {
+        get: async () => ({ status: 200, body: 'input' }),
+      }),
+      app,
+      { responseValidation: true, logInitialization: false },
+    );
+    const response = await supertest(app).get('/json-count');
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({ transformed: 'input' });
+    expect(response.headers['content-type']).toMatch(/^application\/json/);
+    expect(validate).toHaveBeenCalledExactlyOnceWith('input');
+  });
 });
 
 describe('ts-rest-express', () => {
