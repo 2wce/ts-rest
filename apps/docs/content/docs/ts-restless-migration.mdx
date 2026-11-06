@@ -54,6 +54,14 @@ Read that release's verified dependency versions and known gaps before upgrading
 
 ## Major behavioral changes
 
+### Next.js support
+
+The first stable v4 supports Next.js **15 and 16** through `@ts-restless/next` and `@ts-restless/serverless/next`. It excludes Next 12–14, which are unsupported in the [official Next.js lifecycle policy](https://nextjs.org/support-policy) as checked on 2026-11-06. Next 15 receives security maintenance through 2027-01-31; Next 16 is the maintained example baseline.
+
+Upgrade an older Next application using the [official upgrade guides](https://nextjs.org/docs/app/guides/upgrading) before replacing its ts-rest packages. Use a current patched supported release. Pages Router API routes, App Router and Pages Router Edge integrations keep their existing public entry points; changing framework major does not require changing router style. On Next 15 and newer, read deployment-provider headers instead of the removed `NextRequest.geo` / `ip` properties. Existing published upstream ts-rest v3 packages remain unchanged.
+
+### Contract and schema behavior
+
 The scope replacement is one part of the upgrade. Read the [Standard Schema migration guide](/standard-schema-migration) for legacy Zod bridging, moved helpers, portable validation errors and header composition. Default core/server adapters are validator independent, while schema validation remains synchronous.
 
 Applications that depend on historical error classes, serialization or whole-object header override semantics need the corresponding migration changes. Existing published ts-rest v3 packages retain their current behavior.

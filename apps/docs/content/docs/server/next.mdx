@@ -5,6 +5,10 @@ description: How to use ts-restless with Next.js
 
 ## Installation
 
+ts-restless v4 supports Next.js **15 and 16**, the current Maintenance and Active LTS lines in the [Next.js support policy](https://nextjs.org/support-policy) (checked 2026-11-06). Next.js 12–14 are unsupported. Upgrade an older application using the [official Next.js upgrade guides](https://nextjs.org/docs/app/guides/upgrading) before migrating to v4, and use a current patched release.
+
+This package serves **Pages Router API routes** on supported Next majors. For App Router or Pages Router Edge handlers, use [`@ts-restless/serverless/next`](/server/serverless/next-serverless). The maintained [Next 16 example](https://github.com/2wce/ts-restless/tree/main/apps/example-next) demonstrates both integrations.
+
 <InstallTabs packageName="@ts-restless/next" />
 
 ## Usage
@@ -13,7 +17,7 @@ For maximum type safety, by default `@ts-restless/next` uses a single endpoint f
 
 <Callout type="info" title="Multiple Endpoints">
   It is possible to split out to multiple endpoints by having multiple
-  [...ts-restless].tsx files in different folders, so long as the routers you use
+  [...ts-rest].tsx files in different folders, so long as the routers you use
   all begin with the same path e.g. all `/posts` endpoints in a posts folder.
 </Callout>
 
