@@ -197,16 +197,22 @@ async function forkWorkspace(
       await writeFile(pkgPath, JSON.stringify(pkg));
     }
   }
-  await mkdir(join(cwd, '.changeset'));
-  await cp(
-    join(sourceRoot, '.changeset/config.json'),
-    join(cwd, '.changeset/config.json'),
-  );
   if (initialRelease) {
+    await mkdir(join(cwd, '.changeset'));
+    await cp(
+      join(sourceRoot, '.changeset/config.json'),
+      join(cwd, '.changeset/config.json'),
+    );
     await writeFile(
       join(cwd, '.changeset/initial-major.md'),
       '---\n"@ts-restless/core": major\n---\nInitial fork major.\n',
     );
+  } else {
+    // The live release command validates retained changesets before filtering
+    // consumed IDs from prestate, so preserve the entire committed directory.
+    await cp(join(sourceRoot, '.changeset'), join(cwd, '.changeset'), {
+      recursive: true,
+    });
   }
   return cwd;
 }
@@ -394,7 +400,7 @@ test('release PR version command bootstraps alpha once and advances the actual f
   }
 });
 
-test('current prerelease state advances public libraries without reversioning private packages', async () => {
+test('current prerelease state and retained changesets advance only public libraries', async () => {
   const cwd = await forkWorkspace(root, { initialRelease: false });
   try {
     const privateBefore = await privateVersions(cwd);
@@ -406,11 +412,11 @@ test('current prerelease state advances public libraries without reversioning pr
     );
     assert.ok(current, 'fixture starts at an existing numbered prerelease');
     const expectedVersion = `${current[1]}${Number(current[2]) + 1}`;
-    await cp(
-      join(root, '.changeset/pre.json'),
-      join(cwd, '.changeset/pre.json'),
+    await writeFile(
+      join(cwd, '.changeset/current-state-probe.md'),
+      '---\n"@ts-restless/core": patch\n---\nCurrent state probe.\n',
     );
-    await bump(cwd, 'patch');
+    prerelease(cwd, 'version');
     for (const name of publicLibraries) {
       const pkg = JSON.parse(
         await readFile(join(cwd, 'libs/ts-rest', name, 'package.json'), 'utf8'),

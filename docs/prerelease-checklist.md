@@ -29,6 +29,12 @@ progression. Private packages were never npm publication candidates. Existing
 private manifest versions and entries in `pre.json.initialVersions` are history,
 not a request to release those packages again.
 
+Changesets must list only public libraries. The planner validates every retained
+Changeset before filtering consumed IDs from `pre.json`; an old entry mixing a
+private helper with public libraries still blocks the next version command.
+The current-state release probe retains the entire committed `.changeset`
+directory so CI checks this boundary against the real pending and consumed entries.
+
 Before enabling the separately approved stable release path, rehearse prerelease
 exit against all real manifests and verify skipped private packages remain
 unchanged. The installed Changesets planner can assign an exit patch to a skipped
