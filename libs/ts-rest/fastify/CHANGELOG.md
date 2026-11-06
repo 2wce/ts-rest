@@ -1,5 +1,11 @@
 # @ts-rest/fastify
 
+## 4.0.0-alpha.1
+
+### Patch Changes
+
+- b4a1504: Use core's shared response evaluator for Fastify response validation and contract metadata. Preserve validation enablement, single schema transforms, undeclared statuses, native stream handling, hooks and response errors.
+
 ## 4.0.0-alpha.0
 
 ### Major Changes
