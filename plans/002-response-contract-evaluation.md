@@ -12,7 +12,7 @@
 
 **Planned at:** `aaae50b5`, 2026-11-05. **Priority:** P1. **Effort:** M. **Risk:** Medium. **Dependencies:** approved design 001 and completed A02 HTTP conformance. A03 request evaluation is not required for this independent response slice.
 
-**Execution:** Completed locally on 2026-11-06 on `feat/response-contract-evaluation`. Required local gates passed; CI compatibility remains pending. See the [execution evidence](README.md#execution-evidence-2026-11-06).
+**Execution:** Completed and merged on 2026-11-06 through [PR #13](https://github.com/2wce/ts-restless/pull/13), commit `d588e194`. Required local gates and all ten CI compatibility fixtures passed. See the [execution evidence](README.md#execution-evidence-2026-11-06).
 
 ## Global constraints
 
@@ -783,7 +783,7 @@ Expected: first two searches have no matches (exit 1 is expected); the third sho
 - [x] Express uses evaluation after stream bypass and retains existing native response and middleware behavior.
 - [x] Client production diff is only the predicate import. Other host implementations and policy options are unchanged.
 - [x] Focused suites, inference, full source tests, packed consumers, changed-file formatting and whitespace all pass with recorded output.
-- [ ] Existing CI `Compatibility Fixtures` passes before merge; a local pass is not CI evidence.
+- [x] Existing CI `Compatibility Fixtures` passes before merge; PR #13 passed all ten fixture jobs and the aggregate gate.
 
 ## Stop conditions and follow-ups
 

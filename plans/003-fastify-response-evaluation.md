@@ -10,7 +10,7 @@
 
 **Spec:** [Approved response capability design](001-response-contract-evaluation-design.md), extended to Fastify under [A05 of the adapter epic](../docs/superpowers/plans/2026-11-04-adapter-maintenance-epic.md). The user authorized continuation across response consumers on 2026-11-06. This delivery covers only A05's response portion; A03 and Fastify request adoption remain outstanding.
 
-**Baseline:** `add1db23`, draft [PR #13](https://github.com/2wce/ts-restless/pull/13). Execution branch: `feat/fastify-response-evaluation`, stacked on `feat/response-contract-evaluation`, reusing the existing isolated worktree.
+**Baseline:** Original planning baseline `add1db23`; delivery rebased onto `d588e194` after [PR #13](https://github.com/2wce/ts-restless/pull/13) merged with passing compatibility CI. Execution branch: `feat/fastify-response-evaluation`, independently based on `main`, reusing the existing isolated worktree.
 
 ## Global constraints
 
@@ -53,7 +53,7 @@ evaluateResponse({
 
 - [x] Verify a clean isolated branch and read the approved design, epic, contributing guide and current response path.
 - [x] Run `pnpm exec vp test run --project fastify` before edits: 41 tests across three files passed; existing deprecated-context warnings remain.
-- [ ] Add JSON and text cases with validation enabled and disabled. A real Standard Schema increments a counter; JSON wraps the handler body so a second evaluation would visibly nest it. Assert native response status/body/media type, zero or one validation call, and that response hooks see the validated body.
+- [x] Add JSON and text cases with validation enabled and disabled. A real Standard Schema increments a counter; JSON wraps the handler body so a second evaluation would visibly nest it. Assert native response status/body/media type, zero or one validation call, and that response hooks see the validated body.
 
 The JSON schema and literals are:
 
@@ -76,9 +76,9 @@ const schema: StandardSchemaV1<unknown, { wrapped: unknown }> = {
 
 For text, the validator returns `{ value: String(value) + '!' }`. Handler body `'input'` produces `'input!'` with one call when enabled and `'input'` with zero calls when disabled; content type remains Fastify's explicit `'text/plain'`.
 
-- [ ] Add enabled/disabled undeclared-status cases: declare only status 200 with a validator that rejects all values, return status 201 and `{ original: true }`, and assert native status/body plus zero validator calls.
-- [ ] Add enabled/disabled real-stream cases. Use `Readable.from(['streamed'])` and a Standard Schema that records its input then returns `{ issues: [{ message: 'Stream rejected by contract' }] }`. With validation enabled assert status 500, one validation input identical to the stream, and the existing core error with the route and issues. With validation disabled assert status 200, `'streamed'`, explicit text media type and no validator/error. Destroy the test stream and close each app.
-- [ ] Run the added cases against the old implementation. They characterize compatibility and should pass. Prove they catch a policy regression by temporarily inverting only the response-validation condition, run the focused compatibility cases and observe the expected failures, then restore the original condition and rerun. No mutation ships.
+- [x] Add enabled/disabled undeclared-status cases: declare only status 200 with a validator that rejects all values, return status 201 and `{ original: true }`, and assert native status/body plus zero validator calls.
+- [x] Add enabled/disabled real-stream cases. Use `Readable.from(['streamed'])` and a Standard Schema that records its input then returns `{ issues: [{ message: 'Stream rejected by contract' }] }`. With validation enabled assert status 500, one validation input identical to the stream, and the existing core error with the route and issues. With validation disabled assert status 200, `'streamed'`, explicit text media type and no validator/error. Destroy the test stream and close each app.
+- [x] Run the added cases against the old implementation. They characterize compatibility and should pass. Prove they catch a policy regression by temporarily inverting only the response-validation condition, run the focused compatibility cases and observe the expected failures, then restore the original condition and rerun. No mutation ships.
 
 Run:
 
@@ -86,7 +86,7 @@ Run:
 pnpm exec vp test run --project fastify -t 'response evaluation compatibility'
 ```
 
-- [ ] Replace only the response orchestration with this implementation and update imports:
+- [x] Replace only the response orchestration with this implementation and update imports:
 
 ```typescript
 const evaluation = evaluateResponse({
@@ -106,10 +106,10 @@ if (evaluation.metadata.contentType !== undefined) {
 return reply.status(evaluation.metadata.status).send(evaluation.body);
 ```
 
-- [ ] Run the Fastify suites and `pnpm exec tsc --noEmit -p libs/ts-rest/fastify/tsconfig.spec.json`. Keep all existing native hook/context and shared conformance tests.
-- [ ] Extend the existing packed source fixture with `fastify.initServer().router(contract, { convert: async ({ body, headers, request, reply, appRoute }) => ({ status: 200, body: body.toString() }) })`; assert inferred body/header types and typed native route metadata. In the runtime fixture, use real packed ESM and CommonJS Fastify adapters with `app.inject`, response validation enabled/disabled and a counted transforming schema. Assert `'42'`/`42` through native decoding and zero/one calls. Run all four existing validator profiles.
-- [ ] Add the patch Changeset and run the final gates below.
-- [ ] Review the diff against constraints, update execution evidence and A05's partial status, then commit the separately reviewable slice. Preserve PR #13 and its branch.
+- [x] Run the Fastify suites and `pnpm exec tsc --noEmit -p libs/ts-rest/fastify/tsconfig.spec.json`. Keep all existing native hook/context and shared conformance tests.
+- [x] Extend the existing packed source fixture with `fastify.initServer().router(contract, { convert: async ({ body, headers, request, reply, appRoute }) => ({ status: 200, body: body.toString() }) })`; assert inferred body/header types and typed native route metadata. In the runtime fixture, use real packed ESM and CommonJS Fastify adapters with `app.inject`, response validation enabled/disabled and a counted transforming schema. Assert `'42'`/`42` through native decoding and zero/one calls. Run all four existing validator profiles.
+- [x] Add the patch Changeset and run the final gates below.
+- [x] Review the diff against constraints, update execution evidence and A05's partial status, then commit the separately reviewable slice. Preserve PR #13 and its branch.
 
 ## Final gates
 
@@ -127,4 +127,16 @@ Native HTTP tests require permission to bind listeners in the sandbox. Packed fi
 
 ## Execution evidence
 
-Baseline passed on 2026-11-06: 41 Fastify tests in three files. Subsequent outcomes are recorded after running the gates.
+Verified locally on 2026-11-06:
+
+- Baseline: 41 Fastify tests in three files passed before edits.
+- Compatibility checkpoint `abdbf0cd`: eight added native cases passed against the old implementation. Temporarily inverting validation enablement caused six expected failures; restoring the condition produced 49 passing Fastify tests. No mutation remains.
+- Adoption: 350 focused core/Express/Fastify tests passed, with one existing todo; Fastify source/test typing passed.
+- Full source regressions: 700 passed, two existing todo; 57 files passed, two skipped.
+- Inference: all nine tasks passed.
+- Packed consumers/versioning: 20 tests in four files passed. Each validator profile checks strict ESM/CommonJS Fastify handler inference and real packed native responses with zero/one validation calls.
+- The first packed run caught an incorrect fixture assumption that `reply.request` carries the handler request's specialized context. Fastify 4's native declaration gives it broader context. The fixture now checks that native type and keeps precise route metadata on the handler request; no production typing was widened.
+- Targeted lint passed with one existing warning on the unchanged request-options default. Changed-file formatting and whitespace passed. Existing Fastify deprecated-context warnings and Nest negative-response logs remain.
+- Commands used local Node 24.21.0 and pnpm 12.14.0. The repository and CI specify Node 26.12.0; this slice's CI remains required before merge.
+
+Inline review confirmed that response handling alone consumes the shared evaluator; hooks, request validation, route metadata, public declarations and native stream/error policies retain their boundaries. The response portion of A05 is complete locally. Request adoption, other consumers and publication remain separate.

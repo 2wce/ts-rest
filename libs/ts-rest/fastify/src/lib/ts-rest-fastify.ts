@@ -4,13 +4,12 @@ import {
   validateIfSchema,
   FlattenAppRouter,
   HTTPStatusCode,
-  isAppRouteNoBody,
-  isAppRouteOtherResponse,
   parseJsonQueryObject,
   ServerInferRequest,
   ServerInferResponses,
   TsRestResponseError,
-  validateResponse,
+  evaluateResponse,
+  TsRestResponseValidationError,
   StandardSchemaError,
   validateMultiSchemaObject,
 } from '@ts-restless/core';
@@ -373,33 +372,25 @@ const registerRoute = <TAppRoute extends AppRoute>(
         }
       }
 
-      const statusCode = result.status;
+      const evaluation = evaluateResponse({
+        appRoute,
+        response: { status: result.status, body: result.body },
+        validateBody: Boolean(options.responseValidation),
+      });
 
-      let validatedResponseBody = result.body;
-
-      if (options.responseValidation) {
-        const response = validateResponse({
-          appRoute,
-          response: {
-            status: statusCode,
-            body: result.body,
-          },
-        });
-
-        validatedResponseBody = response.body;
+      if (!evaluation.success) {
+        throw new TsRestResponseValidationError(appRoute, evaluation.error);
       }
 
-      const responseType = appRoute.responses[statusCode];
-
-      if (isAppRouteNoBody(responseType)) {
-        return reply.status(statusCode).send();
+      if (evaluation.metadata.bodyKind === 'none') {
+        return reply.status(evaluation.metadata.status).send();
       }
 
-      if (isAppRouteOtherResponse(responseType)) {
-        reply.header('content-type', responseType.contentType);
+      if (evaluation.metadata.contentType !== undefined) {
+        reply.header('content-type', evaluation.metadata.contentType);
       }
 
-      return reply.status(statusCode).send(validatedResponseBody);
+      return reply.status(evaluation.metadata.status).send(evaluation.body);
     },
   };
 

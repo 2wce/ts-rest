@@ -246,6 +246,21 @@ const implementation = initServer().router(contract, { convert: async ({ body, h
   return { status: 200, body: body.toString() };
 } });
 void implementation;
+const fastifyImplementation = fastify.initServer().router(contract, {
+  convert: async ({ body, headers, request, reply, appRoute }) => {
+    type HandlerBody = Expect<Equal<typeof body, number>>;
+    type HandlerHeaders = Expect<Equal<typeof headers['x-count'], number>>;
+    const nativeBody: unknown = request.body;
+    const nativeReplyRequest: import('fastify').FastifyRequest = reply.request;
+    type NativeMethod = Expect<Equal<typeof request.method, string>>;
+    type NativeStatus = Expect<Equal<typeof reply.statusCode, number>>;
+    const route: typeof contract.convert = appRoute;
+    const nativeRoute: typeof contract.convert = request.routeOptions.config.tsRestRoute;
+    void [nativeBody, nativeReplyRequest, route, nativeRoute];
+    return { status: 200, body: body.toString() };
+  },
+});
+void fastifyImplementation;
 void [createExpressEndpoints, initServer, fastify, nest, next, serverless, fetch, aws, azure, serverlessNext];
 `;
       for (const extension of ['mts', 'cts']) {
@@ -346,6 +361,42 @@ for (const { validateIfSchema, validateMultiSchemaObject, initContract, Standard
   const missing = validateMultiSchemaObject({}, headers).error;
   assert.ok(missing instanceof StandardSchemaError);
   assert.deepEqual(missing.issues[0].path, ['x-count']);
+}
+const nativeFastify = (await import('fastify')).default;
+for (const { initServer } of [await import('@ts-restless/fastify'), require('@ts-restless/fastify')]) {
+  for (const responseValidation of [true, false]) {
+    let calls = 0;
+    const countedSchema = { '~standard': {
+      ...schema['~standard'],
+      validate(value) {
+        calls += 1;
+        return schema['~standard'].validate(value);
+      },
+    } };
+    const { initContract } = await import('@ts-restless/core');
+    const contract = initContract().router({ get: {
+      method: 'GET', path: '/packed-response', responses: { 200: countedSchema },
+    } });
+    const app = nativeFastify({ logger: false });
+    const server = initServer();
+    server.registerRouter(contract, server.router(contract, {
+      get: async () => ({ status: 200, body: '42' }),
+    }), app, { responseValidation, logInitialization: false });
+    try {
+      const response = await app.inject({ method: 'GET', url: '/packed-response' });
+      assert.equal(response.statusCode, 200);
+      if (responseValidation) {
+        assert.equal(response.json(), 42);
+        assert.match(response.headers['content-type'], /^application\\/json/);
+      } else {
+        assert.equal(response.body, '42');
+        assert.match(response.headers['content-type'], /^text\\/plain/);
+      }
+      assert.equal(calls, responseValidation ? 1 : 0);
+    } finally {
+      await app.close();
+    }
+  }
 }
 ${
   profile === 'zod-3-legacy'

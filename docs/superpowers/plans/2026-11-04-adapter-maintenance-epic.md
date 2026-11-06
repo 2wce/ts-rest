@@ -2,7 +2,7 @@
 
 **Recorded:** 2026-11-04. **Source baseline:** `534d761bf0629ac196ce9941ff95cf75abdb4719`.
 
-**Status:** Incremental implementation. The user approved A01/A02 on 2026-11-04 and adopted the support-policy baseline. A01 documentation and A02 conformance coverage are delivered. A04 core response evaluation and Express adoption are implemented and verified locally; CI compatibility remains a merge gate. A03 and A05–A19 remain unstarted. These approvals do not authorize dependency support removals, API removals or publication.
+**Status:** Incremental implementation. The user approved A01/A02 on 2026-11-04 and adopted the support-policy baseline. A01 documentation and A02 conformance coverage are delivered. A04 core response evaluation and Express adoption merged in PR #13 with passing compatibility CI. A05 response adoption in Fastify is implemented and verified locally; its CI and request adoption remain outstanding. A03 and A06–A19 remain unstarted. These approvals do not authorize dependency support removals, API removals or publication.
 
 **Goal:** Reduce the work needed to maintain contract behavior and keep integrations compatible as native frameworks and query libraries change.
 
@@ -74,27 +74,27 @@ The [compatibility support and retirement policy](../../support-policy.md) is ad
 
 Scope sizes are relative: **S** is a focused documentation/test/API change; **M** is one integration or bounded cross-package extraction. They are not delivery estimates. If a slice grows beyond that boundary, split it before implementation.
 
-| ID  | Independently deliverable outcome                                      | Prerequisites    | Size | Status                          |
-| --- | ---------------------------------------------------------------------- | ---------------- | ---- | ------------------------------- |
-| A01 | Support inventory and approved maintenance policy                      | None             | S    | Complete (docs)                 |
-| A02 | Shared HTTP conformance scenarios running on Express and Fastify       | None             | M    | Complete (tests)                |
-| A03 | Shared parsed-request evaluation used by Express                       | A02              | M    | Unstarted                       |
-| A04 | Shared response preparation used by Express                            | A02              | M    | Implemented locally; CI pending |
-| A05 | Fastify uses both shared operations                                    | A03, A04         | M    | Unstarted                       |
-| A06 | Next uses shared contract operations                                   | A03, A04         | M    | Unstarted                       |
-| A07 | Nest uses shared contract operations inside its lifecycle              | A03, A04         | M    | Unstarted                       |
-| A08 | Serverless uses shared contract operations                             | A03, A04         | M    | Unstarted                       |
-| A09 | Fetch public declarations no longer expose itty-router types           | A08              | M    | Unstarted                       |
-| A10 | A documented portable Fetch journey proven in a host                   | A09              | S    | Unstarted                       |
-| A11 | Common query execution policy used by existing React Query v5 wrappers | None             | M    | Unstarted                       |
-| A12 | Additive React native query and mutation composition                   | A11              | M    | Unstarted                       |
-| A13 | React native infinite-query composition                                | A12              | S    | Unstarted                       |
-| A14 | Vue adopts common execution and native composition                     | A11, A12         | M    | Unstarted                       |
-| A15 | Solid adopts common execution and native composition                   | A11, A12         | M    | Unstarted                       |
-| A16 | Policy-driven packed compatibility and rolling dependency checks       | A01, A02         | M    | Unstarted                       |
-| A17 | Independent adapter versioning proven in disposable release probes     | A01              | M    | Unstarted                       |
-| A18 | Native upgrade rehearsal and migration guide                           | A05–A10, A12–A17 | S    | Unstarted                       |
-| A19 | First approved legacy-surface retirement                               | A01, A18         | S    | Unstarted                       |
+| ID  | Independently deliverable outcome                                      | Prerequisites    | Size | Status                                                  |
+| --- | ---------------------------------------------------------------------- | ---------------- | ---- | ------------------------------------------------------- |
+| A01 | Support inventory and approved maintenance policy                      | None             | S    | Complete (docs)                                         |
+| A02 | Shared HTTP conformance scenarios running on Express and Fastify       | None             | M    | Complete (tests)                                        |
+| A03 | Shared parsed-request evaluation used by Express                       | A02              | M    | Unstarted                                               |
+| A04 | Shared response preparation used by Express                            | A02              | M    | Complete; merged in PR #13                              |
+| A05 | Fastify uses both shared operations                                    | A03, A04         | M    | Partial: response verified locally; request outstanding |
+| A06 | Next uses shared contract operations                                   | A03, A04         | M    | Unstarted                                               |
+| A07 | Nest uses shared contract operations inside its lifecycle              | A03, A04         | M    | Unstarted                                               |
+| A08 | Serverless uses shared contract operations                             | A03, A04         | M    | Unstarted                                               |
+| A09 | Fetch public declarations no longer expose itty-router types           | A08              | M    | Unstarted                                               |
+| A10 | A documented portable Fetch journey proven in a host                   | A09              | S    | Unstarted                                               |
+| A11 | Common query execution policy used by existing React Query v5 wrappers | None             | M    | Unstarted                                               |
+| A12 | Additive React native query and mutation composition                   | A11              | M    | Unstarted                                               |
+| A13 | React native infinite-query composition                                | A12              | S    | Unstarted                                               |
+| A14 | Vue adopts common execution and native composition                     | A11, A12         | M    | Unstarted                                               |
+| A15 | Solid adopts common execution and native composition                   | A11, A12         | M    | Unstarted                                               |
+| A16 | Policy-driven packed compatibility and rolling dependency checks       | A01, A02         | M    | Unstarted                                               |
+| A17 | Independent adapter versioning proven in disposable release probes     | A01              | M    | Unstarted                                               |
+| A18 | Native upgrade rehearsal and migration guide                           | A05–A10, A12–A17 | S    | Unstarted                                               |
+| A19 | First approved legacy-surface retirement                               | A01, A18         | S    | Unstarted                                               |
 
 Server migrations A06–A08 can proceed independently after the shared boundaries stabilize. Client work and release work need not wait for every server migration. A16 extends its scenario runner as each integration lands.
 
@@ -158,10 +158,11 @@ Server migrations A06–A08 can proceed independently after the shared boundarie
 
 **Scope:** Fastify implementation, hook/context declarations and native tests; extend core policy only for a demonstrated contract-level requirement.
 
-- [ ] Replace repeated request/response orchestration with A03/A04 operations.
-- [ ] Preserve hooks, route config, error-handler behavior, native request/reply types and serialization ownership.
-- [ ] Preserve conformance outcomes for valid, invalid, transformed and non-JSON requests/responses.
-- [ ] Verify the supported Fastify line from A01; adding another major is a separately scoped compatibility change, not an assumed benefit of extraction.
+- [x] Replace response orchestration with A04 evaluation; see [Fastify response plan](../../../plans/003-fastify-response-evaluation.md).
+- [ ] Replace request orchestration with A03 evaluation after that capability is implemented.
+- [x] Preserve hooks, route config, error-handler behavior, native request/reply types and serialization ownership during response adoption.
+- [x] Preserve conformance outcomes for valid, invalid, transformed and non-JSON requests/responses during response adoption.
+- [x] Verify the supported Fastify 4 line from A01; adding another major is a separately scoped compatibility change, not an assumed benefit of extraction.
 
 **Verification:** Fastify source and inference suites pass; packed consumers compile strictly; hooks run in their original order. Review the bridge for remaining duplicated contract logic.
 
@@ -436,6 +437,14 @@ Existing Fastify deprecated `routeConfig` / `reply.context` warnings and intenti
 
 Approved [design](../../../plans/001-response-contract-evaluation-design.md) and completed [implementation plan](../../../plans/002-response-contract-evaluation.md), with [execution evidence](../../../plans/README.md). Core owns response metadata and optional body validation through `evaluateResponse`; its existing `validateResponse` facade preserves the public shape and error class. Express consumes the shared result after its existing stream bypass. Client changes only its predicate import boundary.
 
-Local gates passed: 301 focused core/Express tests, nine inference tasks, the full source suite, and 20 packed-consumer/versioning tests across four files. Formatting and whitespace passed. The CI compatibility matrix remains required before merge. Disabled validation invokes no validator, enabled transforms run once, and native errors, streams, media types, no-body handling and undeclared statuses retain their existing behavior. No support floor, client policy, package identity or publication control changed.
+Local gates passed: 301 focused core/Express tests, nine inference tasks, the full source suite, and 20 packed-consumer/versioning tests across four files. Formatting and whitespace passed. [PR #13](https://github.com/2wce/ts-restless/pull/13) merged as `d588e194` after Build & Test, all ten CI compatibility fixtures and the aggregate gate passed. Disabled validation invokes no validator, enabled transforms run once, and native errors, streams, media types, no-body handling and undeclared statuses retain their existing behavior. No support floor, client policy, package identity or publication control changed.
 
-Next, adopt response evaluation in Fastify independently of A03. That response-only delivery is a partial A05 outcome; request adoption and the full A05 acceptance criteria remain outstanding.
+Fastify response evaluation proceeds independently of A03. That response-only delivery is a partial A05 outcome; request adoption and the full A05 acceptance criteria remain outstanding.
+
+### A05 response portion — Fastify adoption (2026-11-06)
+
+[Implementation plan](../../../plans/003-fastify-response-evaluation.md), compatibility checkpoint `abdbf0cd`, branch `feat/fastify-response-evaluation`, based on merged A04 commit `d588e194`. Fastify consumes `evaluateResponse` and maps failures to the existing core exception. Request processing, hooks, route metadata, public native types and serialization remain unchanged. Streams retain validation when enabled, unlike Express's existing bypass.
+
+Verified locally: 350 focused core/Express/Fastify tests, 700 full-source tests, nine inference tasks, Fastify source/test typing, and 20 packed-consumer/versioning tests. Strict ESM/CommonJS consumers check handler types and native responses across four validator profiles. Native counters and a temporary validation-policy mutation establish zero/one calls and the preserved stream/error path. Changed-file formatting/whitespace and targeted lint passed, with one existing request-options warning. Local runtime was Node 24.21.0; CI retains the pinned Node 26.12.0 gate.
+
+Response adoption is complete locally; its CI compatibility remains required before merge. A03 and Fastify request adoption remain unimplemented, so A05 is partial. No peer floor, Fastify major, client policy or publication control changed.
