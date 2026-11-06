@@ -1,5 +1,46 @@
 # @ts-rest/express
 
+## 4.0.0-alpha.0
+
+### Major Changes
+
+- 724b9b3: Make default core and adapter entry points validator independent through Standard
+  Schema. Remove Zod-specific public inference types and automatic old-Zod detection
+  from those entries, and isolate historical Zod helpers under explicit `/zod3`
+  compatibility entry points.
+
+  Default validation failures use StandardSchemaError with the serialized name
+  ValidationError, including explicitly bridged old schemas. Request error locations
+  and validator-provided issue fields are retained. Whole-object header schemas now
+  validate both inputs before merging successful outputs; merge typed Zod
+  objects before bridging when replacement semantics are required.
+
+  See the unreleased Standard Schema migration guide for moved imports and intentional
+  major-version changes. This Changeset records the future coordinated release;
+  release workflows remain disabled.
+
+### Minor Changes
+
+- ab2a39f: add express v5 support to @ts-restless/express
+- f36510a: Support the "Standard Schema" validation interface to enable support for Zod4, Valibot, Arktype etc.
+
+### Patch Changes
+
+- d588e19: Add a shared response contract evaluator returning body metadata and structured
+  validation results. Preserve the existing core response-validation facade and
+  Express behavior while adopting the evaluator for ordinary responses. Stream
+  handling, validation enablement, undeclared statuses and error identities remain
+  unchanged.
+- Updated dependencies [2c6367c]
+- Updated dependencies [f36510a]
+- Updated dependencies [d588e19]
+- Updated dependencies [0ca71d0]
+- Updated dependencies [612c295]
+- Updated dependencies [534d761]
+- Updated dependencies [113ad0f]
+- Updated dependencies [724b9b3]
+  - @ts-restless/core@4.0.0-alpha.0
+
 ## 3.52.1
 
 ## 3.52.0

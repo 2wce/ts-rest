@@ -1,6 +1,6 @@
 {
   "name": "@ts-restless/example-microservice-util-users-api",
-  "version": "0.0.1",
+  "version": "4.0.0-alpha.0",
   "type": "commonjs",
   "private": true,
   "dependencies": {

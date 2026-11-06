@@ -1,6 +1,6 @@
 {
   "name": "@ts-restless/react-query-v5",
-  "version": "3.52.1",
+  "version": "4.0.0-alpha.0",
   "private": true,
   "license": "MIT",
   "peerDependencies": {
