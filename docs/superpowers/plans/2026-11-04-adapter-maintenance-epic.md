@@ -23,7 +23,7 @@ Server adapters share low-level validation utilities but repeat request-validati
 | Fetch still exposes a router dependency         | `libs/ts-rest/serverless/src/lib/request.ts` implements `itty-router`'s `IRequest`; `types.ts` imports its middleware and CORS types                                                                                                                |
 | Query adapters reproduce native APIs            | `libs/ts-rest/react-query-v5/src/v5/internal/create-hooks.ts` and `types/hooks-options.ts`; Vue and Solid query adapters                                                                                                                            |
 | Compatibility evidence covers selected versions | `.github/workflows/build-test.yml`, `test-projects/`, `tests/packaging/`                                                                                                                                                                            |
-| Release versions are coordinated                | `.changeset/config.json` uses a fixed `@ts-rest/*` group; `tests/releases/versioning.test.mjs` encodes coordinated version expectations                                                                                                             |
+| Release versions are coordinated                | `.changeset/config.json` uses a fixed group of ten public `@ts-restless` libraries; `tests/releases/versioning.test.mjs` encodes coordinated version expectations                                                                                   |
 
 These are checkout-specific observations. No arbitrary newer dependency versions were tested for this epic, and package peer ranges are not proof of every version's compatibility.
 

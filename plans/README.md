@@ -33,3 +33,7 @@ Plan 003 is implemented on `feat/fastify-response-evaluation`, rebased onto main
 Local gates passed: 350 focused tests, 700 full-source tests, all nine inference tasks, Fastify source/test typing, 20 packed tests in four files, changed-file formatting/whitespace and targeted lint (one existing warning). The compatibility checkpoint proved the tests detect an inverted validation policy. Real packed ESM/CommonJS adapters execute transforming responses under all four validator profiles. See [plan 003](003-fastify-response-evaluation.md#execution-evidence) for details and the local runtime version.
 
 A05 remains partial: response adoption is verified locally, its CI is pending, and request adoption depends on unimplemented A03. Next, Nest and serverless response adoption and the client-policy correction remain separate slices.
+
+## Public-only release tracking (2026-11-06)
+
+[Plan 004](004-private-package-release-noise.md) implements the user's private-package policy in the same PR #14: one fixed group of ten explicit public libraries, with private versioning and tagging disabled. All nine real Changesets release probes and the 21-test packed suite passed. Existing private versions/prestate are retained; no live publication occurs in the probes. The prerelease checklist records the separate stable-exit rehearsal for the installed planner's skipped-package edge case.

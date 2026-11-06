@@ -306,10 +306,18 @@ for error identity, moved exports, old-schema bridging and header merge behavior
 Changesets versions the original workspace manifests. Each public package keeps
 source exports for development and declares `publishConfig` overrides for the
 compiled `main`, `module`, `types`, conditional exports and subpath `typesVersions`.
+
 Its `files` allowlist includes `dist` and the changelog. pnpm also includes package
 readmes and the workspace license. Packing uses normal pnpm metadata handling;
 development dependency metadata may remain in the manifest, but consumers do not
 install those dependencies.
+
+The fixed Changesets group lists exactly the ten public libraries. Private
+packages have versioning and tagging disabled: examples, docs, build tooling,
+helpers and the bundled React Query v5 implementation keep their existing
+versions and stay out of future release lists. Their workspace dependency links
+remain usable. Existing versions and prerelease history are retained; private
+packages were never eligible for npm publication.
 
 `pnpm pack:packages` creates `dist/packages/ts-restless-<package>.tgz` without publishing.
 `pnpm test:packages` runs real Changesets versioning probes and installs these

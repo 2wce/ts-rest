@@ -21,6 +21,20 @@ pnpm prerelease:verify
 
 `prerelease:version` initializes alpha mode only when prestate is absent, invokes Changesets and refreshes the lockfile. Existing pending major Changesets already target v4; do not first set versions to `4.0.0` and then apply another major bump. Keep private packages private and React Query v5 bundled through public `/v5`. Do not mix snapshot timestamps into this release line. A beta/RC transition requires reviewed Changesets state and the same artifact checks.
 
+Release tracking is limited to the ten explicitly listed public libraries in
+`.changeset/config.json`. `privatePackages.version` and `privatePackages.tag` are
+both `false`: examples, docs, private tooling/helpers and the bundled v5 package
+retain their versions and receive no release changelog or tag during alpha
+progression. Private packages were never npm publication candidates. Existing
+private manifest versions and entries in `pre.json.initialVersions` are history,
+not a request to release those packages again.
+
+Before enabling the separately approved stable release path, rehearse prerelease
+exit against all real manifests and verify skipped private packages remain
+unchanged. The installed Changesets planner can assign an exit patch to a skipped
+package that has no dependency-only release entry; the current prerelease
+coordinator rejects exited state.
+
 The complete CI gates are:
 
 ```sh
