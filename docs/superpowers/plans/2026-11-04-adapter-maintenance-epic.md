@@ -173,6 +173,7 @@ Server migrations A06–A08 can proceed independently after the shared boundarie
 **Scope:** `next/src/lib/ts-rest-next.ts`, path utilities and tests; Next docs where internal assumptions affect users. Serverless Next wrappers remain in A08.
 
 - [x] Adopt A04 response handling; see [Next response plan](../../../plans/005-next-response-evaluation.md).
+- Response packed evidence: strict ESM/CommonJS declarations against Next 12.3.7 and native HTTP execution against Next 16.4.2, verified on Node 26.12.0. Next 12's eager bundled JWT import uses the removed `SlowBuffer` API on Node 26; the disposable consumer switches Next versions after declaration compilation. Support ranges are unchanged.
 - [ ] Adapt parsed native request fields to A03 after that capability is implemented.
 - [ ] Preserve route matching, optional params, native API request/response context and custom error callbacks.
 - [ ] Test query/header normalization, no-body/non-JSON responses and response validation through Next's existing adapter harness.

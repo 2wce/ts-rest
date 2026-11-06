@@ -6,7 +6,7 @@
 
 **Architecture:** Replace the response validation/declaration branches in `handlerFactory` with `evaluateResponse`. Next keeps status coercion, native writes, routing, request validation and error callbacks. Map evaluator failures to the existing core `TsRestResponseValidationError`.
 
-**Tech Stack:** TypeScript, Standard Schema, Vitest 5.0.5, pnpm 12.14.0; workspace Next 16.4.2, strict packed Next 12.3.7 baseline. CI pins Node 26.12.0; local Node is 24.21.0.
+**Tech Stack:** TypeScript, Standard Schema, Vitest 5.0.5, pnpm 12.14.0; workspace and packed HTTP runtime Next 16.4.2, strict packed declarations against Next 12.3.7. CI and corrected local verification use Node 26.12.0; initial local verification used Node 24.21.0.
 
 **Spec:** [Approved response design](001-response-contract-evaluation-design.md), extended to the response portion of [A06](../docs/superpowers/plans/2026-11-04-adapter-maintenance-epic.md#a06--next-adoption-of-shared-operations). The user approved this slice on 2026-11-06.
 
@@ -89,7 +89,7 @@ res.status(evaluation.metadata.status).json(evaluation.body);
 **Produces:** Packed handler inference and execution evidence without source aliases or compiler suppression.
 
 - [x] Extend the existing source fixture with a Next single handler and router implementation. Assert transformed handler body/header types and native `NextApiRequest`/`NextApiResponse` context.
-- [x] Extend the runtime fixture to invoke both real packed entry points in ESM and CommonJS with response validation enabled/disabled. Capture status, JSON body and validator calls through the installed Next 12 API resolver and real localhost HTTP requests, expecting `42` with one call or `'42'` with zero calls across all four validator profiles.
+- [x] Extend the runtime fixture to invoke both real packed entry points in ESM and CommonJS with response validation enabled/disabled. After strict Next 12 declaration compilation, install the workspace Next 16 baseline in the disposable consumer. Capture status, JSON body and validator calls through its API resolver and real localhost HTTP requests, expecting `42` with one call or `'42'` with zero calls across all four validator profiles.
 - [x] Run `pnpm test:packages`, full `pnpm check` and `pnpm exec tsc --noEmit -p libs/ts-rest/next/tsconfig.spec.json`.
 - [x] Verify the workspace Next example using `pnpm --filter example-next exec next build`. Direct build passed; the task-runner command hit a local CSS-worker port restriction. CI must still verify the canonical build command.
 - [x] Run changed-file formatting and `git diff --check`. Review imports, response dispatch, public signatures and every stated constraint; retain all existing request, route and legacy tests.
@@ -102,7 +102,8 @@ res.status(evaluation.metadata.status).json(evaluation.body);
 - Compatibility checkpoint `965e64f5`: 28 additional cases across both entry points; all 60 Next tests passed against the old implementation. Inverting validation produced 14 expected failures; the restored policy passed.
 - Adoption: 326 core/Next tests and Next source/test typing passed.
 - Full `pnpm check`: 728 tests and all configured typechecks passed, with zero lint errors and 393 existing warnings.
-- Packed suite: 21 tests in four files passed. All four validator profiles exercise strict ESM/CommonJS handler inference and real Next 12.3.7 HTTP serialization for router/single handlers with zero/one response validation calls.
-- Local runtime: Node 24.21.0 and pnpm 12.14.0; CI must verify pinned Node 26.12.0.
+- Initial packed suite: 21 tests in four files passed on Node 24.21.0. CI on Node 26.12.0 failed before adapter execution because Next 12's resolver eagerly loads bundled JWT code that uses the removed `SlowBuffer` API; the failure reproduced locally on Node 26.12.0.
+- Corrected packed suite: all 21 tests in four files passed on Node 26.12.0 and pnpm 12.14.0. All four validator profiles retain strict ESM/CommonJS handler inference against Next 12.3.7, then exercise real Next 16.4.2 HTTP serialization for router/single handlers with zero/one response validation calls. This separates declaration evidence from runtime evidence; it does not establish Next 12 runtime compatibility with Node 26 or change public support ranges.
+- Full `pnpm check` also passed on Node 26.12.0: 728 tests, all configured typechecks and zero lint errors (393 existing warnings). Changed-file formatting and whitespace checks passed after the fixture correction.
 - Direct workspace Next 16.4.2 example build passed. Two task-runner invocations hit a CSS-worker port restriction, including the escalated rerun; the direct command completed compilation, typing and page generation without source/config changes.
 - Rebased onto `a708f059` after PR #16 merged. A frozen dependency refresh left tracked files unchanged; the 21 packed tests, full `pnpm check` (728 tests/all typechecks), Next source/test typing and direct example build passed again on the current alpha.1 baseline.

@@ -153,7 +153,8 @@ for (const [profile, definition] of Object.entries(sources)) {
           await readFile(resolve(root, 'node_modules', name, 'package.json')),
         ).version;
       }
-      // Pin the supported framework baseline independently from the validators.
+      const runtimeNextVersion = dependencies.next;
+      // Pin the strict declaration baseline independently from the validators.
       // Next 16 currently has unrelated upstream declaration failures.
       dependencies.next = '12.3.7';
       if (profile === 'valibot') dependencies.valibot = '1.5.0';
@@ -162,13 +163,14 @@ for (const [profile, definition] of Object.entries(sources)) {
         dependencies.zod = '3.22.3';
         dependencies.typescript = '5.7.3';
       }
+      const consumerPackage = {
+        name: `consumer-${profile}`,
+        private: true,
+        dependencies,
+      };
       await writeFile(
         join(consumer, 'package.json'),
-        JSON.stringify({
-          name: `consumer-${profile}`,
-          private: true,
-          dependencies,
-        }),
+        JSON.stringify(consumerPackage),
       );
       await writeFile(
         join(consumer, 'pnpm-workspace.yaml'),
@@ -341,6 +343,19 @@ type LegacyOutput = Expect<Equal<ZodInferOrType<typeof original>, number>>;
           { cwd: consumer, stdio: 'inherit' },
         );
       }
+      // Next 12's resolver eagerly loads JWT code that requires SlowBuffer,
+      // removed in Node 26. Use the workspace Next baseline for native HTTP
+      // execution after completing the strict Next 12 declaration checks.
+      dependencies.next = runtimeNextVersion;
+      await writeFile(
+        join(consumer, 'package.json'),
+        JSON.stringify(consumerPackage),
+      );
+      execFileSync(
+        'pnpm',
+        ['install', '--ignore-scripts', '--no-frozen-lockfile'],
+        { cwd: consumer, stdio: 'pipe' },
+      );
       const runtime = `import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
 import { createServer } from 'node:http';
@@ -419,9 +434,9 @@ for (const { initServer } of [await import('@ts-restless/fastify'), require('@ts
     }
   }
 }
-// Exercise the installed Next 12 strict-consumer baseline's real API response
+// Exercise the installed workspace Next baseline's real API response
 // augmentation and serialization, rather than replacing json/send/end methods.
-const { apiResolver } = require('next/dist/server/api-utils/node.js');
+const { apiResolver } = require('next/dist/server/api-utils/node/api-resolver.js');
 for (const adapter of [await import('@ts-restless/next'), require('@ts-restless/next')]) {
   for (const mode of ['router', 'single']) {
     for (const responseValidation of [true, false]) {
@@ -448,6 +463,7 @@ for (const adapter of [await import('@ts-restless/next'), require('@ts-restless/
       const app = createServer((req, res) => {
         const query = mode === 'router' ? { 'ts-rest': ['packed-next-response'] } : {};
         void apiResolver(req, res, query, handler, {
+          dev: false,
           previewModeId: '00000000000000000000000000000000',
           previewModeEncryptionKey: '00000000000000000000000000000000',
           previewModeSigningKey: '00000000000000000000000000000000',
