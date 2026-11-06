@@ -16,7 +16,7 @@ import {
 } from './infer-types';
 import { Equal, Expect } from './test-helpers';
 import { isStandardSchema, validateIfSchema } from './standard-schema-utils';
-import { isAppRouteOtherResponse } from './server';
+import { isAppRouteOtherResponse } from './response';
 
 type RecursiveProxyObj<T extends AppRouter, TClientArgs extends ClientArgs> = {
   [TKey in keyof T]: T[TKey] extends AppRoute

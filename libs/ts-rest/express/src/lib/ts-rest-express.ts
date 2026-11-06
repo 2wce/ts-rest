@@ -4,11 +4,10 @@ import {
   validateIfSchema,
   HTTPStatusCode,
   isAppRoute,
-  isAppRouteNoBody,
-  isAppRouteOtherResponse,
   parseJsonQueryObject,
   TsRestResponseError,
-  validateResponse,
+  evaluateResponse,
+  TsRestResponseValidationError,
   parseAsStandardSchema,
   validateMultiSchemaObject,
 } from '@ts-restless/core';
@@ -199,34 +198,28 @@ const initializeExpressRoute = ({
         return;
       }
 
-      let validatedResponseBody = result.body;
+      const evaluation = evaluateResponse({
+        appRoute: schema,
+        response: { status: statusCode, body: result.body },
+        validateBody: Boolean(options.responseValidation),
+      });
 
-      if (options.responseValidation) {
-        const response = validateResponse({
-          appRoute: schema,
-          response: {
-            status: statusCode,
-            body: result.body,
-          },
-        });
-
-        validatedResponseBody = response.body;
+      if (!evaluation.success) {
+        throw new TsRestResponseValidationError(schema, evaluation.error);
       }
 
-      const responseType = schema.responses[statusCode];
-
-      if (isAppRouteNoBody(responseType)) {
-        res.status(statusCode).end();
+      if (evaluation.metadata.bodyKind === 'none') {
+        res.status(evaluation.metadata.status).end();
         return;
       }
 
-      if (isAppRouteOtherResponse(responseType)) {
-        res.setHeader('content-type', responseType.contentType);
-        res.status(statusCode).send(validatedResponseBody);
+      if (evaluation.metadata.contentType !== undefined) {
+        res.setHeader('content-type', evaluation.metadata.contentType);
+        res.status(evaluation.metadata.status).send(evaluation.body);
         return;
       }
 
-      res.status(statusCode).json(validatedResponseBody);
+      res.status(evaluation.metadata.status).json(evaluation.body);
       return;
     } catch (e) {
       return next(e);

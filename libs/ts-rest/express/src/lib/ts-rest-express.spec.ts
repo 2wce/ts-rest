@@ -1,6 +1,8 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
+import { Readable } from 'node:stream';
 import {
+  StandardSchemaV1,
   initContract,
   TsRestResponseValidationError as ResponseValidationError,
   TsRestResponseError,
@@ -82,6 +84,134 @@ describe('strict mode', () => {
         },
       },
     });
+  });
+});
+
+describe('response evaluation compatibility', () => {
+  it.each([true, false])(
+    'runs a non-idempotent text transform according to validation=%s',
+    async (responseValidation) => {
+      const validate = vi.fn((value: unknown) => ({ value: `${value}!` }));
+      const schema: StandardSchemaV1<string> = {
+        '~standard': { version: 1, vendor: 'test', validate },
+      };
+      const contract = c.router({
+        get: {
+          method: 'GET',
+          path: '/response-count',
+          responses: {
+            200: c.otherResponse({ contentType: 'text/plain', body: schema }),
+          },
+        },
+      });
+      const app = express();
+      createExpressEndpoints(
+        contract,
+        s.router(contract, {
+          get: async () => ({ status: 200, body: 'value' }),
+        }),
+        app,
+        { responseValidation, logInitialization: false },
+      );
+      const response = await supertest(app).get('/response-count');
+      expect(response.status).toBe(200);
+      expect(response.text).toBe(responseValidation ? 'value!' : 'value');
+      expect(response.headers['content-type']).toBe(
+        'text/plain; charset=utf-8',
+      );
+      expect(validate).toHaveBeenCalledTimes(responseValidation ? 1 : 0);
+    },
+  );
+
+  it('passes through an undeclared status with validation enabled', async () => {
+    const validate = vi.fn(() => ({ issues: [{ message: 'Do not call' }] }));
+    const schema: StandardSchemaV1<string> = {
+      '~standard': { version: 1, vendor: 'test', validate },
+    };
+    const contract = c.router({
+      get: {
+        method: 'GET',
+        path: '/undeclared',
+        responses: { 200: schema },
+      },
+    });
+    const app = express();
+    createExpressEndpoints(
+      contract,
+      s.router(contract, {
+        get: async () => ({ status: 201, body: 'unknown' }),
+      }),
+      app,
+      { responseValidation: true, logInitialization: false },
+    );
+    const response = await supertest(app).get('/undeclared');
+    expect(response.status).toBe(201);
+    expect(response.body).toBe('unknown');
+    expect(response.headers['content-type']).toMatch(/^application\/json/);
+    expect(validate).not.toHaveBeenCalled();
+  });
+
+  it('bypasses response validation for a real stream', async () => {
+    const validate = vi.fn(() => ({
+      issues: [{ message: 'Stream must bypass validation' }],
+    }));
+    const schema: StandardSchemaV1 = {
+      '~standard': { version: 1, vendor: 'test', validate },
+    };
+    const contract = c.router({
+      get: {
+        method: 'GET',
+        path: '/stream-count',
+        responses: { 200: schema },
+      },
+    });
+    const app = express();
+    createExpressEndpoints(
+      contract,
+      s.router(contract, {
+        get: async ({ res }) => {
+          res.setHeader('content-type', 'text/plain');
+          return { status: 200, body: Readable.from(['streamed']) };
+        },
+      }),
+      app,
+      { responseValidation: true, logInitialization: false },
+    );
+    const response = await supertest(app).get('/stream-count');
+    expect(response.status).toBe(200);
+    expect(response.text).toBe('streamed');
+    expect(response.headers['content-type']).toBe('text/plain');
+    expect(validate).not.toHaveBeenCalled();
+  });
+
+  it('evaluates an ordinary JSON response once', async () => {
+    const validate = vi.fn((value: unknown) => ({
+      value: { transformed: value },
+    }));
+    const schema: StandardSchemaV1<unknown, { transformed: unknown }> = {
+      '~standard': { version: 1, vendor: 'test', validate },
+    };
+    const contract = c.router({
+      get: {
+        method: 'GET',
+        path: '/json-count',
+        responses: { 200: schema },
+      },
+    });
+    const app = express();
+    createExpressEndpoints(
+      contract,
+      s.router(contract, {
+        get: async () => ({ status: 200, body: 'input' }),
+      }),
+      app,
+      { responseValidation: true, logInitialization: false },
+    );
+    const response = await supertest(app).get('/json-count');
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({ transformed: 'input' });
+    expect(response.headers['content-type']).toMatch(/^application\/json/);
+    expect(validate).toHaveBeenCalledExactlyOnceWith('input');
   });
 });
 
