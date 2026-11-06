@@ -41,8 +41,8 @@
 
 - [x] Run `pnpm test:packages` and `pnpm check` on Node 26.12.0. Verify the actual release rehearsal still targets stable v4 and coordinated alphas with the major Changeset.
 - [x] Run changed-file formatting, whitespace checks and the Next example build.
-- [ ] Verify canonical example build and all compatibility fixtures in CI for this expanded scope.
-- [ ] Commit and push normally to draft PR #17, update its title/body around the final scope and observe fresh CI before claiming completion.
+- [x] Verify canonical example build and all compatibility fixtures in CI for this expanded scope.
+- [x] Commit and push normally to draft PR #17, update its title/body around the final scope and observe fresh CI before claiming completion.
 
 ## Execution evidence
 
@@ -52,3 +52,4 @@
 - A temporary incompatible request-body type assertion caused two expected TS2344 failures in the consumer source, one on each supported major. Restored consumers passed.
 - Full `pnpm check` passed 728 tests and all configured typechecks with zero lint errors and 393 existing warnings.
 - The retained Next 16 example built successfully on Node 26.12.0. Documentation build, typing and all 30 rendered-site tests passed. Changed-file formatting and whitespace checks passed.
+- Draft PR #17 was updated and implementation commit `0a7bdb66` passed [Build & Test, all ten compatibility fixtures and the aggregate gate](https://github.com/2wce/ts-restless/actions/runs/42236967009). This records verification without merging or publishing.
