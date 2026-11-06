@@ -28,7 +28,7 @@ The fresh worktree required `pnpm --filter @ts-restless/core build` before the e
 
 ## Fastify response adoption evidence (2026-11-06)
 
-Plan 003 is implemented on `feat/fastify-response-evaluation`, rebased onto the merged A04 commit `d588e194`. Fastify now uses the same core evaluation result for validation, no-body handling and explicit media types. Its native hooks, serialization, error identity and existing stream validation policy are preserved.
+Plan 003 is implemented on `feat/fastify-response-evaluation`, rebased onto main commit `333cbee3`, which includes merged A04 and the prerelease versions. Fastify now uses the same core evaluation result for validation, no-body handling and explicit media types. Its native hooks, serialization, error identity and existing stream validation policy are preserved.
 
 Local gates passed: 350 focused tests, 700 full-source tests, all nine inference tasks, Fastify source/test typing, 20 packed tests in four files, changed-file formatting/whitespace and targeted lint (one existing warning). The compatibility checkpoint proved the tests detect an inverted validation policy. Real packed ESM/CommonJS adapters execute transforming responses under all four validator profiles. See [plan 003](003-fastify-response-evaluation.md#execution-evidence) for details and the local runtime version.
 

@@ -10,7 +10,7 @@
 
 **Spec:** [Approved response capability design](001-response-contract-evaluation-design.md), extended to Fastify under [A05 of the adapter epic](../docs/superpowers/plans/2026-11-04-adapter-maintenance-epic.md). The user authorized continuation across response consumers on 2026-11-06. This delivery covers only A05's response portion; A03 and Fastify request adoption remain outstanding.
 
-**Baseline:** Original planning baseline `add1db23`; delivery rebased onto `d588e194` after [PR #13](https://github.com/2wce/ts-restless/pull/13) merged with passing compatibility CI. Execution branch: `feat/fastify-response-evaluation`, independently based on `main`, reusing the existing isolated worktree.
+**Baseline:** Original planning baseline `add1db23`; delivery rebased onto `333cbee3` after [PR #13](https://github.com/2wce/ts-restless/pull/13) merged with passing compatibility CI and PR #12 advanced the prerelease versions. Execution branch: `feat/fastify-response-evaluation`, independently based on `main`, reusing the existing isolated worktree.
 
 ## Global constraints
 
@@ -130,7 +130,7 @@ Native HTTP tests require permission to bind listeners in the sandbox. Packed fi
 Verified locally on 2026-11-06:
 
 - Baseline: 41 Fastify tests in three files passed before edits.
-- Compatibility checkpoint `abdbf0cd`: eight added native cases passed against the old implementation. Temporarily inverting validation enablement caused six expected failures; restoring the condition produced 49 passing Fastify tests. No mutation remains.
+- Compatibility checkpoint `e4fb47fd`: eight added native cases passed against the old implementation. Temporarily inverting validation enablement caused six expected failures; restoring the condition produced 49 passing Fastify tests. No mutation remains.
 - Adoption: 350 focused core/Express/Fastify tests passed, with one existing todo; Fastify source/test typing passed.
 - Full source regressions: 700 passed, two existing todo; 57 files passed, two skipped.
 - Inference: all nine tasks passed.
@@ -138,5 +138,6 @@ Verified locally on 2026-11-06:
 - The first packed run caught an incorrect fixture assumption that `reply.request` carries the handler request's specialized context. Fastify 4's native declaration gives it broader context. The fixture now checks that native type and keeps precise route metadata on the handler request; no production typing was widened.
 - Targeted lint passed with one existing warning on the unchanged request-options default. Changed-file formatting and whitespace passed. Existing Fastify deprecated-context warnings and Nest negative-response logs remain.
 - Commands used local Node 24.21.0 and pnpm 12.14.0. The repository and CI specify Node 26.12.0; this slice's CI remains required before merge.
+- After main advanced through PR #12, the branch was rebased onto `333cbee3`. A frozen dependency refresh left tracked manifests and the lockfile unchanged; source, inference, Fastify typing and packed checks passed again against that base with the same results.
 
 Inline review confirmed that response handling alone consumes the shared evaluator; hooks, request validation, route metadata, public declarations and native stream/error policies retain their boundaries. The response portion of A05 is complete locally. Request adoption, other consumers and publication remain separate.

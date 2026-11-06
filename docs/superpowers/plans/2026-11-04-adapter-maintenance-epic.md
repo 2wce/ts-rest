@@ -443,7 +443,7 @@ Fastify response evaluation proceeds independently of A03. That response-only de
 
 ### A05 response portion — Fastify adoption (2026-11-06)
 
-[Implementation plan](../../../plans/003-fastify-response-evaluation.md), compatibility checkpoint `abdbf0cd`, branch `feat/fastify-response-evaluation`, based on merged A04 commit `d588e194`. Fastify consumes `evaluateResponse` and maps failures to the existing core exception. Request processing, hooks, route metadata, public native types and serialization remain unchanged. Streams retain validation when enabled, unlike Express's existing bypass.
+[Implementation plan](../../../plans/003-fastify-response-evaluation.md), compatibility checkpoint `e4fb47fd`, branch `feat/fastify-response-evaluation`, based on main commit `333cbee3`, including merged A04 and the prerelease versions. Fastify consumes `evaluateResponse` and maps failures to the existing core exception. Request processing, hooks, route metadata, public native types and serialization remain unchanged. Streams retain validation when enabled, unlike Express's existing bypass.
 
 Verified locally: 350 focused core/Express/Fastify tests, 700 full-source tests, nine inference tasks, Fastify source/test typing, and 20 packed-consumer/versioning tests. Strict ESM/CommonJS consumers check handler types and native responses across four validator profiles. Native counters and a temporary validation-policy mutation establish zero/one calls and the preserved stream/error path. Changed-file formatting/whitespace and targeted lint passed, with one existing request-options warning. Local runtime was Node 24.21.0; CI retains the pinned Node 26.12.0 gate.
 
