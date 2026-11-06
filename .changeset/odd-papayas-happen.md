@@ -6,7 +6,6 @@
 '@ts-restless/next': minor
 '@ts-restless/open-api': minor
 '@ts-restless/react-query': minor
-'@ts-restless/react-query-v5': minor
 '@ts-restless/serverless': minor
 '@ts-restless/solid-query': minor
 '@ts-restless/vue-query': minor
