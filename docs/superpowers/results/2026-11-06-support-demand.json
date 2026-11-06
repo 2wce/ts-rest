@@ -1,0 +1,320 @@
+{
+  "schema_version": 1,
+  "captured_at_utc": "2026-11-06T14:43:46.891295+00:00",
+  "repository_baseline": "a708f05935a1954799b0a8899259c25e6f611a0b",
+  "adapter_downloads": [
+    {
+      "source_url": "https://api.npmjs.org/downloads/point/2026-10-30:2026-11-05/@ts-rest/core",
+      "downloads": 990329,
+      "start": "2026-10-30",
+      "end": "2026-11-05",
+      "package": "@ts-rest/core"
+    },
+    {
+      "source_url": "https://api.npmjs.org/downloads/point/2026-10-30:2026-11-05/@ts-rest/open-api",
+      "downloads": 455821,
+      "start": "2026-10-30",
+      "end": "2026-11-05",
+      "package": "@ts-rest/open-api"
+    },
+    {
+      "source_url": "https://api.npmjs.org/downloads/point/2026-10-30:2026-11-05/@ts-rest/react-query",
+      "downloads": 283553,
+      "start": "2026-10-30",
+      "end": "2026-11-05",
+      "package": "@ts-rest/react-query"
+    },
+    {
+      "source_url": "https://api.npmjs.org/downloads/point/2026-10-30:2026-11-05/@ts-rest/express",
+      "downloads": 234598,
+      "start": "2026-10-30",
+      "end": "2026-11-05",
+      "package": "@ts-rest/express"
+    },
+    {
+      "source_url": "https://api.npmjs.org/downloads/point/2026-10-30:2026-11-05/@ts-rest/nest",
+      "downloads": 202745,
+      "start": "2026-10-30",
+      "end": "2026-11-05",
+      "package": "@ts-rest/nest"
+    },
+    {
+      "source_url": "https://api.npmjs.org/downloads/point/2026-10-30:2026-11-05/@ts-rest/fastify",
+      "downloads": 99919,
+      "start": "2026-10-30",
+      "end": "2026-11-05",
+      "package": "@ts-rest/fastify"
+    },
+    {
+      "source_url": "https://api.npmjs.org/downloads/point/2026-10-30:2026-11-05/@ts-rest/serverless",
+      "downloads": 80807,
+      "start": "2026-10-30",
+      "end": "2026-11-05",
+      "package": "@ts-rest/serverless"
+    },
+    {
+      "source_url": "https://api.npmjs.org/downloads/point/2026-10-30:2026-11-05/@ts-rest/next",
+      "downloads": 10524,
+      "start": "2026-10-30",
+      "end": "2026-11-05",
+      "package": "@ts-rest/next"
+    },
+    {
+      "source_url": "https://api.npmjs.org/downloads/point/2026-10-30:2026-11-05/@ts-rest/solid-query",
+      "downloads": 656,
+      "start": "2026-10-30",
+      "end": "2026-11-05",
+      "package": "@ts-rest/solid-query"
+    },
+    {
+      "source_url": "https://api.npmjs.org/downloads/point/2026-10-30:2026-11-05/@ts-rest/vue-query",
+      "downloads": 621,
+      "start": "2026-10-30",
+      "end": "2026-11-05",
+      "package": "@ts-rest/vue-query"
+    }
+  ],
+  "ecosystem_major_downloads": [
+    {
+      "package": "next",
+      "source_url": "https://api.npmjs.org/versions/next/last-week",
+      "total": 97435778,
+      "major_downloads": {
+        "0": 3632,
+        "1": 441,
+        "2": 1886,
+        "3": 3102,
+        "4": 2543,
+        "5": 8441,
+        "6": 3755,
+        "7": 6712,
+        "8": 8556,
+        "9": 39023,
+        "10": 56376,
+        "11": 54494,
+        "12": 553425,
+        "13": 864327,
+        "14": 6558298,
+        "15": 19698444,
+        "16": 69572323
+      }
+    },
+    {
+      "package": "express",
+      "source_url": "https://api.npmjs.org/versions/express/last-week",
+      "total": 213322973,
+      "major_downloads": {
+        "0": 4358,
+        "1": 3495,
+        "2": 52905,
+        "3": 107118,
+        "4": 91156971,
+        "5": 121998126
+      }
+    },
+    {
+      "package": "@nestjs/core",
+      "source_url": "https://api.npmjs.org/versions/%40nestjs%2Fcore/last-week",
+      "total": 25562070,
+      "major_downloads": {
+        "1": 28,
+        "2": 74,
+        "3": 43,
+        "4": 616,
+        "5": 1797,
+        "6": 24326,
+        "7": 147207,
+        "8": 226654,
+        "9": 518979,
+        "10": 4182430,
+        "11": 15260991,
+        "12": 5198925
+      }
+    },
+    {
+      "package": "fastify",
+      "source_url": "https://api.npmjs.org/versions/fastify/last-week",
+      "total": 23327418,
+      "major_downloads": {
+        "0": 4546,
+        "1": 9920,
+        "2": 24843,
+        "3": 299073,
+        "4": 2213286,
+        "5": 20773448,
+        "6": 2302
+      }
+    },
+    {
+      "package": "react",
+      "source_url": "https://api.npmjs.org/versions/react/last-week",
+      "total": 267668958,
+      "major_downloads": {
+        "0": 412464,
+        "15": 451510,
+        "16": 4238430,
+        "17": 5056566,
+        "18": 61002290,
+        "19": 196507698
+      }
+    },
+    {
+      "package": "@tanstack/react-query",
+      "source_url": "https://api.npmjs.org/versions/%40tanstack%2Freact-query/last-week",
+      "total": 86349177,
+      "major_downloads": {
+        "4": 3878080,
+        "5": 82471097
+      }
+    },
+    {
+      "package": "@tanstack/vue-query",
+      "source_url": "https://api.npmjs.org/versions/%40tanstack%2Fvue-query/last-week",
+      "total": 1242753,
+      "major_downloads": {
+        "4": 48409,
+        "5": 1194344
+      }
+    },
+    {
+      "package": "@tanstack/solid-query",
+      "source_url": "https://api.npmjs.org/versions/%40tanstack%2Fsolid-query/last-week",
+      "total": 389509,
+      "major_downloads": {
+        "4": 838,
+        "5": 374129,
+        "6": 14542
+      }
+    }
+  ],
+  "registry": [
+    {
+      "package": "@ts-restless/core",
+      "source_url": "https://registry.npmjs.org/@ts-restless%2Fcore",
+      "dist_tags": {
+        "latest": "4.0.0-alpha.0",
+        "alpha": "4.0.0-alpha.1"
+      },
+      "versions": ["0.0.0-stage", "4.0.0-alpha.0", "4.0.0-alpha.1"],
+      "alpha_published_at": "2026-11-06T13:17:29.694Z"
+    },
+    {
+      "package": "@ts-restless/open-api",
+      "source_url": "https://registry.npmjs.org/@ts-restless%2Fopen-api",
+      "dist_tags": {
+        "latest": "4.0.0-alpha.0",
+        "alpha": "4.0.0-alpha.1"
+      },
+      "versions": ["0.0.0-stage", "4.0.0-alpha.0", "4.0.0-alpha.1"],
+      "alpha_published_at": "2026-11-06T13:21:01.025Z"
+    },
+    {
+      "package": "@ts-restless/react-query",
+      "source_url": "https://registry.npmjs.org/@ts-restless%2Freact-query",
+      "dist_tags": {
+        "latest": "4.0.0-alpha.0",
+        "alpha": "4.0.0-alpha.1"
+      },
+      "versions": ["0.0.0-stage", "4.0.0-alpha.0", "4.0.0-alpha.1"],
+      "alpha_published_at": "2026-11-06T13:18:00.357Z"
+    },
+    {
+      "package": "@ts-restless/express",
+      "source_url": "https://registry.npmjs.org/@ts-restless%2Fexpress",
+      "dist_tags": {
+        "latest": "4.0.0-alpha.0",
+        "alpha": "4.0.0-alpha.1"
+      },
+      "versions": ["0.0.0-stage", "4.0.0-alpha.0", "4.0.0-alpha.1"],
+      "alpha_published_at": "2026-11-06T13:17:08.673Z"
+    },
+    {
+      "package": "@ts-restless/nest",
+      "source_url": "https://registry.npmjs.org/@ts-restless%2Fnest",
+      "dist_tags": {
+        "latest": "4.0.0-alpha.0",
+        "alpha": "4.0.0-alpha.1"
+      },
+      "versions": ["0.0.0-stage", "4.0.0-alpha.0", "4.0.0-alpha.1"],
+      "alpha_published_at": "2026-11-06T13:20:02.791Z"
+    },
+    {
+      "package": "@ts-restless/fastify",
+      "source_url": "https://registry.npmjs.org/@ts-restless%2Ffastify",
+      "dist_tags": {
+        "latest": "4.0.0-alpha.0",
+        "alpha": "4.0.0-alpha.1"
+      },
+      "versions": ["0.0.0-stage", "4.0.0-alpha.0", "4.0.0-alpha.1"],
+      "alpha_published_at": "2026-11-06T13:17:08.963Z"
+    },
+    {
+      "package": "@ts-restless/serverless",
+      "source_url": "https://registry.npmjs.org/@ts-restless%2Fserverless",
+      "dist_tags": {
+        "latest": "4.0.0-alpha.0",
+        "alpha": "4.0.0-alpha.1"
+      },
+      "versions": ["0.0.0-stage", "4.0.0-alpha.0", "4.0.0-alpha.1"],
+      "alpha_published_at": "2026-11-06T13:17:08.433Z"
+    },
+    {
+      "package": "@ts-restless/next",
+      "source_url": "https://registry.npmjs.org/@ts-restless%2Fnext",
+      "dist_tags": {
+        "latest": "4.0.0-alpha.0",
+        "alpha": "4.0.0-alpha.1"
+      },
+      "versions": ["0.0.0-stage", "4.0.0-alpha.0", "4.0.0-alpha.1"],
+      "alpha_published_at": "2026-11-06T13:19:00.250Z"
+    },
+    {
+      "package": "@ts-restless/solid-query",
+      "source_url": "https://registry.npmjs.org/@ts-restless%2Fsolid-query",
+      "dist_tags": {
+        "latest": "4.0.0-alpha.0",
+        "alpha": "4.0.0-alpha.1"
+      },
+      "versions": ["0.0.0-stage", "4.0.0-alpha.0", "4.0.0-alpha.1"],
+      "alpha_published_at": "2026-11-06T13:18:30.464Z"
+    },
+    {
+      "package": "@ts-restless/vue-query",
+      "source_url": "https://registry.npmjs.org/@ts-restless%2Fvue-query",
+      "dist_tags": {
+        "latest": "4.0.0-alpha.0",
+        "alpha": "4.0.0-alpha.1"
+      },
+      "versions": ["0.0.0-stage", "4.0.0-alpha.0", "4.0.0-alpha.1"],
+      "alpha_published_at": "2026-11-06T13:18:31.993Z"
+    }
+  ],
+  "limitations": [
+    "Downloads are events, not unique users or production deployments.",
+    "Upstream package use does not establish ts-rest and framework version overlap.",
+    "Version endpoints have a rolling last-week window and do not return start/end dates.",
+    "Major buckets include prerelease versions.",
+    "Version-summed totals and package-total endpoints do not reconcile."
+  ],
+  "next_package_total": {
+    "source_url": "https://api.npmjs.org/downloads/point/2026-10-30:2026-11-05/next",
+    "downloads": 91648380,
+    "start": "2026-10-30",
+    "end": "2026-11-05",
+    "package": "next"
+  },
+  "upstream_policies": [
+    {
+      "source_url": "https://nextjs.org/support-policy",
+      "observation": "Next 16 Active LTS; 15 Maintenance LTS with security releases through 2027-01-31; 12, 13 and 14 unsupported."
+    },
+    {
+      "source_url": "https://expressjs.com/en/support/",
+      "observation": "Express 4 and 5 have ongoing support with no fixed end date."
+    },
+    {
+      "source_url": "https://fastify.dev/docs/latest/Reference/LTS/",
+      "observation": "Fastify 4 LTS ended 2025-06-30; 5 has no fixed end date in the published table."
+    }
+  ]
+}

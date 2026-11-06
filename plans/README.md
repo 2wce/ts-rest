@@ -1,4 +1,16 @@
-# Response architecture work
+# Fork architecture and adoption work
+
+Start with the [adapter epic](../docs/superpowers/plans/2026-11-04-adapter-maintenance-epic.md), [adoption backlog](../docs/release-readiness-backlog.md) and [adopted support policy](../docs/support-policy.md).
+
+| Document                                                                                           | Purpose                                                                                    | Status                                                 |
+| -------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ | ------------------------------------------------------ |
+| [2026-11-06 support/demand evidence](../docs/superpowers/results/2026-11-06-support-demand.md)     | Fork direction, support counts, npm/policy sources, maintenance proof and resume checklist | Recorded evidence; retirement recommendations proposed |
+| [Shared-query design](../docs/superpowers/specs/2026-11-06-client-maintenance-design.md)           | A11 boundary, exact API, behavior and two real consumers                                   | Proposed; implementation requires design approval      |
+| [Common-query implementation plan](../docs/superpowers/plans/2026-11-06-common-query-execution.md) | Characterization, extraction, strict consumers and delivery gates                          | Proposed; no A11 implementation                        |
+
+Detailed plans exist for the response slices below. Future native-composition, upgrade and retirement slices require their own scoped designs and executable plans. [Open PR #17](https://github.com/2wce/ts-restless/pull/17) owns plans 005/006, Next response adoption and the initial-v4 Next 15–16 baseline and associated execution records; it is unmerged at this snapshot. Reconcile its records when it merges.
+
+## Response architecture work
 
 These documents refine A04 and the response portion of A05 in the existing adapter epic. Read the approved design and execution plan together. Implementation preserves current behavior; the client-policy correction in F04 and other host migrations remain separately scoped.
 
@@ -6,7 +18,7 @@ These documents refine A04 and the response portion of A05 in the existing adapt
 | ------------------------------------------------------------------------------------- | ----------------------------------------------------------- | --------------------------- |
 | [001 Response contract evaluation design](001-response-contract-evaluation-design.md) | A04, with F04 kept separate                                 | Approved 2026-11-05         |
 | [002 Core evaluation and Express adoption](002-response-contract-evaluation.md)       | A04 implementation; depends on 001 and completed A02        | Merged in PR #13; CI passed |
-| [003 Fastify response adoption](003-fastify-response-evaluation.md)                   | Response portion of A05; depends on A04, independent of A03 | DONE locally; CI pending    |
+| [003 Fastify response adoption](003-fastify-response-evaluation.md)                   | Response portion of A05; depends on A04, independent of A03 | Merged in PR #14; CI passed |
 
 Plan 002 has three sequential tasks: characterize compatibility, establish the core capability and packed API evidence, then adopt it in Express and run the final gates. Original planning baseline: `aaae50b5`; delivery rebased onto `2bbc84e4` to exclude the already merged Changesets correction. Implemented on `feat/response-contract-evaluation`; all required local gates passed on 2026-11-06.
 
@@ -32,8 +44,8 @@ Plan 003 is implemented on `feat/fastify-response-evaluation`, rebased onto main
 
 Local gates passed: 350 focused tests, 700 full-source tests, all nine inference tasks, Fastify source/test typing, 20 packed tests in four files, changed-file formatting/whitespace and targeted lint (one existing warning). The compatibility checkpoint proved the tests detect an inverted validation policy. Real packed ESM/CommonJS adapters execute transforming responses under all four validator profiles. See [plan 003](003-fastify-response-evaluation.md#execution-evidence) for details and the local runtime version.
 
-A05 remains partial: response adoption is verified locally, its CI is pending, and request adoption depends on unimplemented A03. Next, Nest and serverless response adoption and the client-policy correction remain separate slices.
+A05 remains partial: response adoption merged in [PR #14](https://github.com/2wce/ts-restless/pull/14) as `b4a15042` with passing CI; request adoption depends on unimplemented A03. Next, Nest and serverless response adoption and the client-policy correction remain separate slices.
 
 ## Public-only release tracking (2026-11-06)
 
-[Plan 004](004-private-package-release-noise.md) implements the user's private-package policy in the same PR #14: one fixed group of ten explicit public libraries, with private versioning and tagging disabled. All nine real Changesets release probes and the 21-test packed suite passed. Existing private versions/prestate are retained; no live publication occurs in the probes. The prerelease checklist records the separate stable-exit rehearsal for the installed planner's skipped-package edge case.
+[Plan 004](004-private-package-release-noise.md) implements the user's private-package policy in the same PR #14: one fixed group of ten explicit public libraries, with private versioning and tagging disabled. All nine real Changesets release probes and the 21-test packed suite passed. Existing private versions/prestate are retained; no live publication occurs in the probes. The prerelease checklist records the separate stable-exit rehearsal for the installed planner's skipped-package edge case. PR #15 merged the retained mixed-Changeset correction. Release PR #16 and registry metadata establish alpha.1 publication; stable publication remains unperformed.

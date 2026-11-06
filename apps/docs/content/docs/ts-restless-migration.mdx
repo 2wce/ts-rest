@@ -9,11 +9,11 @@ description: Package names, release status and migration from ts-rest v3 to ts-r
 
 The first stable release will be **4.0.0**. Interim `4.0.0-alpha.*` releases can ship while stable-launch compatibility fixes continue, followed by beta and release candidates as needed. Prereleases use their explicit `alpha`, `beta` or `rc` npm tag; stable `4.0.0` will use `latest`.
 
-**No library release is available yet.** The ten `@ts-restless/*` names are registered on npm with `0.0.0-stage` placeholders for trusted-publisher setup. These placeholders contain no library code and must not be installed. This checkout and its compiled examples use the new package names and describe this fork's development source, which differs from published upstream v3. Installation commands apply after the first public alpha is available.
+**All ten public libraries have published `4.0.0-alpha.1`**, available through `@alpha` (registry verified 2026-11-06). Stable `4.0.0` is not published. Historical `0.0.0-stage` registration placeholders remain on npm. These placeholders contain no library code and must not be installed. This checkout and its compiled examples use the new package names and describe this fork's development source, which differs from published upstream v3. Use the explicit prerelease channel in the installation commands below. At this snapshot npm also points `latest` to alpha.0; that is not a stable-release designation. Tag reconciliation is a separate release follow-up.
 
 ## Package migration
 
-Public packages will belong to the project-owned npm organization `ts-restless`, with [@2wce](https://github.com/2wce) as its initial owner.
+Public packages belong to the project-owned npm organization `ts-restless`, with [@2wce](https://github.com/2wce) as its initial owner.
 
 | Upstream dependency    | ts-restless dependency    |
 | ---------------------- | ------------------------- |
@@ -39,16 +39,16 @@ import { initTsrReactQuery } from '@ts-restless/react-query/v5';
 
 `react-query-v5` is a private implementation package. Consumers use the public `@ts-restless/react-query/v5` entry point.
 
-## Trying an alpha after publication
+## Trying an alpha
 
-The following commands apply **after an alpha is published**. For an Express application, replace the old packages and select the alpha channel explicitly:
+For an Express application, replace the old packages and select the alpha channel explicitly:
 
 ```bash
 pnpm remove @ts-rest/core @ts-rest/express
 pnpm add @ts-restless/core@alpha @ts-restless/express@alpha
 ```
 
-For a reproducible evaluation, use the exact version named in the release notes instead of the moving tag, for example `@ts-restless/core@4.0.0-alpha.0`. Check that all selected ts-restless libraries resolve to the same prerelease version. Use your package manager's equivalent commands if needed.
+For a reproducible evaluation, use the exact version named in the release notes instead of the moving tag, for example `@ts-restless/core@4.0.0-alpha.1`. Check that all selected ts-restless libraries resolve to the same prerelease version. Use your package manager's equivalent commands if needed.
 
 Read that release's verified dependency versions and known gaps before upgrading. Current evidence covers pinned dependency combinations; the compatibility work for current Query v5, public React19 and Fastify5 is still ahead. The current public React Query peer range ends at React18, Fastify support is on major4, and OpenAPI still uses its existing Zod3 default converter with explicit converter hooks. A prerelease does not establish broader support.
 
