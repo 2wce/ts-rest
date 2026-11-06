@@ -1,6 +1,14 @@
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
-import { cp, mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
+import {
+  access,
+  cp,
+  mkdir,
+  mkdtemp,
+  readFile,
+  rm,
+  writeFile,
+} from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { test } from 'vitest';
@@ -9,6 +17,18 @@ import { fileURLToPath } from 'node:url';
 const root = fileURLToPath(new URL('../../', import.meta.url));
 const cli = join(root, 'node_modules/@changesets/cli/bin.js');
 const archive = 'nest.tgz';
+const publicLibraries = [
+  'core',
+  'express',
+  'fastify',
+  'nest',
+  'next',
+  'serverless',
+  'react-query',
+  'open-api',
+  'solid-query',
+  'vue-query',
+];
 
 async function workspace() {
   const cwd = await mkdtemp(join(tmpdir(), 'ts-restless-version-'));
@@ -29,7 +49,7 @@ async function workspace() {
     join(cwd, 'pnpm-workspace.yaml'),
     "packages:\n  - 'libs/ts-rest/*'\n",
   );
-  for (const name of ['core', 'nest', 'react-query-v5']) {
+  for (const name of [...publicLibraries, 'react-query-v5']) {
     await mkdir(join(cwd, 'libs/ts-rest', name), { recursive: true });
     await writeFile(
       join(cwd, 'libs/ts-rest', name, 'package.json'),
@@ -37,6 +57,9 @@ async function workspace() {
         name: `@ts-restless/${name}`,
         version: '3.52.1',
         private: name === 'react-query-v5',
+        ...(name === 'react-query-v5'
+          ? { dependencies: { '@ts-restless/core': 'workspace:*' } }
+          : {}),
         ...(name === 'nest'
           ? {
               peerDependencies: {
@@ -92,6 +115,7 @@ async function assertVersion(cwd, version, peer) {
     await readFile(join(cwd, 'libs/ts-rest/react-query-v5/package.json')),
   );
   assert.equal(privatePkg.private, true);
+  assert.equal(privatePkg.version, '3.52.1');
   assert.equal(privatePkg.peerDependencies, undefined);
 }
 
@@ -143,15 +167,22 @@ test('numbered alpha releases progress together and exit to the intended stable 
   }
 });
 
-async function forkWorkspace(sourceRoot = root) {
-  const cwd = await mkdtemp(join(tmpdir(), 'ts-restless-fork-version-'));
-  const manifests = execFileSync('git', ['ls-files', '*package.json'], {
+function workspaceManifests() {
+  return execFileSync('git', ['ls-files', '*package.json'], {
     cwd: root,
     encoding: 'utf8',
   })
     .trim()
     .split('\n')
     .filter((path) => path.startsWith('apps/') || path.startsWith('libs/'));
+}
+
+async function forkWorkspace(
+  sourceRoot = root,
+  { initialRelease = true } = {},
+) {
+  const cwd = await mkdtemp(join(tmpdir(), 'ts-restless-fork-version-'));
+  const manifests = workspaceManifests();
   for (const path of ['package.json', 'pnpm-workspace.yaml', ...manifests]) {
     await mkdir(dirname(join(cwd, path)), { recursive: true });
     await cp(join(sourceRoot, path), join(cwd, path));
@@ -161,7 +192,7 @@ async function forkWorkspace(sourceRoot = root) {
   for (const path of manifests) {
     const pkgPath = join(cwd, path);
     const pkg = JSON.parse(await readFile(pkgPath, 'utf8'));
-    if (pkg.name.startsWith('@ts-restless/')) {
+    if (initialRelease && pkg.name.startsWith('@ts-restless/')) {
       pkg.version = '3.52.1';
       await writeFile(pkgPath, JSON.stringify(pkg));
     }
@@ -171,11 +202,54 @@ async function forkWorkspace(sourceRoot = root) {
     join(sourceRoot, '.changeset/config.json'),
     join(cwd, '.changeset/config.json'),
   );
-  await writeFile(
-    join(cwd, '.changeset/initial-major.md'),
-    '---\n"@ts-restless/core": major\n---\nInitial fork major.\n',
-  );
+  if (initialRelease) {
+    await writeFile(
+      join(cwd, '.changeset/initial-major.md'),
+      '---\n"@ts-restless/core": major\n---\nInitial fork major.\n',
+    );
+  }
   return cwd;
+}
+
+async function privateVersions(cwd) {
+  const manifests = workspaceManifests();
+  const versions = {};
+  for (const path of manifests) {
+    const pkg = JSON.parse(await readFile(join(cwd, path), 'utf8'));
+    if (pkg.private) versions[path] = pkg.version;
+  }
+  return versions;
+}
+
+async function assertPrivateVersions(cwd, versions) {
+  assert.ok(Object.keys(versions).length > 0);
+  for (const [path, version] of Object.entries(versions)) {
+    const pkg = JSON.parse(await readFile(join(cwd, path), 'utf8'));
+    assert.equal(pkg.private, true, `${pkg.name}: remains private`);
+    assert.equal(
+      pkg.version,
+      version,
+      `${pkg.name}: private version unchanged`,
+    );
+    await assert.rejects(access(join(cwd, dirname(path), 'CHANGELOG.md')), {
+      code: 'ENOENT',
+    });
+  }
+}
+
+function initReleaseRepository(cwd) {
+  for (const args of [
+    ['init', '--quiet', '--initial-branch=main'],
+    ['config', 'user.name', 'Release Probe'],
+    ['config', 'user.email', 'release-probe@example.test'],
+    ['config', 'commit.gpgsign', 'false'],
+    ['config', 'tag.gpgsign', 'false'],
+    ['config', 'core.hooksPath', '/dev/null'],
+    ['add', '.'],
+    ['commit', '--quiet', '-m', 'Release fixture'],
+  ]) {
+    execFileSync('git', args, { cwd, stdio: 'pipe' });
+  }
 }
 
 function prerelease(cwd, command) {
@@ -197,23 +271,24 @@ function rejectPrerelease(cwd, pattern) {
 }
 
 test('actual fork manifests with an initial major produce ten v4 packages and correctly packed first-alpha peers', async () => {
-  const publicLibraries = [
-    'core',
-    'express',
-    'fastify',
-    'nest',
-    'next',
-    'serverless',
-    'react-query',
-    'open-api',
-    'solid-query',
-    'vue-query',
-  ];
   for (const tag of [undefined, 'alpha']) {
     const cwd = await forkWorkspace();
     try {
+      const privateBefore = await privateVersions(cwd);
       if (tag) changeset(cwd, 'pre', 'enter', tag);
+      initReleaseRepository(cwd);
+      const statusFile = join(cwd, 'release-plan.json');
+      changeset(cwd, 'status', '--output', statusFile);
+      const plan = JSON.parse(await readFile(statusFile, 'utf8'));
+      assert.deepEqual(
+        plan.releases
+          .filter((release) => release.type !== 'none')
+          .map((release) => release.name)
+          .sort(),
+        publicLibraries.map((name) => `@ts-restless/${name}`).sort(),
+      );
       changeset(cwd, 'version');
+      await assertPrivateVersions(cwd, privateBefore);
       const version = tag ? '4.0.0-alpha.0' : '4.0.0';
       if (tag) {
         assert.match(prerelease(cwd, 'verify'), /4\.0\.0-alpha\.0 under alpha/);
@@ -288,8 +363,10 @@ test('actual fork manifests with an initial major produce ten v4 packages and co
 test('release PR version command bootstraps alpha once and advances the actual fork', async () => {
   const cwd = await forkWorkspace();
   try {
+    const privateBefore = await privateVersions(cwd);
     rejectPrerelease(cwd, /active prerelease/);
     prerelease(cwd, 'version');
+    await assertPrivateVersions(cwd, privateBefore);
     assert.match(prerelease(cwd, 'verify'), /4\.0\.0-alpha\.0 under alpha/);
     const initial = JSON.parse(
       await readFile(join(cwd, '.changeset/pre.json')),
@@ -299,6 +376,7 @@ test('release PR version command bootstraps alpha once and advances the actual f
       '---\n"@ts-restless/core": patch\n---\nFollowup alpha fix.\n',
     );
     prerelease(cwd, 'version');
+    await assertPrivateVersions(cwd, privateBefore);
     assert.match(prerelease(cwd, 'verify'), /4\.0\.0-alpha\.1 under alpha/);
     const next = JSON.parse(await readFile(join(cwd, '.changeset/pre.json')));
     assert.deepEqual(next.initialVersions, initial.initialVersions);
@@ -310,6 +388,39 @@ test('release PR version command bootstraps alpha once and advances the actual f
         assert.match(error.stderr, /active prerelease/);
         return true;
       },
+    );
+  } finally {
+    await rm(cwd, { recursive: true, force: true });
+  }
+});
+
+test('current prerelease state advances public libraries without reversioning private packages', async () => {
+  const cwd = await forkWorkspace(root, { initialRelease: false });
+  try {
+    const privateBefore = await privateVersions(cwd);
+    const core = JSON.parse(
+      await readFile(join(cwd, 'libs/ts-rest/core/package.json'), 'utf8'),
+    );
+    const current = /^(\d+\.\d+\.\d+-(?:alpha|beta|rc)\.)(\d+)$/.exec(
+      core.version,
+    );
+    assert.ok(current, 'fixture starts at an existing numbered prerelease');
+    const expectedVersion = `${current[1]}${Number(current[2]) + 1}`;
+    await cp(
+      join(root, '.changeset/pre.json'),
+      join(cwd, '.changeset/pre.json'),
+    );
+    await bump(cwd, 'patch');
+    for (const name of publicLibraries) {
+      const pkg = JSON.parse(
+        await readFile(join(cwd, 'libs/ts-rest', name, 'package.json'), 'utf8'),
+      );
+      assert.equal(pkg.version, expectedVersion);
+    }
+    await assertPrivateVersions(cwd, privateBefore);
+    assert.match(
+      prerelease(cwd, 'verify'),
+      new RegExp(expectedVersion.replaceAll('.', '\\.')),
     );
   } finally {
     await rm(cwd, { recursive: true, force: true });
@@ -383,6 +494,7 @@ test('real Changesets publish preflight preserves alpha state and keeps prerelea
     prerelease(cwd, 'version');
     const prePath = join(cwd, '.changeset/pre.json');
     const original = await readFile(prePath, 'utf8');
+    initReleaseRepository(cwd);
     const bin = join(cwd, 'bin');
     const log = join(cwd, 'publish-commands.jsonl');
     await mkdir(bin);
@@ -407,7 +519,7 @@ else if (args[0] === 'publish') {
     }
     const run = (command, args) => {
       if (command === 'pnpm' && args[0] === 'build') return;
-      execFileSync(command, [...args, '--no-git-tag'], {
+      execFileSync(command, args, {
         cwd,
         env: { ...process.env, PATH: `${bin}:${process.env.PATH}` },
         stdio: 'pipe',
@@ -419,6 +531,12 @@ else if (args[0] === 'publish') {
       .split('\n')
       .map(JSON.parse);
     assert.equal(publications.length, 10);
+    assert.deepEqual(
+      publications
+        .map((publication) => publication.name)
+        .sort((left, right) => left.localeCompare(right)),
+      publicLibraries.map((name) => `@ts-restless/${name}`).sort(),
+    );
     for (const publication of publications) {
       assert.ok(publication.name.startsWith('@ts-restless/'));
       assert.equal(
@@ -426,6 +544,19 @@ else if (args[0] === 'publish') {
         'alpha',
       );
     }
+    const tags = execFileSync('git', ['tag', '--list'], {
+      cwd,
+      encoding: 'utf8',
+    })
+      .trim()
+      .split('\n')
+      .sort();
+    assert.deepEqual(
+      tags,
+      publicLibraries
+        .map((name) => `@ts-restless/${name}@4.0.0-alpha.1`)
+        .sort(),
+    );
     assert.equal(await readFile(prePath, 'utf8'), original);
     await assert.rejects(
       publishPrerelease(cwd, (command) => {
