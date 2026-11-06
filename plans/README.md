@@ -1,4 +1,16 @@
-# Response architecture work
+# Fork architecture and adoption work
+
+Start with the [adapter epic](../docs/superpowers/plans/2026-11-04-adapter-maintenance-epic.md), [adoption backlog](../docs/release-readiness-backlog.md) and [adopted support policy](../docs/support-policy.md).
+
+| Document                                                                                           | Purpose                                                                                    | Status                                                 |
+| -------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ | ------------------------------------------------------ |
+| [2026-11-06 support/demand evidence](../docs/superpowers/results/2026-11-06-support-demand.md)     | Fork direction, support counts, npm/policy sources, maintenance proof and resume checklist | Recorded evidence; retirement recommendations proposed |
+| [Shared-query design](../docs/superpowers/specs/2026-11-06-client-maintenance-design.md)           | A11 boundary, exact API, behavior and two real consumers                                   | Proposed; implementation requires design approval      |
+| [Common-query implementation plan](../docs/superpowers/plans/2026-11-06-common-query-execution.md) | Characterization, extraction, strict consumers and delivery gates                          | Proposed; no A11 implementation                        |
+
+Detailed plans exist for the response slices below. Future native-composition, upgrade and retirement slices require their own scoped designs and executable plans. [Merged PR #17](https://github.com/2wce/ts-restless/pull/17) owns plans 005/006, Next response adoption and the initial-v4 Next 15–16 baseline and associated execution records; it merged as `e937ed0e` on 2026-11-06. Its Next support decision and verification records are retained below.
+
+## Response architecture work
 
 These documents refine A04 and the response portions of A05/A06 in the existing adapter epic. Read the approved design and execution plan together. Implementation preserves current behavior; the client-policy correction in F04 and other host migrations remain separately scoped.
 
@@ -8,8 +20,8 @@ These documents refine A04 and the response portions of A05/A06 in the existing 
 | [002 Core evaluation and Express adoption](002-response-contract-evaluation.md)       | A04 implementation; depends on 001 and completed A02        | Merged in PR #13; CI passed                    |
 | [003 Fastify response adoption](003-fastify-response-evaluation.md)                   | Response portion of A05; depends on A04, independent of A03 | Merged in PR #14; CI passed                    |
 | [004 Private package release noise](004-private-package-release-noise.md)             | Public-only release tracking                                | Merged in PR #14; retained-entry fix in PR #15 |
-| [005 Next response adoption](005-next-response-evaluation.md)                         | Response portion of A06; depends on A04, independent of A03 | Draft PR #17; CI passed at `0a7bdb66`          |
-| [006 Next supported majors](006-next-supported-majors.md)                             | Initial v4 Next baseline; A01/A19 support decision          | Draft PR #17; CI passed at `0a7bdb66`          |
+| [005 Next response adoption](005-next-response-evaluation.md)                         | Response portion of A06; depends on A04, independent of A03 | Merged in PR #17; CI evidence at `0a7bdb66`    |
+| [006 Next supported majors](006-next-supported-majors.md)                             | Initial v4 Next baseline; A01/A19 support decision          | Merged in PR #17; CI evidence at `0a7bdb66`    |
 
 Plan 002 has three sequential tasks: characterize compatibility, establish the core capability and packed API evidence, then adopt it in Express and run the final gates. Original planning baseline: `aaae50b5`; delivery rebased onto `2bbc84e4` to exclude the already merged Changesets correction. Implemented on `feat/response-contract-evaluation`; all required local gates passed on 2026-11-06.
 
@@ -41,7 +53,7 @@ A05 remains partial: response adoption merged in [PR #14](https://github.com/2wc
 
 [Plan 004](004-private-package-release-noise.md) implements the user's private-package policy in the same PR #14: one fixed group of ten explicit public libraries, with private versioning and tagging disabled. All nine real Changesets release probes and the 21-test packed suite passed. Existing private versions/prestate are retained; no live publication occurs in the probes. The prerelease checklist records the separate stable-exit rehearsal for the installed planner's skipped-package edge case.
 
-[PR #15](https://github.com/2wce/ts-restless/pull/15) merged as `aed1a973` after the same CI gates passed. It removes the private v5 helper from a retained mixed Changeset and makes the current-state version probe retain every committed Changeset. The probe reproduced the action's mixed-entry failure before the correction. Release/publication status remains separate from architecture delivery.
+[PR #15](https://github.com/2wce/ts-restless/pull/15) merged as `aed1a973` after the same CI gates passed. It removes the private v5 helper from a retained mixed Changeset and makes the current-state version probe retain every committed Changeset. The probe reproduced the action's mixed-entry failure before the correction. Release PR #16 and the dated registry snapshot establish alpha.1 publication; stable publication remains unperformed. Release/publication status remains separate from architecture delivery.
 
 ## Next response adoption evidence (2026-11-06)
 
@@ -55,4 +67,4 @@ At checkpoint `85b102ce`, all 21 packed tests passed on Node 26.12.0 with Next 1
 
 The user approved dropping upstream-unsupported Next majors from the first stable v4 baseline. [Plan 006](006-next-supported-majors.md) narrows Next and serverless peers to `^15.0.0 || ^16.0.0`, matching the [official LTS policy](https://nextjs.org/support-policy). The existing Next 16 example is retained; Pages Router style does not imply an unsupported Next major.
 
-All 25 packed/release tests passed on Node 26.12.0, covering Next 15.5.29 and 16.4.2 across four validator profiles, native Pages API HTTP and serverless NextRequest execution, and both module formats. Strict checking reports only exact reviewed upstream diagnostics; every other error fails. A deliberately incorrect handler type caused two expected failures and passed after restoration. The initial peer baseline failed against old archives before the manifests changed. Full `pnpm check` passed 728 tests and all configured typechecks, with zero lint errors and 393 existing warnings. [CI for implementation `0a7bdb66`](https://github.com/2wce/ts-restless/actions/runs/42236967009) passed Build & Test, all ten compatibility fixtures and the aggregate gate. PR #17 remains draft; no merge or publication occurred.
+All 25 packed/release tests passed on Node 26.12.0, covering Next 15.5.29 and 16.4.2 across four validator profiles, native Pages API HTTP and serverless NextRequest execution, and both module formats. Strict checking reports only exact reviewed upstream diagnostics; every other error fails. A deliberately incorrect handler type caused two expected failures and passed after restoration. The initial peer baseline failed against old archives before the manifests changed. Full `pnpm check` passed 728 tests and all configured typechecks, with zero lint errors and 393 existing warnings. [CI for implementation `0a7bdb66`](https://github.com/2wce/ts-restless/actions/runs/42236967009) passed Build & Test, all ten compatibility fixtures and the aggregate gate. PR #17 merged as `e937ed0e` on 2026-11-06. No publication was part of that change.

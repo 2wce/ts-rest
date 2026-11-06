@@ -13,7 +13,7 @@ Contract-first, end-to-end typed REST for TypeScript. A maintained fork of [ts-r
 
 ## Release status
 
-The first stable ts-restless release will be **4.0.0**, with interim `4.0.0-alpha.*` prereleases while compatibility fixes continue. No library release is available yet. The ten `@ts-restless/*` names are registered on npm with `0.0.0-stage` placeholders for trusted-publisher setup. These placeholders contain no library code and must not be installed.
+The first stable ts-restless release will be **4.0.0**, with interim `4.0.0-alpha.*` prereleases while compatibility fixes continue. All ten public libraries have published `4.0.0-alpha.1`, available through the explicit `@alpha` npm channel (registry verified 2026-11-06). Stable `4.0.0` is not published. Historical `0.0.0-stage` registration placeholders remain on npm. These placeholders contain no library code and must not be installed.
 
 This development checkout uses `@ts-restless/*` package names. Its examples describe this fork's source, which includes breaking changes from published upstream v3. See the [package migration and prerelease guide](apps/docs/content/docs/ts-restless-migration.mdx) and [Standard Schema migration](apps/docs/content/docs/standard-schema-migration.mdx).
 

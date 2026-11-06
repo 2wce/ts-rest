@@ -48,7 +48,7 @@ Remove support in the next scheduled ts-rest major release on or after the earli
 
 When adding a new supported dependency major, decide the maintenance status and retirement schedule of the older lines in the same review. When maintaining an old line is no longer viable, make an explicit release decision and communicate its consequences rather than silently reducing support.
 
-The fork's initial major can establish a narrower support baseline before its first stable publication. Document differences from upstream published v3 and provide migration guidance. This initial baseline decision is separate from retiring a compatibility promise already shipped by the fork. The [Standard Schema migration guide](../apps/docs/content/docs/standard-schema-migration.mdx) currently describes an unreleased major.
+The fork's initial major can establish a narrower support baseline before its first stable publication. Document differences from upstream published v3 and provide migration guidance. This initial baseline decision is separate from retiring a compatibility promise already shipped by the fork. The [Standard Schema migration guide](../apps/docs/content/docs/standard-schema-migration.mdx) describes the v4 prerelease migration; stable v4 remains unreleased.
 
 ## Retirement requirements
 
@@ -82,7 +82,7 @@ A01's [support inventory](support-inventory.md) records the manifest, lockfile, 
 
 ## Release handling
 
-The current [Changesets configuration](../.changeset/config.json) places the ten public libraries in a fixed group, so compatibility removal currently requires a coordinated major release. Independent adapter versioning can later reduce the release impact through A17; it is not a prerequisite for documenting the policy.
+The current [Changesets configuration](../.changeset/config.json) places the ten explicit public `@ts-restless` libraries in a fixed group, so compatibility removal currently requires a coordinated major release. Independent adapter versioning can later reduce the release impact through A17; it is not a prerequisite for documenting the policy.
 
 Use support documentation, migration guides and release notes to communicate retirement. Avoid blanket npm deprecation of releases that still contain supported integrations or entry points. Any npm deprecation must identify a specific obsolete or unusable release and explain the replacement accurately.
 
