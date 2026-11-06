@@ -1,5 +1,13 @@
 # @ts-rest/serverless
 
+## 4.0.0-alpha.2
+
+### Major Changes
+
+- e937ed0: Set the first stable ts-restless v4 Next.js baseline to majors 15 and 16, matching Next.js's Maintenance and Active LTS lines. Remove unsupported Next.js 12, 13 and 14 from both integrations' peer ranges and packed consumers.
+
+  Before migrating an application on Next.js 12–14 to ts-restless v4, upgrade Next.js using its official migration guides. Pages Router, App Router and Pages Router Edge integration entry points remain available on supported majors. Use a current patched release of Next.js 15 or 16; the maintained workspace example targets Next.js 16. This initial v4 baseline does not change already published upstream ts-rest v3 packages.
+
 ## 4.0.0-alpha.1
 
 ## 4.0.0-alpha.0
