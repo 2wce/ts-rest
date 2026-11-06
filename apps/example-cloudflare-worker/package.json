@@ -1,7 +1,7 @@
 {
   "name": "example-cloudflare-worker",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.0.1-alpha.0",
   "scripts": {
     "build": "wrangler deploy --dry-run --outdir dist",
     "dev": "wrangler dev src/index.ts"

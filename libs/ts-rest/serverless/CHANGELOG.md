@@ -1,5 +1,46 @@
 # @ts-rest/serverless
 
+## 4.0.0-alpha.0
+
+### Major Changes
+
+- 724b9b3: Make default core and adapter entry points validator independent through Standard
+  Schema. Remove Zod-specific public inference types and automatic old-Zod detection
+  from those entries, and isolate historical Zod helpers under explicit `/zod3`
+  compatibility entry points.
+
+  Default validation failures use StandardSchemaError with the serialized name
+  ValidationError, including explicitly bridged old schemas. Request error locations
+  and validator-provided issue fields are retained. Whole-object header schemas now
+  validate both inputs before merging successful outputs; merge typed Zod
+  objects before bridging when replacement semantics are required.
+
+  See the unreleased Standard Schema migration guide for moved imports and intentional
+  major-version changes. This Changeset records the future coordinated release;
+  release workflows remain disabled.
+
+### Minor Changes
+
+- f08fc34: Support Nest 12 and Next 15/16 while retaining older framework peer ranges.
+  Register optional Nest contract paths as concrete route alternatives for Express
+  5 compatibility. Paths keep the selected framework's native route priority.
+  Update the Zod 3 OpenAPI converter to the compatible 1.14 release without
+  changing the OpenAPI public type major.
+- f36510a: Support the "Standard Schema" validation interface to enable support for Zod4, Valibot, Arktype etc.
+
+### Patch Changes
+
+- 3313b33: Expose more types to fix build issues with "verbatimModuleSyntax" and other such build configs
+- Updated dependencies [2c6367c]
+- Updated dependencies [f36510a]
+- Updated dependencies [d588e19]
+- Updated dependencies [0ca71d0]
+- Updated dependencies [612c295]
+- Updated dependencies [534d761]
+- Updated dependencies [113ad0f]
+- Updated dependencies [724b9b3]
+  - @ts-restless/core@4.0.0-alpha.0
+
 ## 3.52.1
 
 ## 3.52.0

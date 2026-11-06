@@ -1,5 +1,58 @@
 # @ts-rest/core
 
+## 4.0.0-alpha.0
+
+### Major Changes
+
+- 113ad0f: Launch the maintained fork as **ts-restless**, with the ten public packages under
+  `@ts-restless/*` and the first stable target `4.0.0`. Interim numbered alpha
+  releases are available before the remaining compatibility work is complete.
+  Replace upstream dependencies and imports as a matched package set; public API
+  identifiers and supported subpaths, including `/zod3` and React Query `/v5`, remain.
+  Report bugs and prerelease feedback at https://github.com/2wce/ts-restless/issues.
+
+  This major includes the Standard Schema default API and the separately documented
+  legacy Zod bridge. A prerelease does not widen framework support: public React
+  peers cover React 16.8–18, Fastify support remains on major 4, and Query v5 evidence
+  is limited to the pinned compatibility baseline. OpenAPI still has its existing
+  converter boundary. Follow the package and Standard Schema migration guides in
+  the repository before moving from upstream v3.
+
+- 724b9b3: Make default core and adapter entry points validator independent through Standard
+  Schema. Remove Zod-specific public inference types and automatic old-Zod detection
+  from those entries, and isolate historical Zod helpers under explicit `/zod3`
+  compatibility entry points.
+
+  Default validation failures use StandardSchemaError with the serialized name
+  ValidationError, including explicitly bridged old schemas. Request error locations
+  and validator-provided issue fields are retained. Whole-object header schemas now
+  validate both inputs before merging successful outputs; merge typed Zod
+  objects before bridging when replacement semantics are required.
+
+  See the unreleased Standard Schema migration guide for moved imports and intentional
+  major-version changes. This Changeset records the future coordinated release;
+  release workflows remain disabled.
+
+### Minor Changes
+
+- f36510a: Support the "Standard Schema" validation interface to enable support for Zod4, Valibot, Arktype etc.
+- d588e19: Add a shared response contract evaluator returning body metadata and structured
+  validation results. Preserve the existing core response-validation facade and
+  Express behavior while adopting the evaluator for ordinary responses. Stream
+  handling, validation enablement, undeclared statuses and error identities remain
+  unchanged.
+
+### Patch Changes
+
+- 2c6367c: Fix handling of responses with no body and content type json header
+- 0ca71d0: Fixed a bug where leading and trailing forward slashes the baseUrl and path would double up
+- 612c295: allow passing numbers as path params into ts-rest core
+- 534d761: Correct field-record header input/output inference across Standard Schema validators.
+  Normalize HTTP names for validation and base/route overrides, preserve optional
+  outputs and transformed values, and retain null removals through nested routers.
+  Infer plain contract header maps correctly. Whole-object schemas keep their
+  existing validation and merge semantics and require lowercase header keys.
+
 ## 3.52.1
 
 ### Patch Changes
