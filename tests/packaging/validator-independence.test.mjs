@@ -189,7 +189,7 @@ for (const [profile, definition] of Object.entries(sources)) {
           'no-Zod consumer must not install Zod transitively',
         );
       }
-      const source = `import { initContract, StandardSchemaV1, SchemaInputOrType, SchemaOutputOrType, ServerInferRequest, ClientInferRequest, ClientInferResponseBody } from '@ts-restless/core';
+      const source = `import { initContract, evaluateResponse, ResponseMetadata, ResponseEvaluation, StandardSchemaV1, SchemaInputOrType, SchemaOutputOrType, ServerInferRequest, ClientInferRequest, ClientInferResponseBody } from '@ts-restless/core';
 import { createExpressEndpoints, initServer } from '@ts-restless/express';
 import * as fastify from '@ts-restless/fastify';
 import * as nest from '@ts-restless/nest';
@@ -209,6 +209,22 @@ type Expect<T extends true> = T;
 type Input = Expect<Equal<SchemaInputOrType<typeof schema>, string>>;
 type Output = Expect<Equal<SchemaOutputOrType<typeof schema>, number>>;
 const contract = initContract().router({ convert: { method: 'POST', path: '/convert', body: schema, headers: { 'X-Count': schema, 'X-Note': optionalHeader }, responses: { 200: schema } } });
+const evaluated: ResponseEvaluation = evaluateResponse({
+  appRoute: contract.convert,
+  response: { status: 200, body: '12' },
+  validateBody: true,
+});
+const responseMetadata: ResponseMetadata = evaluated.metadata;
+if (evaluated.success) {
+  const evaluatedBody: unknown = evaluated.body;
+  void evaluatedBody;
+} else {
+  const issueMessage: string = evaluated.error.issues[0].message;
+  void issueMessage;
+}
+// @ts-expect-error callers must explicitly choose validation enablement
+evaluateResponse({ appRoute: contract.convert, response: { status: 200, body: '12' } });
+void responseMetadata;
 type ServerBody = Expect<Equal<ServerInferRequest<typeof contract.convert>['body'], number>>;
 type ClientBody = Expect<Equal<ClientInferRequest<typeof contract.convert>['body'], string>>;
 type ResponseBody = Expect<Equal<ClientInferResponseBody<typeof contract.convert, 200>, number>>;
@@ -298,11 +314,33 @@ for (const name of ['@ts-restless/core', '@ts-restless/express', '@ts-restless/f
   assert.deepEqual(Object.keys(esm).filter((key) => key !== 'default').sort(), Object.keys(cjs).sort());
 }
 ${definition.replace('schema: StandardSchemaV1<string, number>', 'schema')}
-for (const { validateIfSchema, validateMultiSchemaObject, initContract, StandardSchemaError } of [await import('@ts-restless/core'), require('@ts-restless/core')]) {
+for (const { validateIfSchema, validateMultiSchemaObject, initContract, StandardSchemaError, evaluateResponse } of [await import('@ts-restless/core'), require('@ts-restless/core')]) {
   assert.equal(validateIfSchema('42', schema).value, 42);
   const failure = validateIfSchema({}, schema).error;
   assert.ok(failure instanceof StandardSchemaError);
   assert.ok(failure.issues.length > 0);
+  const responseRoute = initContract().router({ get: {
+    method: 'GET', path: '/response', responses: { 200: schema },
+  } }).get;
+  const accepted = evaluateResponse({
+    appRoute: responseRoute, response: { status: 200, body: '42' }, validateBody: true,
+  });
+  assert.deepEqual(accepted, {
+    success: true,
+    metadata: { status: 200, bodyKind: 'value', contentType: undefined }, body: 42,
+  });
+  const rejected = evaluateResponse({
+    appRoute: responseRoute, response: { status: 200, body: {} }, validateBody: true,
+  });
+  assert.equal(rejected.success, false);
+  assert.ok(rejected.error instanceof StandardSchemaError);
+  assert.ok(rejected.error.issues.length > 0);
+  const original = {};
+  const disabled = evaluateResponse({
+    appRoute: responseRoute, response: { status: 200, body: original }, validateBody: false,
+  });
+  assert.equal(disabled.success, true);
+  assert.equal(disabled.body, original);
   const headers = initContract().router({ get: { method: 'GET', path: '/headers', headers: { 'X-Count': schema }, responses: { 200: null } } }).get.headers;
   assert.equal(validateMultiSchemaObject({ 'X-COUNT': '42' }, headers).value['x-count'], 42);
   const missing = validateMultiSchemaObject({}, headers).error;

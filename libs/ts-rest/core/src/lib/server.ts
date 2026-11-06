@@ -1,46 +1,12 @@
-import { HTTPStatusCode } from './status-codes';
+import { AppRoute } from './dsl';
+import { evaluateResponse, isAppRouteResponse } from './response';
 import { TsRestResponseValidationError } from './response-validation-error';
-import {
-  AppRoute,
-  ContractAnyType,
-  ContractNoBody,
-  ContractNoBodyType,
-  ContractOtherResponse,
-} from './dsl';
-import { validateIfSchema } from './standard-schema-utils';
 
-export const isAppRouteResponse = (
-  value: unknown,
-): value is { status: HTTPStatusCode; body?: any } => {
-  return (
-    value != null &&
-    typeof value === 'object' &&
-    'status' in value &&
-    typeof value.status === 'number'
-  );
-};
-
-export const isAppRouteOtherResponse = (
-  response:
-    | ContractAnyType
-    | ContractNoBodyType
-    | ContractOtherResponse<ContractAnyType>,
-): response is ContractOtherResponse<ContractAnyType> => {
-  return (
-    response != null &&
-    typeof response === 'object' &&
-    'contentType' in response
-  );
-};
-
-export const isAppRouteNoBody = (
-  response:
-    | ContractAnyType
-    | ContractNoBodyType
-    | ContractOtherResponse<ContractAnyType>,
-): response is ContractNoBodyType => {
-  return response === ContractNoBody;
-};
+export {
+  isAppRouteResponse,
+  isAppRouteOtherResponse,
+  isAppRouteNoBody,
+} from './response';
 
 export const validateResponse = ({
   appRoute,
@@ -49,27 +15,14 @@ export const validateResponse = ({
   appRoute: AppRoute;
   response: { status: number; body?: unknown };
 }): { status: number; body?: unknown } => {
-  if (isAppRouteResponse(response)) {
-    const responseType = appRoute.responses[response.status];
-
-    const responseSchema = isAppRouteOtherResponse(responseType)
-      ? responseType.body
-      : responseType;
-
-    const responseValidation = validateIfSchema(response.body, responseSchema);
-
-    if (responseValidation.error) {
-      throw new TsRestResponseValidationError(
-        appRoute,
-        responseValidation.error,
-      );
-    }
-
-    return {
-      status: response.status,
-      body: responseValidation.value,
-    };
+  if (!isAppRouteResponse(response)) return response;
+  const evaluation = evaluateResponse({
+    appRoute,
+    response,
+    validateBody: true,
+  });
+  if (!evaluation.success) {
+    throw new TsRestResponseValidationError(appRoute, evaluation.error);
   }
-
-  return response;
+  return { status: evaluation.metadata.status, body: evaluation.body };
 };
