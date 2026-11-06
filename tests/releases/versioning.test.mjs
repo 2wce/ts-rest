@@ -532,7 +532,9 @@ else if (args[0] === 'publish') {
       .map(JSON.parse);
     assert.equal(publications.length, 10);
     assert.deepEqual(
-      publications.map((publication) => publication.name).sort(),
+      publications
+        .map((publication) => publication.name)
+        .sort((left, right) => left.localeCompare(right)),
       publicLibraries.map((name) => `@ts-restless/${name}`).sort(),
     );
     for (const publication of publications) {
