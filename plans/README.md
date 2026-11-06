@@ -1,12 +1,14 @@
 # Response architecture work
 
-These documents refine A04 and the response portion of A05 in the existing adapter epic. Read the approved design and execution plan together. Implementation preserves current behavior; the client-policy correction in F04 and other host migrations remain separately scoped.
+These documents refine A04 and the response portions of A05/A06 in the existing adapter epic. Read the approved design and execution plan together. Implementation preserves current behavior; the client-policy correction in F04 and other host migrations remain separately scoped.
 
-| Document                                                                              | Existing work                                               | Status                      |
-| ------------------------------------------------------------------------------------- | ----------------------------------------------------------- | --------------------------- |
-| [001 Response contract evaluation design](001-response-contract-evaluation-design.md) | A04, with F04 kept separate                                 | Approved 2026-11-05         |
-| [002 Core evaluation and Express adoption](002-response-contract-evaluation.md)       | A04 implementation; depends on 001 and completed A02        | Merged in PR #13; CI passed |
-| [003 Fastify response adoption](003-fastify-response-evaluation.md)                   | Response portion of A05; depends on A04, independent of A03 | DONE locally; CI pending    |
+| Document                                                                              | Existing work                                               | Status                                         |
+| ------------------------------------------------------------------------------------- | ----------------------------------------------------------- | ---------------------------------------------- |
+| [001 Response contract evaluation design](001-response-contract-evaluation-design.md) | A04, with F04 kept separate                                 | Approved 2026-11-05                            |
+| [002 Core evaluation and Express adoption](002-response-contract-evaluation.md)       | A04 implementation; depends on 001 and completed A02        | Merged in PR #13; CI passed                    |
+| [003 Fastify response adoption](003-fastify-response-evaluation.md)                   | Response portion of A05; depends on A04, independent of A03 | Merged in PR #14; CI passed                    |
+| [004 Private package release noise](004-private-package-release-noise.md)             | Public-only release tracking                                | Merged in PR #14; retained-entry fix in PR #15 |
+| [005 Next response adoption](005-next-response-evaluation.md)                         | Response portion of A06; depends on A04, independent of A03 | DONE locally; CI pending                       |
 
 Plan 002 has three sequential tasks: characterize compatibility, establish the core capability and packed API evidence, then adopt it in Express and run the final gates. Original planning baseline: `aaae50b5`; delivery rebased onto `2bbc84e4` to exclude the already merged Changesets correction. Implemented on `feat/response-contract-evaluation`; all required local gates passed on 2026-11-06.
 
@@ -32,8 +34,18 @@ Plan 003 is implemented on `feat/fastify-response-evaluation`, rebased onto main
 
 Local gates passed: 350 focused tests, 700 full-source tests, all nine inference tasks, Fastify source/test typing, 20 packed tests in four files, changed-file formatting/whitespace and targeted lint (one existing warning). The compatibility checkpoint proved the tests detect an inverted validation policy. Real packed ESM/CommonJS adapters execute transforming responses under all four validator profiles. See [plan 003](003-fastify-response-evaluation.md#execution-evidence) for details and the local runtime version.
 
-A05 remains partial: response adoption is verified locally, its CI is pending, and request adoption depends on unimplemented A03. Next, Nest and serverless response adoption and the client-policy correction remain separate slices.
+A05 remains partial: response adoption merged in [PR #14](https://github.com/2wce/ts-restless/pull/14) as `b4a15042` after Build & Test, all ten compatibility fixtures and the aggregate gate passed. Request adoption depends on unimplemented A03. Nest/serverless response adoption and the client-policy correction remain separate slices.
 
 ## Public-only release tracking (2026-11-06)
 
 [Plan 004](004-private-package-release-noise.md) implements the user's private-package policy in the same PR #14: one fixed group of ten explicit public libraries, with private versioning and tagging disabled. All nine real Changesets release probes and the 21-test packed suite passed. Existing private versions/prestate are retained; no live publication occurs in the probes. The prerelease checklist records the separate stable-exit rehearsal for the installed planner's skipped-package edge case.
+
+[PR #15](https://github.com/2wce/ts-restless/pull/15) merged as `aed1a973` after the same CI gates passed. It removes the private v5 helper from a retained mixed Changeset and makes the current-state version probe retain every committed Changeset. The probe reproduced the action's mixed-entry failure before the correction. Release/publication status remains separate from architecture delivery.
+
+## Next response adoption evidence (2026-11-06)
+
+[Plan 005](005-next-response-evaluation.md) extends the shared response capability to the native Next API adapter on `feat/next-response-evaluation`, based on `aed1a973`. Both router and single-route handlers retain their native writes, status coercion, original request/response context and error callbacks. Request validation and routing stay at their existing boundaries.
+
+Compatibility checkpoint `c7e32709` adds 28 cases across both entry points. All 60 Next tests passed before adoption; temporarily inverting validation produced 14 expected failures. Adoption checkpoint `c223736c` passed 326 core/Next tests and Next source/test typing. Full `pnpm check` passed 728 source tests and all configured typechecks, with zero lint errors and the existing 393 warnings.
+
+All 21 packed tests passed. Existing strict ESM/CommonJS consumers now check Next handler inference and real HTTP execution through Next 12.3.7's API resolver across four validator profiles, both entry points and validation enablement. The workspace Next 16.4.2 example passed its direct `next build` command; the local task-runner path hit a CSS-worker port restriction, so the canonical CI build remains required. Local Node was 24.21.0; CI pins 26.12.0. A06 remains partial until A03 and Next request adoption are implemented.

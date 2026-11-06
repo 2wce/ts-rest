@@ -261,6 +261,26 @@ const fastifyImplementation = fastify.initServer().router(contract, {
   },
 });
 void fastifyImplementation;
+const nextImplementation = next.createNextRoute(contract, {
+  convert: async ({ body, headers, req, res }) => {
+    type HandlerBody = Expect<Equal<typeof body, number>>;
+    type HandlerHeaders = Expect<Equal<typeof headers['x-count'], number>>;
+    const nativeRequest: import('next').NextApiRequest = req;
+    const nativeResponse: import('next').NextApiResponse = res;
+    void [nativeRequest, nativeResponse];
+    return { status: 200, body: body.toString() };
+  },
+});
+const nextRouter = next.createNextRouter(contract, nextImplementation, { responseValidation: true });
+const nextSingle = next.createSingleRouteHandler(contract.convert, async ({ body, headers, req, res }) => {
+  type HandlerBody = Expect<Equal<typeof body, number>>;
+  type HandlerHeaders = Expect<Equal<typeof headers['x-count'], number>>;
+  const nativeRequest: import('next').NextApiRequest = req;
+  const nativeResponse: import('next').NextApiResponse = res;
+  void [nativeRequest, nativeResponse];
+  return { status: 200, body: body.toString() };
+}, { responseValidation: true });
+void [nextRouter, nextSingle];
 void [createExpressEndpoints, initServer, fastify, nest, next, serverless, fetch, aws, azure, serverlessNext];
 `;
       for (const extension of ['mts', 'cts']) {
@@ -323,6 +343,7 @@ type LegacyOutput = Expect<Equal<ZodInferOrType<typeof original>, number>>;
       }
       const runtime = `import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
+import { createServer } from 'node:http';
 const require = createRequire(import.meta.url);
 for (const name of ['@ts-restless/core', '@ts-restless/express', '@ts-restless/fastify', '@ts-restless/nest', '@ts-restless/next', '@ts-restless/serverless', '@ts-restless/serverless/fetch', '@ts-restless/serverless/aws', '@ts-restless/serverless/azure', '@ts-restless/serverless/next']) {
   const esm = await import(name); const cjs = require(name);
@@ -395,6 +416,59 @@ for (const { initServer } of [await import('@ts-restless/fastify'), require('@ts
       assert.equal(calls, responseValidation ? 1 : 0);
     } finally {
       await app.close();
+    }
+  }
+}
+// Exercise the installed Next 12 strict-consumer baseline's real API response
+// augmentation and serialization, rather than replacing json/send/end methods.
+const { apiResolver } = require('next/dist/server/api-utils/node.js');
+for (const adapter of [await import('@ts-restless/next'), require('@ts-restless/next')]) {
+  for (const mode of ['router', 'single']) {
+    for (const responseValidation of [true, false]) {
+      let calls = 0;
+      const countedSchema = { '~standard': {
+        ...schema['~standard'],
+        validate(value) {
+          calls += 1;
+          return schema['~standard'].validate(value);
+        },
+      } };
+      const { initContract } = await import('@ts-restless/core');
+      const contract = initContract().router({ get: {
+        method: 'GET', path: '/packed-next-response', responses: { 200: countedSchema },
+      } });
+      const implementation = async ({ req, res }) => {
+        assert.equal(req.method, 'GET');
+        assert.equal(typeof res.json, 'function');
+        return { status: 200, body: '42' };
+      };
+      const handler = mode === 'router'
+        ? adapter.createNextRouter(contract, { get: implementation }, { responseValidation })
+        : adapter.createSingleRouteHandler(contract.get, implementation, { responseValidation });
+      const app = createServer((req, res) => {
+        const query = mode === 'router' ? { 'ts-rest': ['packed-next-response'] } : {};
+        void apiResolver(req, res, query, handler, {
+          previewModeId: '00000000000000000000000000000000',
+          previewModeEncryptionKey: '00000000000000000000000000000000',
+          previewModeSigningKey: '00000000000000000000000000000000',
+        }, true).catch((error) => {
+          res.statusCode = 500;
+          res.end(String(error));
+        });
+      });
+      try {
+        await new Promise((resolve, reject) => {
+          app.once('error', reject);
+          app.listen(0, '127.0.0.1', resolve);
+        });
+        const response = await fetch('http://127.0.0.1:' + app.address().port + '/packed-next-response');
+        assert.equal(response.status, 200);
+        assert.match(response.headers.get('content-type'), /^application\\/json/);
+        assert.equal(await response.json(), responseValidation ? 42 : '42');
+        assert.equal(calls, responseValidation ? 1 : 0);
+      } finally {
+        await new Promise((resolve, reject) => app.close((error) => error ? reject(error) : resolve()));
+      }
     }
   }
 }

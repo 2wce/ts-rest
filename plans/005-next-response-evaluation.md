@@ -88,12 +88,13 @@ res.status(evaluation.metadata.status).json(evaluation.body);
 
 **Produces:** Packed handler inference and execution evidence without source aliases or compiler suppression.
 
-- [ ] Extend the existing source fixture with a Next single handler and router implementation. Assert transformed handler body/header types and native `NextApiRequest`/`NextApiResponse` context.
-- [ ] Extend the runtime fixture to invoke both real packed entry points in ESM and CommonJS with response validation enabled/disabled. Capture status, JSON body and validator calls through the installed Next 12 API resolver and real localhost HTTP requests, expecting `42` with one call or `'42'` with zero calls across all four validator profiles.
-- [ ] Run `pnpm test:packages`, full `pnpm check`, `pnpm exec tsc --noEmit -p libs/ts-rest/next/tsconfig.spec.json`, and `pnpm --filter example-next build`.
-- [ ] Run changed-file formatting and `git diff --check`. Review imports, response dispatch, public signatures and every stated constraint; retain all existing request, route and legacy tests.
-- [ ] Record exact results and current merged PR #14/#15 evidence in the plan index and epic. Mark only A06's response portion complete locally, with CI pending; A03 and Next request adoption remain outstanding.
-- [ ] Commit final evidence and publish a draft PR from `feat/next-response-evaluation`; require the existing CI compatibility gates before merge. No merge or npm publication is part of this slice.
+- [x] Extend the existing source fixture with a Next single handler and router implementation. Assert transformed handler body/header types and native `NextApiRequest`/`NextApiResponse` context.
+- [x] Extend the runtime fixture to invoke both real packed entry points in ESM and CommonJS with response validation enabled/disabled. Capture status, JSON body and validator calls through the installed Next 12 API resolver and real localhost HTTP requests, expecting `42` with one call or `'42'` with zero calls across all four validator profiles.
+- [x] Run `pnpm test:packages`, full `pnpm check` and `pnpm exec tsc --noEmit -p libs/ts-rest/next/tsconfig.spec.json`.
+- [x] Verify the workspace Next example using `pnpm --filter example-next exec next build`. Direct build passed; the task-runner command hit a local CSS-worker port restriction. CI must still verify the canonical build command.
+- [x] Run changed-file formatting and `git diff --check`. Review imports, response dispatch, public signatures and every stated constraint; retain all existing request, route and legacy tests.
+- [x] Record exact results and current merged PR #14/#15 evidence in the plan index and epic. Mark only A06's response portion complete locally, with CI pending; A03 and Next request adoption remain outstanding.
+- [x] Commit final evidence for draft PR delivery from `feat/next-response-evaluation`; require the existing CI compatibility gates before merge. No merge or npm publication is part of this slice.
 
 ## Execution evidence
 
@@ -103,4 +104,4 @@ res.status(evaluation.metadata.status).json(evaluation.body);
 - Full `pnpm check`: 728 tests and all configured typechecks passed, with zero lint errors and 393 existing warnings.
 - Packed suite: 21 tests in four files passed. All four validator profiles exercise strict ESM/CommonJS handler inference and real Next 12.3.7 HTTP serialization for router/single handlers with zero/one response validation calls.
 - Local runtime: Node 24.21.0 and pnpm 12.14.0; CI must verify pinned Node 26.12.0.
-
+- Direct workspace Next 16.4.2 example build passed. Two task-runner invocations hit a CSS-worker port restriction, including the escalated rerun; the direct command completed compilation, typing and page generation without source/config changes.
