@@ -4,6 +4,8 @@
 
 **Goal:** Make the native Next API adapter consume core response evaluation while preserving its observable behavior.
 
+**Historical checkpoint:** This plan records behavior-preserving response adoption, including the temporary Next 12 declaration baseline. [Plan 006](006-next-supported-majors.md) supersedes that baseline with the separately approved initial v4 support change. Current consumers use Next 15/16; no Next 12 consumer remains.
+
 **Architecture:** Replace the response validation/declaration branches in `handlerFactory` with `evaluateResponse`. Next keeps status coercion, native writes, routing, request validation and error callbacks. Map evaluator failures to the existing core `TsRestResponseValidationError`.
 
 **Tech Stack:** TypeScript, Standard Schema, Vitest 5.0.5, pnpm 12.14.0; workspace and packed HTTP runtime Next 16.4.2, strict packed declarations against Next 12.3.7. CI and corrected local verification use Node 26.12.0; initial local verification used Node 24.21.0.

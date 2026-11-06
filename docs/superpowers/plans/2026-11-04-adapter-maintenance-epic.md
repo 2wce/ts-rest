@@ -2,7 +2,7 @@
 
 **Recorded:** 2026-11-04. **Source baseline:** `534d761bf0629ac196ce9941ff95cf75abdb4719`.
 
-**Status:** Incremental implementation. The user approved A01/A02 on 2026-11-04 and adopted the support-policy baseline. A01 documentation and A02 conformance coverage are delivered. A04 core response evaluation and Express adoption merged in PR #13 with passing compatibility CI. A05 response adoption in Fastify merged in PR #14 with passing CI; request adoption remains outstanding. A06 response adoption in Next is implemented with source/packed verification; its CI remains required. A03 and A07–A19 remain unstarted. These approvals do not authorize dependency support removals, API removals or publication.
+**Status:** Incremental implementation. The user approved A01/A02 on 2026-11-04 and adopted the support-policy baseline. A01 documentation and A02 conformance coverage are delivered. A04 core response evaluation and Express adoption merged in PR #13 with passing compatibility CI. A05 response adoption in Fastify merged in PR #14 with passing CI; request adoption remains outstanding. A06 response adoption in Next is implemented; the separately approved initial v4 Next support baseline is recorded below, with final CI required for the expanded scope. A03 and A07–A18 remain unstarted; A19 has only the scoped initial Next decision. These approvals do not authorize other support removals, API removals or publication.
 
 **Goal:** Reduce the work needed to maintain contract behavior and keep integrations compatible as native frameworks and query libraries change.
 
@@ -173,7 +173,7 @@ Server migrations A06–A08 can proceed independently after the shared boundarie
 **Scope:** `next/src/lib/ts-rest-next.ts`, path utilities and tests; Next docs where internal assumptions affect users. Serverless Next wrappers remain in A08.
 
 - [x] Adopt A04 response handling; see [Next response plan](../../../plans/005-next-response-evaluation.md).
-- Response packed evidence: strict ESM/CommonJS declarations against Next 12.3.7 and native HTTP execution against Next 16.4.2, verified on Node 26.12.0. Next 12's eager bundled JWT import uses the removed `SlowBuffer` API on Node 26; the disposable consumer switches Next versions after declaration compilation. Support ranges are unchanged.
+- Current response packed evidence: Next 15.5.29 and 16.4.2 consumers verify ESM/CommonJS handler inference and native execution on Node 26.12.0, with exact upstream declaration limitations reported. The user approved the initial v4 Next support baseline in [plan 006](../../../plans/006-next-supported-majors.md); the temporary Next 12 declaration consumer is removed.
 - [ ] Adapt parsed native request fields to A03 after that capability is implemented.
 - [ ] Preserve route matching, optional params, native API request/response context and custom error callbacks.
 - [ ] Test query/header normalization, no-body/non-JSON responses and response validation through Next's existing adapter harness.
@@ -457,4 +457,10 @@ Response adoption merged in [PR #14](https://github.com/2wce/ts-restless/pull/14
 
 Compatibility checkpoint `965e64f5` passed 60 Next tests against the old implementation; a temporary validation-policy inversion caused 14 expected failures, then the restored policy passed. Adoption checkpoint `ce4c963f` passed 326 core/Next tests and source/test typing. Full `pnpm check` passed 728 tests and all configured typechecks with zero lint errors and 393 existing warnings. All 21 packed tests passed; strict ESM/CommonJS consumers check handler inference and real Next 12.3.7 HTTP serialization across four validator profiles. The workspace Next 16.4.2 example passed the direct build; the local task-runner path hit a CSS-worker port restriction, so the canonical CI build remains required. Local Node was 24.21.0; CI pins 26.12.0.
 
-A06 remains partial: response adoption and the direct example build are verified locally; CI remains pending. A03 and Next request adoption remain unimplemented. No dependency floor, public signature, client policy or publication control changed.
+A06 remains partial: response adoption passed [CI at `85b102ce`](https://github.com/2wce/ts-restless/actions/runs/42228417004), including canonical example builds and all ten compatibility fixtures. A03 and Next request adoption remain unimplemented. The original adoption preserved peer ranges; the separately approved initial v4 Next baseline below supersedes its temporary declaration fixture.
+
+### Initial Next support baseline — A01/A19 decision (2026-11-06)
+
+The user approved excluding Next majors that the [official lifecycle policy](https://nextjs.org/support-policy) lists as unsupported. [Plan 006](../../../plans/006-next-supported-majors.md) establishes `^15.0.0 || ^16.0.0` for both Next integrations before stable v4, removes Next 12–14 from current consumers and support docs, and retains the supported Next 16 example and all router modes. A major Changeset records the migration requirement; release controls are unchanged.
+
+The 25-test packed/release suite verifies both pinned supported majors across four validator profiles, checked public handler types and real native Pages API / serverless NextRequest execution. It reports the exact upstream Next declaration errors rather than disabling library checking. A deliberately incompatible handler type fails on both majors; the restored consumers pass. Full source checks pass 728 tests/all configured typechecks with zero lint errors and 393 existing warnings. Final CI for this expanded PR scope remains required.

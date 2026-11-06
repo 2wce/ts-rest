@@ -120,8 +120,93 @@ const sources = {
   const schema = toStandardSchema(z.string().transform(Number));`,
 };
 
-for (const [profile, definition] of Object.entries(sources)) {
-  test(`packed core and adapters support ${profile} with strict ESM/CommonJS declarations`, async () => {
+// Reviewed failures in the installed Next declarations, not adapter diagnostics.
+// Keep library checking enabled and reject every other compiler error. Match
+// exact files, codes and messages for these pinned versions; do not stub types.
+const missingSatori =
+  "Cannot find module 'next/dist/compiled/@vercel/og/satori' or its corresponding type declarations.";
+const missingSharpConstructor =
+  "Namespace 'sharp' has no exported member 'SharpConstructor'.";
+const nextDeclarationDiagnostics = {
+  '15.5.29': [
+    ['dist/compiled/@vercel/og/types.d.ts', 'TS2307', missingSatori],
+    [
+      'dist/compiled/@vercel/og/types.d.ts',
+      'TS2834',
+      "Relative import paths need explicit file extensions in ECMAScript imports when '--moduleResolution' is 'node16' or 'nodenext'. Consider adding an extension to the import path.",
+    ],
+    ['dist/server/image-optimizer.d.ts', 'TS2694', missingSharpConstructor],
+  ],
+  '16.4.2': [
+    ['dist/compiled/@vercel/og/types.d.ts', 'TS2307', missingSatori],
+    [
+      'dist/server/image-optimizer/transform.d.ts',
+      'TS2694',
+      missingSharpConstructor,
+    ],
+  ],
+};
+
+function checkConsumerDeclarations(consumer, file, nextVersion) {
+  try {
+    execFileSync(
+      process.execPath,
+      [
+        resolve(root, 'node_modules/typescript/bin/tsc'),
+        '--noEmit',
+        '--strict',
+        '--pretty',
+        'false',
+        '--target',
+        'es2024',
+        '--module',
+        'nodenext',
+        '--moduleResolution',
+        'nodenext',
+        '--esModuleInterop',
+        file,
+      ],
+      { cwd: consumer, stdio: 'pipe' },
+    );
+  } catch (error) {
+    assert.ok(
+      [1, 2].includes(error.status),
+      'compiler must finish with type diagnostics',
+    );
+    assert.equal(error.stderr.toString().trim(), '', 'compiler must not crash');
+    const diagnostics = error.stdout.toString().trim().split('\n');
+    assert.ok(diagnostics[0], 'compiler must report its failure');
+    for (const diagnostic of diagnostics) {
+      const match = diagnostic.match(
+        /\/node_modules\/next\/(dist\/[^()]+)\(\d+,\d+\): error (TS\d+): (.*)$/,
+      );
+      assert.ok(
+        match &&
+          nextDeclarationDiagnostics[nextVersion]?.some(
+            ([file, code, message]) =>
+              file === match[1] && code === match[2] && message === match[3],
+          ),
+        `Unexpected declaration error on Next ${nextVersion}: ${diagnostic}`,
+      );
+    }
+    console.warn(
+      `Next ${nextVersion} upstream declaration diagnostics (${file}):\n${diagnostics.join('\n')}`,
+    );
+  }
+}
+
+const workspaceNextVersion = JSON.parse(
+  await readFile(resolve(root, 'node_modules/next/package.json')),
+).version;
+const consumers = Object.entries(sources).flatMap(([profile, definition]) =>
+  ['15.5.29', workspaceNextVersion].map((nextVersion) => ({
+    profile,
+    definition,
+    nextVersion,
+  })),
+);
+for (const { profile, definition, nextVersion } of consumers) {
+  test(`packed core and adapters support ${profile} on Next ${nextVersion} with strict ESM/CommonJS declarations`, async () => {
     const consumer = await mkdtemp(join(tmpdir(), `ts-restless-${profile}-`));
     try {
       const dependencies = {
@@ -153,10 +238,11 @@ for (const [profile, definition] of Object.entries(sources)) {
           await readFile(resolve(root, 'node_modules', name, 'package.json')),
         ).version;
       }
-      const runtimeNextVersion = dependencies.next;
-      // Pin the strict declaration baseline independently from the validators.
-      // Next 16 currently has unrelated upstream declaration failures.
-      dependencies.next = '12.3.7';
+      dependencies.next = nextVersion;
+      dependencies.react = '19.3.1';
+      dependencies['react-dom'] = '19.3.1';
+      dependencies['@types/react'] = '19.3.0';
+      dependencies['@types/react-dom'] = '19.3.0';
       if (profile === 'valibot') dependencies.valibot = '1.5.0';
       if (profile === 'zod-4') dependencies.zod = '4.6.7';
       if (profile === 'zod-3-legacy') {
@@ -283,28 +369,22 @@ const nextSingle = next.createSingleRouteHandler(contract.convert, async ({ body
   return { status: 200, body: body.toString() };
 }, { responseValidation: true });
 void [nextRouter, nextSingle];
+const serverlessNextHandler = serverlessNext.createNextHandler(contract, {
+  convert: async ({ body, headers }, { nextRequest }) => {
+    type HandlerBody = Expect<Equal<typeof body, number>>;
+    type HandlerHeaders = Expect<Equal<typeof headers['x-count'], number>>;
+    const nativeRequest: import('next/server.js').NextRequest = nextRequest;
+    void nativeRequest;
+    return { status: 200, body: body.toString() };
+  },
+}, { handlerType: 'app-router', responseValidation: true });
+void serverlessNextHandler;
 void [createExpressEndpoints, initServer, fastify, nest, next, serverless, fetch, aws, azure, serverlessNext];
 `;
       for (const extension of ['mts', 'cts']) {
         const file = join(consumer, `consumer.${extension}`);
         await writeFile(file, source);
-        execFileSync(
-          process.execPath,
-          [
-            resolve(root, 'node_modules/typescript/bin/tsc'),
-            '--noEmit',
-            '--strict',
-            '--target',
-            'es2022',
-            '--module',
-            'nodenext',
-            '--moduleResolution',
-            'nodenext',
-            '--esModuleInterop',
-            file,
-          ],
-          { cwd: consumer, stdio: 'inherit' },
-        );
+        checkConsumerDeclarations(consumer, file, nextVersion);
       }
       if (profile === 'zod-3-legacy') {
         // Classic Node resolution predates conditional package exports. The
@@ -343,19 +423,6 @@ type LegacyOutput = Expect<Equal<ZodInferOrType<typeof original>, number>>;
           { cwd: consumer, stdio: 'inherit' },
         );
       }
-      // Next 12's resolver eagerly loads JWT code that requires SlowBuffer,
-      // removed in Node 26. Use the workspace Next baseline for native HTTP
-      // execution after completing the strict Next 12 declaration checks.
-      dependencies.next = runtimeNextVersion;
-      await writeFile(
-        join(consumer, 'package.json'),
-        JSON.stringify(consumerPackage),
-      );
-      execFileSync(
-        'pnpm',
-        ['install', '--ignore-scripts', '--no-frozen-lockfile'],
-        { cwd: consumer, stdio: 'pipe' },
-      );
       const runtime = `import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
 import { createServer } from 'node:http';
@@ -434,7 +501,7 @@ for (const { initServer } of [await import('@ts-restless/fastify'), require('@ts
     }
   }
 }
-// Exercise the installed workspace Next baseline's real API response
+// Exercise the same installed Next major's real API response
 // augmentation and serialization, rather than replacing json/send/end methods.
 const { apiResolver } = require('next/dist/server/api-utils/node/api-resolver.js');
 for (const adapter of [await import('@ts-restless/next'), require('@ts-restless/next')]) {
@@ -488,6 +555,40 @@ for (const adapter of [await import('@ts-restless/next'), require('@ts-restless/
     }
   }
 }
+const { NextRequest } = require('next/server.js');
+for (const adapter of [await import('@ts-restless/serverless/next'), require('@ts-restless/serverless/next')]) {
+  for (const handlerType of ['app-router', 'pages-router-edge']) {
+    for (const responseValidation of [true, false]) {
+      let calls = 0;
+      const countedSchema = { '~standard': {
+        ...schema['~standard'],
+        validate(value) {
+          calls += 1;
+          return schema['~standard'].validate(value);
+        },
+      } };
+      const { initContract } = await import('@ts-restless/core');
+      const contract = initContract().router({ get: {
+        method: 'GET', path: '/packed-next-serverless-response', responses: { 200: countedSchema },
+      } });
+      const url = new URL('http://localhost/packed-next-serverless-response');
+      if (handlerType === 'pages-router-edge') url.searchParams.set('ts-rest', 'packed-next-serverless-response');
+      const request = new NextRequest(url);
+      const handler = adapter.createNextHandler(contract, {
+        get: async (_, { nextRequest }) => {
+          assert.equal(nextRequest, request);
+          assert.equal(nextRequest.nextUrl.searchParams.has('ts-rest'), false);
+          return { status: 200, body: '42' };
+        },
+      }, { handlerType, responseValidation });
+      const response = await handler(request);
+      assert.equal(response.status, 200);
+      assert.match(response.headers.get('content-type'), /^application\\/json/);
+      assert.equal(await response.json(), responseValidation ? 42 : '42');
+      assert.equal(calls, responseValidation ? 1 : 0);
+    }
+  }
+}
 ${
   profile === 'zod-3-legacy'
     ? `
@@ -510,7 +611,10 @@ for (const compat of [await import('@ts-restless/core/zod3'), require('@ts-restl
 `;
       const file = join(consumer, 'consumer.mjs');
       await writeFile(file, runtime);
-      execFileSync(process.execPath, [file], { cwd: consumer, stdio: 'pipe' });
+      execFileSync(process.execPath, [file], {
+        cwd: consumer,
+        stdio: 'pipe',
+      });
     } finally {
       await rm(consumer, { recursive: true, force: true });
     }
