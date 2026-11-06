@@ -295,9 +295,26 @@ checks ESM and CommonJS imports and strict declarations without `skipLibCheck`.
 The no-Zod profiles also reject Zod in the installed dependency graph. The full
 `test-projects` compatibility matrix remains CI-only.
 
-The strict adapter consumer uses a supported Next 12 baseline to isolate the
-validator boundary from independent upstream Next 16 declaration errors. The
-regular workspace and Next example keep their current Next 16 baseline.
+Next consumers cover supported majors 15 and 16 with pinned Next 15.5.29 and
+workspace Next 16.4.2. Each installed major is used for both NodeNext ESM/CommonJS
+declaration checks and native Pages API / serverless NextRequest execution,
+across all four validator profiles. These disposable consumers use React
+19.3.1, React types 19.3.0 and ES2024 libraries; workspace examples retain their
+existing React baseline.
+
+Library checking remains enabled. Current upstream Next declarations produce
+three reviewed diagnostics on 15.5.29 and two on 16.4.2: NodeNext Satori module
+resolution, a relative import in Next 15's image-generation types, and a missing
+SharpConstructor export. The fixture reports those diagnostics and matches
+exact version, file, error code and message; every other compiler error fails.
+This is checked adapter inference with explicit upstream limitations, not a
+claim that all Next declarations compile without errors. When updating pinned
+Next versions, re-evaluate the diagnostic list rather than widening it.
+
+Next 12–14 are outside the first stable v4 peer ranges and are not used for
+compatibility fixtures or current examples. See the
+[Next support baseline](docs/support-policy.md#nextjs-baseline-for-ts-restless-v4)
+and [official Next.js support policy](https://nextjs.org/support-policy).
 See the [unreleased major migration guide](apps/docs/content/docs/standard-schema-migration.mdx)
 for error identity, moved exports, old-schema bridging and header merge behavior.
 

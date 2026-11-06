@@ -1,6 +1,6 @@
 # Compatibility support and retirement policy
 
-**Recorded:** 2026-11-04. **Status:** Adopted baseline, approved by the user on 2026-11-04. The [A01 inventory](support-inventory.md) records existing version floors, working lines, retained promises, evidence gaps and package ownership. Existing peers and compatibility fixtures remain intact. No retirement notice, removal date or new dependency floor is approved by this policy; individual changes require review under A19 of the [adapter maintenance epic](superpowers/plans/2026-11-04-adapter-maintenance-epic.md).
+**Recorded:** 2026-11-04; Next baseline updated 2026-11-06. **Status:** Adopted policy. The user approved excluding upstream-unsupported Next majors from the first stable v4 baseline on 2026-11-06. The [A01 inventory](support-inventory.md) records version floors, working lines, evidence gaps and package ownership. Other compatibility reductions remain subject to A19 of the [adapter maintenance epic](superpowers/plans/2026-11-04-adapter-maintenance-epic.md).
 
 Support the newest verified dependency major actively, retain a previous supported major for a dated migration window, and remove compatibility in a ts-rest major release. This bounds maintenance work while giving consumers a predictable upgrade path.
 
@@ -16,6 +16,16 @@ Older dependency majors and legacy ts-rest APIs have different retirement condit
 | Older Zod 3 bridge or historical `/zod3` helpers | A tested migration to Standard Schema or a supported equivalent for each helper being removed.                  |
 
 An upstream major release does not automatically establish ts-rest support. Upstream end-of-support triggers a review of the affected line; it does not silently remove compatibility.
+
+### Next.js baseline for ts-restless v4
+
+The first stable v4 supports Next.js **15 and 16** in both `@ts-restless/next` and `@ts-restless/serverless/next`, with peers `^15.0.0 || ^16.0.0`. Next.js **12–14 are excluded**. The [official Next.js support policy](https://nextjs.org/support-policy), checked on 2026-11-06, lists 16 as Active LTS, 15 as Maintenance LTS and 14 and earlier as unsupported. Next 15's security maintenance is extended through 2027-01-31.
+
+This establishes the fork's initial stable major baseline rather than withdrawing a shipped stable v4 promise. Before adopting v4 on Next 12–14, upgrade Next using its [official upgrade guides](https://nextjs.org/docs/app/guides/upgrading) and use a current patched release of 15 or 16. Existing published upstream ts-rest v3 packages are unchanged.
+
+Examples and current documentation target supported Next majors. The maintained example uses Next 16; Pages Router, App Router and Pages Router Edge integrations remain available. Router style is separate from framework-major lifecycle status. Packed consumers use Next 15.5.29 and 16.4.2 for native behavior and checked public types; exact upstream declaration diagnostics and untested floors are recorded in the inventory.
+
+Review the official policy when updating this baseline. Changes to Next's LTS status do not edit our peer ranges automatically. After stable v4 publication, future removals follow the notice and major-release process below.
 
 ## Support states
 
@@ -60,7 +70,7 @@ The following observations are a checkout snapshot from 2026-11-04, not an adopt
 | ------------------- | ------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------- |
 | Express             | Peer range permits majors 4 and 5; isolated fixtures cover both.                           | Focus new work on 5; retain 4 until an explicit retirement decision. Verify isolated v5 types as well as runtime.                              |
 | Nest                | Peer ranges permit majors 9 through 12; isolated fixtures cover 9, 10 and 11.              | Focus workspace work on 12; retain broader promises and add isolated 12 coverage before claiming equivalent evidence across lines.             |
-| Next                | Peer range permits majors 12 through 16.                                                   | Review the broad range against actual consumer and host coverage before selecting retirements.                                                 |
+| Next                | First stable v4 peers permit majors 15 and 16, per the 2026-11-06 decision above.          | Maintain verified LTS lines and current examples; review future lifecycle changes before updating published support.                           |
 | Fastify             | Peer range permits major 4 only.                                                           | Deliver and verify support for a newer major before proposing a migration away from 4.                                                         |
 | React Query         | Peer range permits majors 4 and 5; v5 has its own import path.                             | Prove the v5 migration before retiring v4. Decide import-path changes separately.                                                              |
 | Vue and Solid Query | Each peer range permits major 4 only.                                                      | Deliver and verify replacements before proposing v4 retirement.                                                                                |
@@ -68,7 +78,7 @@ The following observations are a checkout snapshot from 2026-11-04, not an adopt
 
 Sources: library [package manifests](../libs/ts-rest/), the [isolated CI matrix](../.github/workflows/build-test.yml) and the [Standard Schema migration guide](../apps/docs/content/docs/standard-schema-migration.mdx).
 
-A01's [support inventory](support-inventory.md) completes the manifest, lockfile, fixture, compiler, runtime and ownership snapshot. It records retained broad-range exceptions and missing evidence explicitly. No dated retirement exception is necessary yet because no retirement clock has started. Adding dependency floors or narrowing support remains a separately reviewed change.
+A01's [support inventory](support-inventory.md) records the manifest, lockfile, fixture, compiler, runtime and ownership snapshot, including the approved initial Next baseline. Other broad-range exceptions and missing evidence remain explicit. No retirement clock for a published stable fork promise has started.
 
 ## Release handling
 

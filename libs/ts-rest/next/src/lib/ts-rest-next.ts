@@ -6,13 +6,12 @@ import {
   validateIfSchema,
   HTTPStatusCode,
   isAppRoute,
-  isAppRouteNoBody,
-  isAppRouteOtherResponse,
   parseJsonQueryObject,
   ServerInferRequest,
   ServerInferResponses,
   TsRestResponseError,
-  validateResponse,
+  evaluateResponse,
+  TsRestResponseValidationError,
   StandardSchemaError,
   validateMultiSchemaObject,
 } from '@ts-restless/core';
@@ -364,36 +363,27 @@ const handlerFactory = (
         }
       }
 
-      const statusCode = Number(result.status);
-
-      let validatedResponseBody = result.body;
-
-      if (responseValidation) {
-        const response = validateResponse({
-          appRoute: route,
-          response: {
-            status: statusCode,
-            body: result.body,
-          },
-        });
-
-        validatedResponseBody = response.body;
+      const evaluation = evaluateResponse({
+        appRoute: route,
+        response: { status: Number(result.status), body: result.body },
+        validateBody: responseValidation,
+      });
+      if (!evaluation.success) {
+        throw new TsRestResponseValidationError(route, evaluation.error);
       }
 
-      const responseType = route.responses[statusCode];
-
-      if (isAppRouteNoBody(responseType)) {
-        res.status(statusCode).end();
+      if (evaluation.metadata.bodyKind === 'none') {
+        res.status(evaluation.metadata.status).end();
         return;
       }
 
-      if (isAppRouteOtherResponse(responseType)) {
-        res.setHeader('content-type', responseType.contentType);
-        res.status(statusCode).send(validatedResponseBody);
+      if (evaluation.metadata.contentType !== undefined) {
+        res.setHeader('content-type', evaluation.metadata.contentType);
+        res.status(evaluation.metadata.status).send(evaluation.body);
         return;
       }
 
-      res.status(statusCode).json(validatedResponseBody);
+      res.status(evaluation.metadata.status).json(evaluation.body);
       return;
     } catch (e) {
       if (options?.errorHandler) {
