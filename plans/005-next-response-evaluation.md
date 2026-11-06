@@ -55,8 +55,8 @@ const schema: StandardSchemaV1<unknown, { wrapped: unknown }> = {
 
 **Produces:** Native Next writes sourced from `metadata.status`, `metadata.bodyKind`, `metadata.contentType` and `body`; the existing core exception for schema issues.
 
-- [ ] Replace the imports of `validateResponse`, `isAppRouteNoBody` and `isAppRouteOtherResponse` with `evaluateResponse` and `TsRestResponseValidationError`.
-- [ ] Replace the response-only block with this flow:
+- [x] Replace the imports of `validateResponse`, `isAppRouteNoBody` and `isAppRouteOtherResponse` with `evaluateResponse` and `TsRestResponseValidationError`.
+- [x] Replace the response-only block with this flow:
 
 ```ts
 const evaluation = evaluateResponse({
@@ -79,8 +79,8 @@ if (evaluation.metadata.contentType !== undefined) {
 res.status(evaluation.metadata.status).json(evaluation.body);
 ```
 
-- [ ] Run core/Express/Fastify/Next source regressions and Next source/test typing. Confirm schema configuration errors still propagate through the existing callback boundary.
-- [ ] Add `.changeset/next-response-evaluation.md` with `"@ts-restless/next": patch` and describe preserved behavior under shared core response evaluation. Commit the adoption checkpoint.
+- [x] Run core/Express/Fastify/Next source regressions and Next source/test typing. Confirm schema configuration errors still propagate through the existing callback boundary.
+- [x] Add `.changeset/next-response-evaluation.md` with `"@ts-restless/next": patch` and describe preserved behavior under shared core response evaluation. Commit the adoption checkpoint.
 
 ## Task 3: Verify packed consumers and record delivery
 
@@ -89,7 +89,7 @@ res.status(evaluation.metadata.status).json(evaluation.body);
 **Produces:** Packed handler inference and execution evidence without source aliases or compiler suppression.
 
 - [ ] Extend the existing source fixture with a Next single handler and router implementation. Assert transformed handler body/header types and native `NextApiRequest`/`NextApiResponse` context.
-- [ ] Extend the runtime fixture to invoke both real packed entry points in ESM and CommonJS with response validation enabled/disabled. Capture status, JSON body and validator calls through a minimal native response boundary, expecting `42` with one call or `'42'` with zero calls across all four validator profiles.
+- [ ] Extend the runtime fixture to invoke both real packed entry points in ESM and CommonJS with response validation enabled/disabled. Capture status, JSON body and validator calls through the installed Next 12 API resolver and real localhost HTTP requests, expecting `42` with one call or `'42'` with zero calls across all four validator profiles.
 - [ ] Run `pnpm test:packages`, full `pnpm check`, `pnpm exec tsc --noEmit -p libs/ts-rest/next/tsconfig.spec.json`, and `pnpm --filter example-next build`.
 - [ ] Run changed-file formatting and `git diff --check`. Review imports, response dispatch, public signatures and every stated constraint; retain all existing request, route and legacy tests.
 - [ ] Record exact results and current merged PR #14/#15 evidence in the plan index and epic. Mark only A06's response portion complete locally, with CI pending; A03 and Next request adoption remain outstanding.
@@ -97,4 +97,10 @@ res.status(evaluation.metadata.status).json(evaluation.body);
 
 ## Execution evidence
 
-Record checkpoint commits, exact command results, runtime limits and CI state here after execution.
+- Baseline: 32 Next tests passed.
+- Compatibility checkpoint `c7e32709`: 28 additional cases across both entry points; all 60 Next tests passed against the old implementation. Inverting validation produced 14 expected failures; the restored policy passed.
+- Adoption: 326 core/Next tests and Next source/test typing passed.
+- Full `pnpm check`: 728 tests and all configured typechecks passed, with zero lint errors and 393 existing warnings.
+- Packed suite: 21 tests in four files passed. All four validator profiles exercise strict ESM/CommonJS handler inference and real Next 12.3.7 HTTP serialization for router/single handlers with zero/one response validation calls.
+- Local runtime: Node 24.21.0 and pnpm 12.14.0; CI must verify pinned Node 26.12.0.
+
